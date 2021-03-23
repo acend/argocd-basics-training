@@ -1,0 +1,88 @@
+name: Publish Main Version
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - 
+        name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - 
+        name: Lint Markdown
+        uses: nosborn/github-action-markdown-cli@v1.1.1
+        with:
+          files: "content *.md"
+          config_file: ".markdownlint.json"
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      -
+        name: Login to Quay.io Container Registry
+        uses: docker/login-action@v1 
+        with:
+          registry: quay.io
+          username: ${{ secrets.QUAYIO_USERNAME }}
+          password: ${{ secrets.QUAYIO_TOKEN }}
+      - 
+        name: Build Acend Version
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            quay.io/acend/argocd-training:latest
+      - 
+        name: Build Puzzle Version
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          build-args: |
+            ACEND_HUGO_ENV=puzzle
+          push: true
+          tags: |
+            quay.io/acend/argocd-training:latest-puzzle
+      - 
+        name: 'Deploy Helm Release'
+        uses: 'deliverybot/helm@v1'
+        with:
+          release: 'latest'
+          namespace: 'acend-argocd-training-prod'
+          version: '${{ github.sha }}'
+          repository: 'https://acend.github.io/helm-charts/'
+          chart: 'acend-training-chart'
+          token: '${{ github.token }}'
+          helm: 'helm3'
+          value-files: |
+            [
+              "helm-chart/values.yaml"
+            ]
+
+        env:
+          KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
+      - 
+        name: Redeploy acend Deployment
+        uses: actions-hub/kubectl@master
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBECONFIG_BASE64 }}
+        with:
+          args: rollout restart deployment/latest-argocd-training-acend --namespace acend-argocd-training-prod
+      - 
+        name: Redeploy puzzle Deployment
+        uses: actions-hub/kubectl@master
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBECONFIG_BASE64 }}
+        with:
+          args: rollout restart deployment/latest-argocd-training-puzzle --namespace acend-argocd-training-prod

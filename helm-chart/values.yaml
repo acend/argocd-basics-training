@@ -1,0 +1,46 @@
+
+acendTraining:
+  servicePort: 8080
+  deployments:
+    - 
+      name: acend
+      replicaCount: 1
+      image:
+        repository: quay.io/acend/argocd-training
+        pullPolicy: Always
+        tag: ""
+        tagsuffix: ""
+      ingress:
+        annotations: 
+          kubernetes.io/ingress.class: nginx-public
+        secretOverride: acend-wildcard
+        appname: argocd-training
+        domain: training.acend.ch
+    - 
+      name: puzzle
+      replicaCount: 1
+      image:
+        repository: quay.io/acend/argocd-training
+        pullPolicy: Always
+        tag: ""
+        tagsuffix: "-puzzle"
+      ingress:
+        annotations: 
+          kubernetes.io/ingress.class: nginx-public
+        useDefaultSecret: true
+        appname: argocd-training
+        domain: k8s.puzzle.ch
+
+
+
+nameOverride: "argocd-training"
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
