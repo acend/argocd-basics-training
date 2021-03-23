@@ -18,7 +18,7 @@ jobs:
           # Task remove means to remove the helm release.
           task: 'remove'
           release: 'pr-${{ github.event.pull_request.number }}'
-          namespace: 'acend-hugo-training-template-test'
+          namespace: 'acend-argocd-training-test'
           version: '${{ github.sha }}'
           chart: 'helm-chart'
           token: '${{ github.token }}'
