@@ -20,7 +20,7 @@ argocd login {{% param argoCdUrl %}} --grpc-web --username hannelore
 
 ## Task {{% param sectionnumber %}}.2: Fork the Git repository
 
-As we are proceeding according to the GitOps principle we need some example resource manifests in a Git repository which we can edit. 
+As we are proceeding according to the GitOps principle we need some example resource manifests in a Git repository which we can edit.
 
 Users which have a personal Github account can just fork the Repository [amm-argocd-example](https://github.com/puzzle/amm-argocd-example) to their personal account. To fork the repository click on the top right of the Github on _Fork_.
 
@@ -35,7 +35,7 @@ Login with the new user and fork the existing Git repository from Github:
 1. Select _Create_ on the top right -> _New Migration_ -> Select _GitHub_
 1. Migrate / Clone From URL: https://github.com/puzzle/amm-argocd-example.git
 1. Click _Migrate Repository_
- 
+
 The URL of the newly forked Git repository will look like `https://{{% param giteaUrl %}}/<username>/amm-argocd-example.git`
 
 Set the `LAB_USER` environment variable to your personal user:
@@ -103,7 +103,7 @@ Server:             https://kubernetes.default.svc
 Namespace:          <username>
 URL:                https://{{% param argoCdUrl %}}/applications/argo-<username>
 Repo:               https://{{% param giteaUrl %}}/<username>/amm-argocd-example.git
-Target:             
+Target:
 Path:               example-app
 SyncWindow:         Sync Allowed
 Sync Policy:        <none>
@@ -138,7 +138,7 @@ Server:             https://kubernetes.default.svc
 Namespace:          <username>
 URL:                https://{{% param argoCdUrl %}}/applications/argo-<username>
 Repo:               https://{{% param giteaUrl %}}/<username>/amm-argocd-example.git
-Target:             
+Target:
 Path:               example-app
 SyncWindow:         Sync Allowed
 Sync Policy:        <none>
@@ -161,8 +161,8 @@ apps   Deployment  <username>  example-php-docker-helloworld  Synced  Progressin
 Check the Argo CD UI to browse the application and their components. The URL of the Argo CD webinterface will be provided by the teacher.
 
 Application overview in unsynced and synced state
-<img src="app-overview-unsynced.png" alt="drawing" width="300"/>
-<img src="app-overview-synced.png" alt="drawing" width="300"/>
+![Application overview (unsynced state)](app-overview-unsynced.png)
+![Application overview (synced state)](app-overview-synced.png)
 
 Detailed view of a application in unsynced and synced state
 ![Application Tree (unsynced state)](app-tree-unsynced.png)
@@ -244,7 +244,7 @@ Server:             https://kubernetes.default.svc
 Namespace:          <username>
 URL:                https://{{% param argoCdUrl %}}/applications/argo-<username>
 Repo:               https://{{% param giteaUrl %}}/<username>/amm-argocd-example.git
-Target:             
+Target:
 Path:               example-app
 SyncWindow:         Sync Allowed
 Sync Policy:        <none>
@@ -296,7 +296,7 @@ Server:             https://kubernetes.default.svc
 Namespace:          <username>
 URL:                https://{{% param argoCdUrl %}}/applications/argo-<username>
 Repo:               https://{{% param giteaUrl %}}/<username>/amm-argocd-example.git
-Target:             
+Target:
 Path:               example-app
 SyncWindow:         Sync Allowed
 Sync Policy:        <none>
@@ -386,7 +386,7 @@ You will see that even with auto-sync and self-healing enabled the status is sti
 ```
 GROUP  KIND        NAMESPACE    NAME                           STATUS     HEALTH   HOOK  MESSAGE
 apps   Deployment  <username>   example-php-docker-helloworld  Synced     Healthy        deployment.apps/example-php-docker-helloworld configured
-       Service     <username>   example-php-docker-helloworld  OutOfSync  Healthy        
+       Service     <username>   example-php-docker-helloworld  OutOfSync  Healthy
 ```
 
 Now enable the auto pruning explicitly:
@@ -439,7 +439,7 @@ You even can edit the `Application` resource by using:
 kubectl edit app argo-<username>
 ```
 
-This allows us to manage the ArgoCD application definitions in a declarative way as well. It is a common pattern to have one ArgoCD application which references n child Applications which allows us a fast bootstrapping of a whole environment or a new cluster. This pattern is well known as the [App of apps](https://argoproj.github.io/argo-cd/operator-manual/cluster-bootstrapping/#app-of-apps-pattern) pattern. 
+This allows us to manage the ArgoCD application definitions in a declarative way as well. It is a common pattern to have one ArgoCD application which references n child Applications which allows us a fast bootstrapping of a whole environment or a new cluster. This pattern is well known as the [App of apps](https://argoproj.github.io/argo-cd/operator-manual/cluster-bootstrapping/#app-of-apps-pattern) pattern.
 
 
 ## Task {{% param sectionnumber %}}.8: Delete the Application
