@@ -76,6 +76,10 @@ argoCdUrl = "argocd.techlab.openshift.ch"
 giteaUrl = "gitea.techlab.openshift.ch"
 
 enabledModule = "base"
+techlabClusterWebConsolePrefix = "console"
+techlabClusterDomainName = "techlab.openshift.ch"
+techlabArgoCdUrl = "argocd.techlab.openshift.ch"
+techlabGiteaUrl = "gitea.techlab.openshift.ch"
 
 # Enable Lunr.js offline search
 offlineSearch = true
