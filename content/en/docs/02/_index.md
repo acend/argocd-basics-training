@@ -4,25 +4,8 @@ weight: 2
 sectionnumber: 2
 ---
 
-## Simple Example (bb)
-
-Introduction: (evtl. in die introduction moven?)
-
-* Wo speichert ArgoCD die Daten?
-* Aufzeigen wie die CRDs usw. zusammen hängen
-
-
-Simple Example with https://github.com/puzzle/amm-argocd-example
-
-* Basis Setup application with argocd
-* Gitea setup, user können eigenen github account verwenden wenn vorhanden
-* Auto sync
-* Self Healing
-* Pruning
-
 
 ## Task {{% param sectionnumber %}}.1: Getting started
-
 
 You can access Argo CD via Web UI (URL is provided by your teacher) or using the CLI. The Argo CD CLI Tool is already installed on the web IDE.
 
@@ -37,11 +20,13 @@ argocd login {{% param argoCdUrl %}} --grpc-web --username hannelore
 
 ## Task {{% param sectionnumber %}}.2: Fork the Git repository
 
-As we are proceeding from now on according to the GitOps principle we need some example resource manifests in a new Git repository. All the cli commands in this chapter must be executed in the terminal of the provided Web IDE.
+As we are proceeding according to the GitOps principle we need some example resource manifests in a Git repository which we can edit. 
 
-Users which have a personal Github account can just fork the Repository [amm-argocd-example](https://github.com/puzzle/amm-argocd-example). To fork the repository click on the top right of the Github on _Fork_. The repository will be copied to your personal Github account.
+Users which have a personal Github account can just fork the Repository [amm-argocd-example](https://github.com/puzzle/amm-argocd-example) to their personal account. To fork the repository click on the top right of the Github on _Fork_.
 
 All other users can use the provided Gitea installation of the personal lab environment. Visit `https://{{% param giteaUrl %}}/` with your browser and register a new account with your personal username and a password that you can remember ;)
+
+{{% alert title="Note" color="primary" %}}All the cli commands in this chapter must be executed in the terminal of the provided Web IDE.{{% /alert %}}
 
 ![Register new User in Gitea](gitea-register.png)
 
@@ -129,19 +114,6 @@ GROUP  KIND        NAMESPACE    NAME                           STATUS     HEALTH
        Service     <username>  example-php-docker-helloworld  OutOfSync  Missing
 apps   Deployment  <username>  example-php-docker-helloworld  OutOfSync  Missing
 ```
-
-ArgoCD persists the configuration of the created application in a instance of the Custom Resource applications.argoproj.io
-
-
-```bash
-kubectl get app
-```
-
-```
-NAME               SYNC STATUS   HEALTH STATUS
-argo-<username>    OutOfSync     Missing
-```
-
 
 
 The application status is initially in OutOfSync state. To sync (deploy) the resource manifests, run:
@@ -456,7 +428,39 @@ apps                Deployment   <username>  data-producer  Synced     Healthy  
 ```
 
 
-## Task {{% param sectionnumber %}}.8: Delete the Application
+## Task {{% param sectionnumber %}}.8: State of ArgoCD
+
+Argo CD is largely built stateless. The configuration is persisted as native Kubernetes objects. And those are stored in Kubernetes _etcd_. There is no additional storage layer needed to run ArgoCD. The Redis storage under the hood acts just as a throw-away cache and can be evicted anytime without any data loss.
+
+The configuration changes made on ArgoCD objects through the UI or by cli tool `argocd` are reflected in updates of the ArgoCD Kubernetes objects `Application` and `AppProject`.
+
+Let's list all Kubernetes objects of type `Application` (short form: `app`)
+
+```bash
+kubectl get app
+```
+
+```
+NAME               SYNC STATUS   HEALTH STATUS
+argo-<username>    Synced        Healthy
+```
+
+You will see the application which we created some chapters ago by cli command `argocd app create...`. To see the complete configuration of the `Application` as _yaml_ use:
+
+```bash
+kubectl get app argo-<username> -oyaml
+```
+
+You even can edit the `Application` resource by using:
+
+```bash
+kubectl edit app argo-<username>
+```
+
+This allows us to manage the ArgoCD application definitions in a declarative way as well. It is a common pattern to have one ArgoCD application which references n child Applications which allows us a fast bootstrapping of a whole environment or a new cluster. This pattern is well known as the [App of apps](https://argoproj.github.io/argo-cd/operator-manual/cluster-bootstrapping/#app-of-apps-pattern) pattern. 
+
+
+## Task {{% param sectionnumber %}}.9: Delete the Application
 
 You can cascading delete the ArgoCD Application with the following command:
 
@@ -464,4 +468,4 @@ You can cascading delete the ArgoCD Application with the following command:
 argocd app delete argo-$LAB_USER
 ```
 
-This will delete the `applications` Manifests of ArgoCD and all created resources by this application. In our case the `application`, `deployment` and `service` will be deleted.  With the flag `--cascade=false` only the ArgoCD `application` will be deleted and the created resources `deployment` and `service` remain untouched.
+This will delete the `Application` Manifests of ArgoCD and all created resources by this application. In our case the `Application`, `Deployment` and `Service` will be deleted.  With the flag `--cascade=false` only the ArgoCD `Application` will be deleted and the created resources `Deployment` and `Service` remain untouched.
