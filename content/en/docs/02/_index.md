@@ -333,32 +333,34 @@ By default, changes made to the live cluster will not trigger automatic sync. To
 argocd app set argo-$LAB_USER --self-heal
 ```
 
-Watch the deployment `data-producer` in a separate terminal
+Watch the deployment `example-php-docker-helloworld` in a separate terminal
 
 ```bash
-kubectl get deployment data-producer -w
+kubectl get deployment example-php-docker-helloworld -w
 ```
 
-Let's scale our `data-producer` Deployment and observe whats happening:
+Let's scale our `example-php-docker-helloworld` Deployment and observe whats happening:
 
 ```bash
-kubectl scale deployment data-producer --replicas=1
+kubectl scale deployment example-php-docker-helloworld --replicas=3
 ```
 
-Argo CD will immediately scale back the `data-producer` Deployment to `2` replicas. You will see the desired replicas count in the watched Deployment.
+Argo CD will immediately scale back the `example-php-docker-helloworld` Deployment to `1` replicas. You will see the desired replicas count in the watched Deployment.
 
 ```
-NAME            READY   UP-TO-DATE   AVAILABLE   AGE
-data-producer   2/2     2            2           78m
-data-producer   2/1     2            2           78m
-data-producer   2/1     2            2           78m
-data-producer   1/1     1            1           78m
-data-producer   1/2     1            1           78m
-data-producer   1/2     1            1           78m
-data-producer   1/2     1            1           78m
-data-producer   1/2     2            1           78m
-data-producer   2/2     2            2           78m
+NAME                            READY   UP-TO-DATE   AVAILABLE   AGE
+example-php-docker-helloworld   1/1     1            1           114m
+example-php-docker-helloworld   1/3     1            1           114m
+example-php-docker-helloworld   1/3     1            1           114m
+example-php-docker-helloworld   1/3     1            1           114m
+example-php-docker-helloworld   1/3     3            1           114m
+example-php-docker-helloworld   1/1     3            1           114m
+example-php-docker-helloworld   1/1     3            1           114m
+example-php-docker-helloworld   1/1     3            1           114m
+example-php-docker-helloworld   1/1     1            1           114m
 ```
+
+This is a great way to enforce a strict GitOps principle. Changes which are manually made on deployed resource manifests are reverted immediately back to the desired state by the ArgoCD controller.
 
 
 ## Task {{% param sectionnumber %}}.7: Pruning
