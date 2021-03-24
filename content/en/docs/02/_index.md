@@ -363,15 +363,15 @@ example-php-docker-helloworld   1/1     1            1           114m
 This is a great way to enforce a strict GitOps principle. Changes which are manually made on deployed resource manifests are reverted immediately back to the desired state by the ArgoCD controller.
 
 
-## Task {{% param sectionnumber %}}.7: Pruning
+## Task {{% param sectionnumber %}}.6: Pruning
 
 You probably asked yourself how can I delete deployed resources on the container platform? Argo CD can be configured to delete resources that no longer exist in the Git repository.
 
-First delete the file `imageStream.yaml` from Git repository and push the changes
+First delete the file `example-php-docker-helloworld-svc.yaml` from Git repository and push the changes
 
 ```bash
-git rm imageStream.yaml
-git add --all && git commit -m 'Removes ImageStream' && git push
+git rm example-php-docker-helloworld-svc.yaml
+git add --all && git commit -m 'Removes service' && git push
 
 ```
 
@@ -384,12 +384,9 @@ argocd app get argo-$LAB_USER --refresh
 You will see that even with auto-sync and self-healing enabled the status is still OutOfSync
 
 ```
-GROUP               KIND         NAMESPACE    NAME           STATUS     HEALTH   HOOK  MESSAGE
-...
-build.openshift.io  BuildConfig  <username>  data-producer  Synced
-image.openshift.io  ImageStream  <username>  data-producer  OutOfSync
-kafka.strimzi.io    Kafka        <username>  amm-techlab    Synced
-...
+GROUP  KIND        NAMESPACE    NAME                           STATUS     HEALTH   HOOK  MESSAGE
+apps   Deployment  <username>   example-php-docker-helloworld  Synced     Healthy        deployment.apps/example-php-docker-helloworld configured
+       Service     <username>   example-php-docker-helloworld  OutOfSync  Healthy        
 ```
 
 Now enable the auto pruning explicitly:
@@ -404,21 +401,16 @@ Recheck the status again
 argocd app get argo-$LAB_USER --refresh
 ```
 
-Now the ImageStream was successfully deleted by Argo CD.
-
 ```
-GROUP               KIND         NAMESPACE    NAME           STATUS     HEALTH   HOOK  MESSAGE
-...
-image.openshift.io  ImageStream  <username>  data-producer  Succeeded  Pruned         pruned
-                    Service      <username>  data-producer  Synced     Healthy        service/data-producer unchanged
-                    Service      <username>  data-consumer  Synced     Healthy        service/data-consumer unchanged
-apps                Deployment   <username>  data-producer  Synced     Healthy        deployment.apps/data-producer unchanged
-...
-
+GROUP  KIND        NAMESPACE    NAME                           STATUS     HEALTH   HOOK  MESSAGE
+       Service     <username>   example-php-docker-helloworld  Succeeded  Pruned         pruned
+apps   Deployment  <username>   example-php-docker-helloworld  Synced     Healthy        deployment.apps/example-php-docker-helloworld unchanged
 ```
 
+The Service was successfully deleted by Argo CD because the manifest was removed from git. See the HEALTH and MESSAGE of the previous console output.
 
-## Task {{% param sectionnumber %}}.8: State of ArgoCD
+
+## Task {{% param sectionnumber %}}.7: State of ArgoCD
 
 Argo CD is largely built stateless. The configuration is persisted as native Kubernetes objects. And those are stored in Kubernetes _etcd_. There is no additional storage layer needed to run ArgoCD. The Redis storage under the hood acts just as a throw-away cache and can be evicted anytime without any data loss.
 
@@ -450,7 +442,7 @@ kubectl edit app argo-<username>
 This allows us to manage the ArgoCD application definitions in a declarative way as well. It is a common pattern to have one ArgoCD application which references n child Applications which allows us a fast bootstrapping of a whole environment or a new cluster. This pattern is well known as the [App of apps](https://argoproj.github.io/argo-cd/operator-manual/cluster-bootstrapping/#app-of-apps-pattern) pattern. 
 
 
-## Task {{% param sectionnumber %}}.9: Delete the Application
+## Task {{% param sectionnumber %}}.8: Delete the Application
 
 You can cascading delete the ArgoCD Application with the following command:
 
