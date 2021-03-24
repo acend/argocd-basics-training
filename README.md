@@ -48,7 +48,7 @@ git submodule update --remote
 Build the image:
 
 ```bash
-docker build <--build-arg ACEND_HUGO_ENV=...> -t acend/argocd-training .
+docker build --build-arg ACEND_HUGO_ENV=puzzle -t acend/argocd-training .
 ```
 
 Run it locally:
