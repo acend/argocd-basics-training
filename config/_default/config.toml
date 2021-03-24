@@ -72,6 +72,8 @@ url = "https://www.acend.ch"
 copyright = "acend gmbh"
 github_repo = "https://github.com/acend/argocd-training"
 github_branch = "main"
+argoCdUrl = "argocd.techlab.openshift.ch"
+giteaUrl = "gitea.techlab.openshift.ch"
 
 enabledModule = "base"
 techlabClusterWebConsolePrefix = "console"
