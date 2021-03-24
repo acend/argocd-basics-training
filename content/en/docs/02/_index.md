@@ -128,9 +128,9 @@ You should see an output similar to the following lines:
 
 ```
 TIMESTAMP                  GROUP        KIND   NAMESPACE                   NAME             STATUS    HEALTH        HOOK  MESSAGE
-2021-03-24T14:19:16+01:00            Service  hannelore42  example-php-docker-helloworld  OutOfSync  Missing
-2021-03-24T14:19:16+01:00   apps  Deployment  hannelore42  example-php-docker-helloworld  OutOfSync  Missing
-2021-03-24T14:19:16+01:00            Service  hannelore42  example-php-docker-helloworld    Synced  Healthy
+2021-03-24T14:19:16+01:00            Service  <username>  example-php-docker-helloworld  OutOfSync  Missing
+2021-03-24T14:19:16+01:00   apps  Deployment  <username>  example-php-docker-helloworld  OutOfSync  Missing
+2021-03-24T14:19:16+01:00            Service  <username>  example-php-docker-helloworld    Synced  Healthy
 
 Name:               argo-<username>
 Project:            default
@@ -172,95 +172,60 @@ Detailed view of a application in unsynced and synced state
 
 ## Task {{% param sectionnumber %}}.4: Automated Sync Policy and Diff
 
-When there is a new commit in your Git repository, the Argo CD application becomes OutOfSync. Let's assume we want to scale up our producer of the previous lab from 1 to 2 replicas. We will change this in the Deployment.
+When there is a new commit in your Git repository, the Argo CD application becomes OutOfSync. Let's assume we want to scale up our `Deployment` of the example application from 1 to 2 replicas. We will change this in the Deployment manifest.
 
-
-Change the number of replicas in your file `<workspace>/producer.yaml`.
+Increase the number of replicas in your file `<workspace>/example-app/example-php-docker-helloworld-deployment.yaml` to 2.
 
 ```
-{{< highlight YAML "hl_lines=9" >}}
+{{< highlight YAML "hl_lines=6" >}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    app: data-producer
-    application: amm-techlab
-  name: data-producer
+  name: example-php-docker-helloworld
 spec:
   replicas: 2
+  revisionHistoryLimit: 3
   selector:
     matchLabels:
-      deployment: data-producer
-  strategy:
-    type: Recreate
-...
+      app: example-php-docker-helloworld
+  template:
+    metadata:
+      labels:
+        app: example-php-docker-helloworld
+    spec:
+      containers:
+      - image: appuio/example-php-docker-helloworld
+        name: example-php-docker-helloworld
+        ports:
+        - containerPort: 8080
 {{< / highlight >}}
 ```
 
-Commit the changes and push them to the remote:
+
+<!--- TODO bb: verify initial authentication against git, describe if necessary -->
 
 
-
-
-
-// TODO: describe initial authentication against git
-
-Now add the resource definitions to your personal Git repository and push them to remote. Use the password you entered when creating your Gitea user.
-
-After the Git push command a password input field will appear at the top of the Web IDE. You need to enter your Gitea password there.
+Commit the changes and push them to your personal remote Git repository. After the Git push command a password input field will appear at the top of the Web IDE. You need to enter your Gitea password there.
 
 ```bash
-git add --all
-git commit -m "Initial commit of resource definitions"
-git remote add origin https://$LAB_USER@{{% param giteaUrl %}}/$LAB_USER/amm-argocd-example.git
-git push -u origin master
-
+git add example-php-docker-helloworld-deployment.yaml
+git commit -m "Increased replicas to 2"
+git push
 ```
 
 After a successful push you should see the following output
 
 ```bash
-Enumerating objects: 15, done.
-Counting objects: 100% (15/15), done.
-Delta compression using up to 4 threads
-Compressing objects: 100% (15/15), done.
-Writing objects: 100% (15/15), 4.02 KiB | 4.02 MiB/s, done.
-Total 15 (delta 1), reused 0 (delta 0)
-remote: . Processing 1 references
-remote: Processed 1 references in total
-To https://{{% param giteaUrl %}}/<username>/amm-argocd-example.git
- * [new branch]      master -> master
-```
-
-Go back to the webinterface of Gitea and inspect the structure and files in your personal Git repository: `https://{{% param giteaUrl %}}/<username>/amm-argocd-example`
-
-// TODO ends
-
-
-
-
-
-```bash
-git add . && git commit -m 'Scaled up to 2 replicas' && git push
-```
-
-Don't forget to interactively provide your personal Git password. After a successful push you should see a message similar to the following lines:
-
-```
-[master 18daed3] Scaled up to 2 replicas
- 1 file changed, 1 insertion(+), 1 deletion(-)
 Enumerating objects: 7, done.
 Counting objects: 100% (7/7), done.
-Delta compression using up to 4 threads
+Delta compression using up to 8 threads
 Compressing objects: 100% (4/4), done.
-Writing objects: 100% (4/4), 372 bytes | 372.00 KiB/s, done.
-Total 4 (delta 2), reused 0 (delta 0)
-remote: . Processing 1 references
-remote: Processed 1 references in total
+Writing objects: 100% (4/4), 367 bytes | 367.00 KiB/s, done.
+Total 4 (delta 3), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (3/3), completed with 3 local objects.
 To https://{{% param giteaUrl %}}/<username>/amm-argocd-example.git
-   fe4e2b6..18daed3  master -> master
+   5a6f365..e2d4bbf  master -> master
 ```
-
 
 Check the state of the resources by cli:
 
@@ -268,18 +233,27 @@ Check the state of the resources by cli:
 argocd app get argo-$LAB_USER --refresh
 ```
 
-The parameter `--refresh` triggers an update against the Git repository. Out of the box Git will be polled by Argo CD. To use a synchronous workflow you can use webhooks in Git. These will trigger a synchronization in Argo CD on every push to the repository.
+The parameter `--refresh` triggers an update against the Git repository. Out of the box Git will be polled by Argo CD in a predefined interval (defaults to 3 minutes). To use a synchronous workflow you can use webhooks in Git. These will trigger a synchronization in Argo CD on every push to the repository.
 
-You will see that the data-producer is OutOfSync:
+You will see that the Deployment is now OutOfSync:
 
 ```
-...
-GROUP               KIND         NAMESPACE    NAME           STATUS     HEALTH   HOOK  MESSAGE
-                    Service      <username>  data-producer  Synced     Healthy        service/data-producer unchanged
-                    Service      <username>  data-consumer  Synced     Healthy        service/data-consumer unchanged
-apps                Deployment   <username>  data-producer  OutOfSync  Healthy        deployment.apps/data-producer configured
-apps                Deployment   <username>  data-consumer  Synced     Healthy        deployment.apps/data-consumer unchanged
-...
+Name:               argo-<username>
+Project:            default
+Server:             https://kubernetes.default.svc
+Namespace:          <username>
+URL:                https://{{% param argoCdUrl %}}/applications/argo-<username>
+Repo:               https://{{% param giteaUrl %}}/<username>/amm-argocd-example.git
+Target:             
+Path:               example-app
+SyncWindow:         Sync Allowed
+Sync Policy:        <none>
+Sync Status:        OutOfSync from  (e2d4bbf)
+Health Status:      Healthy
+
+GROUP  KIND        NAMESPACE    NAME                           STATUS     HEALTH   HOOK  MESSAGE
+       Service     <username>   example-php-docker-helloworld  Synced     Healthy        service/example-php-docker-helloworld created
+apps   Deployment  <username>   example-php-docker-helloworld  OutOfSync  Healthy        deployment.apps/example-php-docker-helloworld created
 ```
 
 When an application is OutOfSync then your deployed 'live state' is no longer the same as the 'target state' which is represented by the resource manifests in the Git repository. You can inspect the differences between live and target state by cli:
@@ -291,20 +265,20 @@ argocd app diff argo-$LAB_USER
 which should give you an output similar to:
 
 ```
-===== apps/Deployment <username>/data-producer ======
-155c155
+===== apps/Deployment <username>/example-php-docker-helloworld ======
+101c102
 <   replicas: 1
 ---
 >   replicas: 2
 ```
 
-Now open the web console of Argo CD and go to your application. The deployment `data-producer` is marked as 'OutOfSync':
+Now open the web console of Argo CD and go to your application. The deployment `example-php-docker-helloworld` is marked as 'OutOfSync':
 
-![Application Out-of-Sync](../argo-outofsynch.png)
+![Application Out-of-Sync](app-replicas-diff-overview.png)
 
 With a click on Deployment > Diff you will see the differences:
 
-![Application Differences](../argo-diff.png)
+![Application Differences](app-replicas-diff-detail.png)
 
 
 Now click `Sync` on the top left and let the magic happens ;) The producer will be scaled up to 2 replicas and the resources are in Sync again.
@@ -316,14 +290,22 @@ argocd app get argo-$LAB_USER
 ```
 
 ```
-...
-GROUP               KIND         NAMESPACE    NAME           STATUS  HEALTH       HOOK  MESSAGE
-                    Service      <username>  data-consumer  Synced  Healthy            service/data-consumer unchanged
-                    Service      <username>  data-producer  Synced  Healthy            service/data-producer unchanged
-apps                Deployment   <username>  data-consumer  Synced  Healthy            deployment.apps/data-consumer unchanged
-apps                Deployment   <username>  data-producer  Synced  Progressing        deployment.apps/data-producer configured
-kafka.strimzi.io    Kafka        <username>  amm-techlab    Synced                     kafka.kafka.strimzi.io/amm-techlab unchanged
-...
+Name:               argo-<username>
+Project:            default
+Server:             https://kubernetes.default.svc
+Namespace:          <username>
+URL:                https://{{% param argoCdUrl %}}/applications/argo-<username>
+Repo:               https://{{% param giteaUrl %}}/<username>/amm-argocd-example.git
+Target:             
+Path:               example-app
+SyncWindow:         Sync Allowed
+Sync Policy:        <none>
+Sync Status:        Synced to  (e2d4bbf)
+Health Status:      Healthy
+
+GROUP  KIND        NAMESPACE    NAME                           STATUS  HEALTH   HOOK  MESSAGE
+       Service     <username>   example-php-docker-helloworld  Synced  Healthy        service/example-php-docker-helloworld unchanged
+apps   Deployment  <username>   example-php-docker-helloworld  Synced  Healthy        deployment.apps/example-php-docker-helloworld configured
 ```
 
 Argo CD can automatically sync an application when it detects differences between the desired manifests in Git, and the live state in the cluster. A benefit of automatic sync is that CI/CD pipelines no longer need direct access to the Argo CD API server to perform the deployment. Instead, the pipeline makes a commit and push to the Git repository with the changes to the manifests in the tracking Git repo.
@@ -334,7 +316,13 @@ To configure automatic sync run (or use the UI):
 argocd app set argo-$LAB_USER --sync-policy automated
 ```
 
-From now on Argo CD will automatically synchronize resources every time you commit to the Git repository.
+From now on Argo CD will automatically apply all resources to Kubernetes every time you commit to the Git repository.
+
+Decrease the replicas count to 1 and push the updated manifest to remote. Wait for a few moments and see check that ArgoCD will scale the deployment of the example app down to 1 replica. The default polling interval is 3 minutes. If you don't want to wait you can force a refresh by clicking `Refresh` in the UI or by cli:
+
+```bash
+argocd app get argo-$LAB_USER --refresh
+```
 
 
 ## Task {{% param sectionnumber %}}.5: Automatic Self-Healing
@@ -468,4 +456,4 @@ You can cascading delete the ArgoCD Application with the following command:
 argocd app delete argo-$LAB_USER
 ```
 
-This will delete the `Application` Manifests of ArgoCD and all created resources by this application. In our case the `Application`, `Deployment` and `Service` will be deleted.  With the flag `--cascade=false` only the ArgoCD `Application` will be deleted and the created resources `Deployment` and `Service` remain untouched.
+This will delete the `Application` manifests of ArgoCD and all created resources by this application. In our case the `Application`, `Deployment` and `Service` will be deleted.  With the flag `--cascade=false` only the ArgoCD `Application` will be deleted and the created resources `Deployment` and `Service` remain untouched.
