@@ -25,6 +25,22 @@ Managing Kubernetes resources using a GitOps approach brings the following benef
 * Die Entwickler beschreiben die Infrastruktur in bereits bekannten Formaten und Tools wie yaml und Git.
 
 
+Argo CD follows the GitOps pattern of using Git repositories as the source of truth for defining the desired application state. Kubernetes manifests can be specified in several ways:
+
+* [kustomize](https://kustomize.io/) applications
+* [helm](https://helm.sh/) charts
+* [ksonnet](https://github.com/ksonnet/ksonnet) applications
+* [jsonnet](https://jsonnet.org/) files
+* Plain directory of YAML/json manifests
+* Any custom config management tool configured as a config management plugin
+
+Argo CD automates the deployment of the desired application states in the specified target environments. Application deployments can track updates to branches, tags, or pinned to a specific version of manifests at a Git commit. See tracking strategies for additional details about the different tracking strategies available.
+
+For a quick 10 minute overview of Argo CD, check out the demo presented to the Sig Apps community meeting:
+
+{{< youtube aWDIQMbp1cc >}}
+
+
 ## Argo CD Architecture
 
 Argo CDs core components are the API Server, the Repository Server and the Application Controller
