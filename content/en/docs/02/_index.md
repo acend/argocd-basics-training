@@ -45,14 +45,6 @@ export LAB_USER=<username>
 echo $LAB_USER
 ```
 
-When using the Web IDE: Configure the Git Client and verify the output
-
-```bash
-git config user.name "$LAB_USER"
-git config user.email "foo@bar.org"
-git config --local --list
-```
-
 Clone the forked repository to your local workspace:
 
 ```bash
