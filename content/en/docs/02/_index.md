@@ -4,25 +4,14 @@ weight: 2
 sectionnumber: 2
 ---
 
-
-## Task {{% param sectionnumber %}}.1: Getting started
-
-You can access Argo CD via Web UI (URL is provided by your teacher) or using the CLI. The Argo CD CLI Tool is already installed on the web IDE.
-
-Since the sso login does not work inside the Web IDE for various reasons, your teacher will provide a generic local Argo CD account `hannelore` without any number.
-
-```bash
-argocd login {{% param argoCdUrl %}} --grpc-web --username hannelore
-```
-
-{{% alert title="Note" color="primary" %}}Make sure to pass the `<ARGOCD_SERVER>` without protocol e.g. `argocd.domain.com`. The `--grpc-web` parameter is necessary due to missing http 2.0 router.{{% /alert %}}
+In this lab you will learn how to deploy a simple application using Argo CD.
 
 
-## Task {{% param sectionnumber %}}.2: Fork the Git repository
+## Task {{% param sectionnumber %}}.1: Fork the Git repository
 
 As we are proceeding according to the GitOps principle we need some example resource manifests in a Git repository which we can edit.
 
-Users which have a personal Github account can just fork the Repository [amm-argocd-example](https://github.com/puzzle/amm-argocd-example) to their personal account. To fork the repository click on the top right of the Github on _Fork_.
+Users which have a personal Github account can just fork the Repository [amm-argocd-example](https://github.com/acend/amm-argocd-example) to their personal account. To fork the repository click on the top right of the Github on _Fork_.
 
 All other users can use the provided Gitea installation of the personal lab environment. Visit `https://{{% param giteaUrl %}}/` with your browser and register a new account with your personal username and a password that you can remember ;)
 
@@ -33,7 +22,7 @@ All other users can use the provided Gitea installation of the personal lab envi
 Login with the new user and fork the existing Git repository from Github:
 
 1. Select _Create_ on the top right -> _New Migration_ -> Select _GitHub_
-1. Migrate / Clone From URL: https://github.com/puzzle/amm-argocd-example.git
+1. Migrate / Clone From URL: https://github.com/acend/amm-argocd-example.git
 1. Click _Migrate Repository_
 
 The URL of the newly forked Git repository will look like `https://{{% param giteaUrl %}}/<username>/amm-argocd-example.git`
@@ -68,7 +57,7 @@ git config --local --list
 ```
 
 
-## Task {{% param sectionnumber %}}.3: Deploying the resources with Argo CD
+## Task {{% param sectionnumber %}}.2: Deploying the resources with Argo CD
 
 Now we want to deploy the resource manifests contained in the cloned repository with Argo CD to demonstrate the basic features of Argo CD.
 
@@ -170,7 +159,7 @@ Detailed view of a application in unsynced and synced state
 ![Application Tree (synced state)](app-tree-sycned.png)
 
 
-## Task {{% param sectionnumber %}}.4: Automated Sync Policy and Diff
+## Task {{% param sectionnumber %}}.3: Automated Sync Policy and Diff
 
 When there is a new commit in your Git repository, the Argo CD application becomes OutOfSync. Let's assume we want to scale up our `Deployment` of the example application from 1 to 2 replicas. We will change this in the Deployment manifest.
 
@@ -281,7 +270,7 @@ With a click on Deployment > Diff you will see the differences:
 ![Application Differences](app-replicas-diff-detail.png)
 
 
-Now click `Sync` on the top left and let the magic happens ;) The producer will be scaled up to 2 replicas and the resources are in Sync again.
+Now click `Sync` on the top left and let the magic happens ;) The application will be scaled up to 2 replicas and the resources are in Sync again.
 
 Double-check the status by cli
 
@@ -325,7 +314,7 @@ argocd app get argo-$LAB_USER --refresh
 ```
 
 
-## Task {{% param sectionnumber %}}.5: Automatic Self-Healing
+## Task {{% param sectionnumber %}}.4: Automatic Self-Healing
 
 By default, changes made to the live cluster will not trigger automatic sync. To enable automatic sync when the live cluster's state deviates from the state defined in Git, run:
 
@@ -363,7 +352,7 @@ example-php-docker-helloworld   1/1     1            1           114m
 This is a great way to enforce a strict GitOps principle. Changes which are manually made on deployed resource manifests are reverted immediately back to the desired state by the ArgoCD controller.
 
 
-## Task {{% param sectionnumber %}}.6: Pruning
+## Task {{% param sectionnumber %}}.5: Pruning
 
 You probably asked yourself how can I delete deployed resources on the container platform? Argo CD can be configured to delete resources that no longer exist in the Git repository.
 
@@ -410,7 +399,7 @@ apps   Deployment  <username>   example-php-docker-helloworld  Synced     Health
 The Service was successfully deleted by Argo CD because the manifest was removed from git. See the HEALTH and MESSAGE of the previous console output.
 
 
-## Task {{% param sectionnumber %}}.7: State of ArgoCD
+## Task {{% param sectionnumber %}}.6: State of ArgoCD
 
 Argo CD is largely built stateless. The configuration is persisted as native Kubernetes objects. And those are stored in Kubernetes _etcd_. There is no additional storage layer needed to run ArgoCD. The Redis storage under the hood acts just as a throw-away cache and can be evicted anytime without any data loss.
 
@@ -442,7 +431,7 @@ kubectl edit app argo-<username>
 This allows us to manage the ArgoCD application definitions in a declarative way as well. It is a common pattern to have one ArgoCD application which references n child Applications which allows us a fast bootstrapping of a whole environment or a new cluster. This pattern is well known as the [App of apps](https://argoproj.github.io/argo-cd/operator-manual/cluster-bootstrapping/#app-of-apps-pattern) pattern.
 
 
-## Task {{% param sectionnumber %}}.8: Delete the Application
+## Task {{% param sectionnumber %}}.7: Delete the Application
 
 You can cascading delete the ArgoCD Application with the following command:
 
