@@ -57,7 +57,7 @@ git clone https://$LAB_USER@{{% param giteaUrl %}}/$LAB_USER/amm-argocd-example.
 https://github.com/<github-username>/amm-argocd-example
 ```
 
-Change the working directory to the cloned git repository: `cd amm-argocd-example`
+Change the working directory to the cloned git repository: `cd amm-argocd-example/example-app`
 
 When using the Web IDE: Configure the Git Client and verify the output
 
