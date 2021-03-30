@@ -115,3 +115,14 @@ git push
 ```
 {{% /details %}}
 
+
+## Task {{% param sectionnumber %}}.4: Delete the Application
+
+Delete the application after you've explored the Argo CD Resources and the managed Kubernetes resources.
+
+{{% details title="Hint" %}}
+```bash
+argocd app delete argo-complex-$LAB_USER
+
+```
+{{% /details %}}

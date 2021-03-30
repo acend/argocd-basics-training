@@ -11,7 +11,7 @@ In this lab you will learn how to deploy a simple application using Argo CD.
 
 As we are proceeding according to the GitOps principle we need some example resource manifests in a Git repository which we can edit.
 
-Users which have a personal Github account can just fork the Repository [amm-argocd-example](https://github.com/acend/amm-argocd-example) to their personal account. To fork the repository click on the top right of the Github on _Fork_.
+Users which have a personal Github account can just fork the Repository [argocd-training-examples](https://github.com/acend/argocd-training-examples) to their personal account. To fork the repository click on the top right of the Github on _Fork_.
 
 All other users can use the provided Gitea installation of the personal lab environment. Visit `https://{{% param giteaUrl %}}/` with your browser and register a new account with your personal username and a password that you can remember ;)
 
@@ -22,10 +22,10 @@ All other users can use the provided Gitea installation of the personal lab envi
 Login with the new user and fork the existing Git repository from Github:
 
 1. Select _Create_ on the top right -> _New Migration_ -> Select _GitHub_
-1. Migrate / Clone From URL: https://github.com/acend/amm-argocd-example.git
+1. Migrate / Clone From URL: https://github.com/acend/argocd-training-examples.git
 1. Click _Migrate Repository_
 
-The URL of the newly forked Git repository will look like `https://{{% param giteaUrl %}}/<username>/amm-argocd-example.git`
+The URL of the newly forked Git repository will look like `https://{{% param giteaUrl %}}/<username>/argocd-training-examples.git`
 
 Set the `LAB_USER` environment variable to your personal user:
 
@@ -37,16 +37,16 @@ echo $LAB_USER
 Clone the forked repository to your local workspace:
 
 ```bash
-git clone https://$LAB_USER@{{% param giteaUrl %}}/$LAB_USER/amm-argocd-example.git
+git clone https://$LAB_USER@{{% param giteaUrl %}}/$LAB_USER/argocd-training-examples.git
 ```
 
 ... or when forked to Github with:
 
 ```bash
-https://github.com/<github-username>/amm-argocd-example
+https://github.com/<github-username>/argocd-training-examples
 ```
 
-Change the working directory to the cloned git repository: `cd amm-argocd-example/example-app`
+Change the working directory to the cloned git repository: `cd argocd-training-examples/example-app`
 
 When using the Web IDE: Configure the Git Client and verify the output
 
@@ -64,7 +64,7 @@ Now we want to deploy the resource manifests contained in the cloned repository 
 To deploy the resources using the Argo CD CLI use the following command:
 
 ```bash
-argocd app create argo-$LAB_USER --repo https://{{% param giteaUrl %}}/$LAB_USER/amm-argocd-example.git --path 'example-app' --dest-server https://kubernetes.default.svc --dest-namespace $LAB_USER
+argocd app create argo-$LAB_USER --repo https://{{% param giteaUrl %}}/$LAB_USER/argocd-training-examples.git --path 'example-app' --dest-server https://kubernetes.default.svc --dest-namespace $LAB_USER
 ```
 
 
@@ -85,7 +85,7 @@ Project:            default
 Server:             https://kubernetes.default.svc
 Namespace:          <username>
 URL:                https://{{% param argoCdUrl %}}/applications/argo-<username>
-Repo:               https://{{% param giteaUrl %}}/<username>/amm-argocd-example.git
+Repo:               https://{{% param giteaUrl %}}/<username>/argocd-training-examples.git
 Target:
 Path:               example-app
 SyncWindow:         Sync Allowed
@@ -93,9 +93,9 @@ Sync Policy:        <none>
 Sync Status:        OutOfSync from  (5a6f365)
 Health Status:      Missing
 
-GROUP  KIND        NAMESPACE    NAME                           STATUS     HEALTH   HOOK  MESSAGE
-       Service     <username>  example-php-docker-helloworld  OutOfSync  Missing
-apps   Deployment  <username>  example-php-docker-helloworld  OutOfSync  Missing
+GROUP  KIND        NAMESPACE    NAME           STATUS     HEALTH   HOOK  MESSAGE
+       Service     <username>  simple-example  OutOfSync  Missing
+apps   Deployment  <username>  simple-example  OutOfSync  Missing
 ```
 
 
@@ -110,17 +110,17 @@ This command retrieves the manifests from the git repository and performs a `{{%
 You should see an output similar to the following lines:
 
 ```
-TIMESTAMP                  GROUP        KIND   NAMESPACE                   NAME             STATUS    HEALTH        HOOK  MESSAGE
-2021-03-24T14:19:16+01:00            Service  <username>  example-php-docker-helloworld  OutOfSync  Missing
-2021-03-24T14:19:16+01:00   apps  Deployment  <username>  example-php-docker-helloworld  OutOfSync  Missing
-2021-03-24T14:19:16+01:00            Service  <username>  example-php-docker-helloworld    Synced  Healthy
+TIMESTAMP                  GROUP        KIND   NAMESPACE  NAME            STATUS    HEALTH        HOOK  MESSAGE
+2021-03-24T14:19:16+01:00            Service  <username>  simple-example  OutOfSync  Missing
+2021-03-24T14:19:16+01:00   apps  Deployment  <username>  simple-example  OutOfSync  Missing
+2021-03-24T14:19:16+01:00            Service  <username>  simple-example    Synced  Healthy
 
 Name:               argo-<username>
 Project:            default
 Server:             https://kubernetes.default.svc
 Namespace:          <username>
 URL:                https://{{% param argoCdUrl %}}/applications/argo-<username>
-Repo:               https://{{% param giteaUrl %}}/<username>/amm-argocd-example.git
+Repo:               https://{{% param giteaUrl %}}/<username>/argocd-training-examples.git
 Target:
 Path:               example-app
 SyncWindow:         Sync Allowed
@@ -136,9 +136,9 @@ Finished:           2021-03-24 14:19:16 +0100 CET
 Duration:           0s
 Message:            successfully synced (all tasks run)
 
-GROUP  KIND        NAMESPACE    NAME                           STATUS  HEALTH       HOOK  MESSAGE
-       Service     <username>  example-php-docker-helloworld  Synced  Healthy            service/example-php-docker-helloworld created
-apps   Deployment  <username>  example-php-docker-helloworld  Synced  Progressing        deployment.apps/example-php-docker-helloworld created
+GROUP  KIND        NAMESPACE    NAME           STATUS  HEALTH       HOOK  MESSAGE
+       Service     <username>  simple-example  Synced  Healthy            service/simple-example created
+apps   Deployment  <username>  simple-example  Synced  Progressing        deployment.apps/simple-example created
 ```
 
 Check the Argo CD UI to browse the application and their components. The URL of the Argo CD webinterface will be provided by the teacher.
@@ -157,30 +157,30 @@ Detailed view of a application in unsynced and synced state
 
 When there is a new commit in your Git repository, the Argo CD application becomes OutOfSync. Let's assume we want to scale up our `Deployment` of the example application from 1 to 2 replicas. We will change this in the Deployment manifest.
 
-Increase the number of replicas in your file `<workspace>/example-app/example-php-docker-helloworld-deployment.yaml` to 2.
+Increase the number of replicas in your file `<workspace>/example-app/deployment.yaml` to 2.
 
 ```
 {{< highlight YAML "hl_lines=6" >}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: example-php-docker-helloworld
+  name: simple-example
 spec:
   replicas: 2
   revisionHistoryLimit: 3
   selector:
     matchLabels:
-      app: example-php-docker-helloworld
+      app: simple-example
   template:
     metadata:
       labels:
-        app: example-php-docker-helloworld
+        app: simple-example
     spec:
       containers:
-      - image: appuio/example-php-docker-helloworld
-        name: example-php-docker-helloworld
+      - image: quay.io/acend/example-web-go
+        name: simple-example
         ports:
-        - containerPort: 8080
+        - containerPort: 5000
 {{< / highlight >}}
 ```
 
@@ -191,7 +191,7 @@ spec:
 Commit the changes and push them to your personal remote Git repository. After the Git push command a password input field will appear at the top of the Web IDE. You need to enter your Gitea password there.
 
 ```bash
-git add example-php-docker-helloworld-deployment.yaml
+git add deployment.yaml
 git commit -m "Increased replicas to 2"
 git push
 ```
@@ -206,7 +206,7 @@ Compressing objects: 100% (4/4), done.
 Writing objects: 100% (4/4), 367 bytes | 367.00 KiB/s, done.
 Total 4 (delta 3), reused 0 (delta 0), pack-reused 0
 remote: Resolving deltas: 100% (3/3), completed with 3 local objects.
-To https://{{% param giteaUrl %}}/<username>/amm-argocd-example.git
+To https://{{% param giteaUrl %}}/<username>/argocd-training-examples.git
    5a6f365..e2d4bbf  master -> master
 ```
 
@@ -226,7 +226,7 @@ Project:            default
 Server:             https://kubernetes.default.svc
 Namespace:          <username>
 URL:                https://{{% param argoCdUrl %}}/applications/argo-<username>
-Repo:               https://{{% param giteaUrl %}}/<username>/amm-argocd-example.git
+Repo:               https://{{% param giteaUrl %}}/<username>/argocd-training-examples.git
 Target:
 Path:               example-app
 SyncWindow:         Sync Allowed
@@ -234,9 +234,9 @@ Sync Policy:        <none>
 Sync Status:        OutOfSync from  (e2d4bbf)
 Health Status:      Healthy
 
-GROUP  KIND        NAMESPACE    NAME                           STATUS     HEALTH   HOOK  MESSAGE
-       Service     <username>   example-php-docker-helloworld  Synced     Healthy        service/example-php-docker-helloworld created
-apps   Deployment  <username>   example-php-docker-helloworld  OutOfSync  Healthy        deployment.apps/example-php-docker-helloworld created
+GROUP  KIND        NAMESPACE    NAME            STATUS     HEALTH   HOOK  MESSAGE
+       Service     <username>   simple-example  Synced     Healthy        service/simple-example created
+apps   Deployment  <username>   simple-example  OutOfSync  Healthy        deployment.apps/simple-example created
 ```
 
 When an application is OutOfSync then your deployed 'live state' is no longer the same as the 'target state' which is represented by the resource manifests in the Git repository. You can inspect the differences between live and target state by cli:
@@ -248,14 +248,14 @@ argocd app diff argo-$LAB_USER
 which should give you an output similar to:
 
 ```
-===== apps/Deployment <username>/example-php-docker-helloworld ======
+===== apps/Deployment <username>/simple-example ======
 101c102
 <   replicas: 1
 ---
 >   replicas: 2
 ```
 
-Now open the web console of Argo CD and go to your application. The deployment `example-php-docker-helloworld` is marked as 'OutOfSync':
+Now open the web console of Argo CD and go to your application. The deployment `simple-example` is marked as 'OutOfSync':
 
 ![Application Out-of-Sync](app-replicas-diff-overview.png)
 
@@ -278,7 +278,7 @@ Project:            default
 Server:             https://kubernetes.default.svc
 Namespace:          <username>
 URL:                https://{{% param argoCdUrl %}}/applications/argo-<username>
-Repo:               https://{{% param giteaUrl %}}/<username>/amm-argocd-example.git
+Repo:               https://{{% param giteaUrl %}}/<username>/argocd-training-examples.git
 Target:
 Path:               example-app
 SyncWindow:         Sync Allowed
@@ -286,9 +286,9 @@ Sync Policy:        <none>
 Sync Status:        Synced to  (e2d4bbf)
 Health Status:      Healthy
 
-GROUP  KIND        NAMESPACE    NAME                           STATUS  HEALTH   HOOK  MESSAGE
-       Service     <username>   example-php-docker-helloworld  Synced  Healthy        service/example-php-docker-helloworld unchanged
-apps   Deployment  <username>   example-php-docker-helloworld  Synced  Healthy        deployment.apps/example-php-docker-helloworld configured
+GROUP  KIND        NAMESPACE    NAME            STATUS  HEALTH   HOOK  MESSAGE
+       Service     <username>   simple-example  Synced  Healthy        service/simple-example unchanged
+apps   Deployment  <username>   simple-example  Synced  Healthy        deployment.apps/simple-example configured
 ```
 
 Argo CD can automatically sync an application when it detects differences between the desired manifests in Git, and the live state in the cluster. A benefit of automatic sync is that CI/CD pipelines no longer need direct access to the Argo CD API server to perform the deployment. Instead, the pipeline makes a commit and push to the Git repository with the changes to the manifests in the tracking Git repo.
@@ -316,31 +316,31 @@ By default, changes made to the live cluster will not trigger automatic sync. To
 argocd app set argo-$LAB_USER --self-heal
 ```
 
-Watch the deployment `example-php-docker-helloworld` in a separate terminal
+Watch the deployment `simple-example` in a separate terminal
 
 ```bash
-{{% param cliToolName %}} get deployment example-php-docker-helloworld -w --namespace=$LAB_USER
+{{% param cliToolName %}} get deployment simple-example -w --namespace=$LAB_USER
 ```
 
-Let's scale our `example-php-docker-helloworld` Deployment and observe whats happening:
+Let's scale our `simple-example` Deployment and observe whats happening:
 
 ```bash
-{{% param cliToolName %}} scale deployment example-php-docker-helloworld --replicas=3 --namespace=$LAB_USER
+{{% param cliToolName %}} scale deployment simple-example --replicas=3 --namespace=$LAB_USER
 ```
 
-Argo CD will immediately scale back the `example-php-docker-helloworld` Deployment to `1` replicas. You will see the desired replicas count in the watched Deployment.
+Argo CD will immediately scale back the `simple-example` Deployment to `1` replicas. You will see the desired replicas count in the watched Deployment.
 
 ```
-NAME                            READY   UP-TO-DATE   AVAILABLE   AGE
-example-php-docker-helloworld   1/1     1            1           114m
-example-php-docker-helloworld   1/3     1            1           114m
-example-php-docker-helloworld   1/3     1            1           114m
-example-php-docker-helloworld   1/3     1            1           114m
-example-php-docker-helloworld   1/3     3            1           114m
-example-php-docker-helloworld   1/1     3            1           114m
-example-php-docker-helloworld   1/1     3            1           114m
-example-php-docker-helloworld   1/1     3            1           114m
-example-php-docker-helloworld   1/1     1            1           114m
+NAME             READY   UP-TO-DATE   AVAILABLE   AGE
+simple-example   1/1     1            1           114m
+simple-example   1/3     1            1           114m
+simple-example   1/3     1            1           114m
+simple-example   1/3     1            1           114m
+simple-example   1/3     3            1           114m
+simple-example   1/1     3            1           114m
+simple-example   1/1     3            1           114m
+simple-example   1/1     3            1           114m
+simple-example   1/1     1            1           114m
 ```
 
 This is a great way to enforce a strict GitOps principle. Changes which are manually made on deployed resource manifests are reverted immediately back to the desired state by the ArgoCD controller.
@@ -350,10 +350,10 @@ This is a great way to enforce a strict GitOps principle. Changes which are manu
 
 You probably asked yourself how can I delete deployed resources on the container platform? Argo CD can be configured to delete resources that no longer exist in the Git repository.
 
-First delete the file `example-php-docker-helloworld-svc.yaml` from Git repository and push the changes
+First delete the file `svc.yaml` from Git repository and push the changes
 
 ```bash
-git rm example-php-docker-helloworld-svc.yaml
+git rm svc.yaml
 git add --all && git commit -m 'Removes service' && git push
 
 ```
@@ -367,9 +367,9 @@ argocd app get argo-$LAB_USER --refresh
 You will see that even with auto-sync and self-healing enabled the status is still OutOfSync
 
 ```
-GROUP  KIND        NAMESPACE    NAME                           STATUS     HEALTH   HOOK  MESSAGE
-apps   Deployment  <username>   example-php-docker-helloworld  Synced     Healthy        deployment.apps/example-php-docker-helloworld configured
-       Service     <username>   example-php-docker-helloworld  OutOfSync  Healthy
+GROUP  KIND        NAMESPACE    NAME            STATUS     HEALTH   HOOK  MESSAGE
+apps   Deployment  <username>   simple-example  Synced     Healthy        deployment.apps/simple-exampleconfigured
+       Service     <username>   simple-example  OutOfSync  Healthy
 ```
 
 Now enable the auto pruning explicitly:
@@ -385,9 +385,9 @@ argocd app get argo-$LAB_USER --refresh
 ```
 
 ```
-GROUP  KIND        NAMESPACE    NAME                           STATUS     HEALTH   HOOK  MESSAGE
-       Service     <username>   example-php-docker-helloworld  Succeeded  Pruned         pruned
-apps   Deployment  <username>   example-php-docker-helloworld  Synced     Healthy        deployment.apps/example-php-docker-helloworld unchanged
+GROUP  KIND        NAMESPACE    NAME            STATUS     HEALTH   HOOK  MESSAGE
+       Service     <username>   simple-example  Succeeded  Pruned         pruned
+apps   Deployment  <username>   simple-example  Synced     Healthy        deployment.apps/simple-example unchanged
 ```
 
 The Service was successfully deleted by Argo CD because the manifest was removed from git. See the HEALTH and MESSAGE of the previous console output.

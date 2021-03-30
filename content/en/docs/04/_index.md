@@ -4,8 +4,83 @@ weight: 4
 sectionnumber: 4
 ---
 
+In this Lab you are going to learn about [Resource Hooks](https://argoproj.github.io/argo-cd/user-guide/resource_hooks/).
+
+
 ## Resource Hooks
 
-Work in progress
+Hooks allow to run scripts before, during and after the Argo CD **sync** operation is running. They give you more control over the sync process. They can also run when the sync operation fails for example. The concept is very similar to the concept of [Helm Hooks](https://helm.sh/docs/topics/charts_hooks/#the-available-hooks).
 
-[Official Documentation](https://argoproj.github.io/argo-cd/user-guide/resource_hooks/)
+Some examples when hooks can be useful:
+
+* `PreSync` hook. Upgrading a Database, Performing a migration before deploying a new version of the application.
+* `PostSync` hook. Run integration, smoke and other tests after the deployment to verify its status.
+* `Sync` hook. Allows to run more complex deployment strategies. e.g.: Blue-Green or Canary Deployments
+* `SyncFail` hook. Clean up a failed deployment.
+
+Hooks are annotated `argocd.argoproj.io/hook: <hook>` Kubernetes resources in the source repository, which Argo CD will apply during the sync operation.
+
+A `PreSync` Hook to run a database migration might therefore look like this:
+
+```yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  generateName: schema-migrate-
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+...
+```
+
+It's basically a [Kubernetes Job](https://kubernetes.io/docs/concepts/workloads/controllers/job/) which starts a Pod that executes some sort of code.
+
+{{% alert  color="primary" title="Note" %}}
+Named hooks (i.e. ones with `/metadata/name`) will only be created once. If you want a hook to be re-created each time either use BeforeHookCreation policy or `/metadata/generateName`.
+{{% /alert %}}
+
+{{% alert  color="primary" title="Note" %}}
+Hooks are not run during a [selective sync](https://argoproj.github.io/argo-cd/user-guide/selective_sync/)
+{{% /alert %}}
+
+
+### Hook Deletion Policies
+
+The hook deletion policy defines when a hook should be deleted. It's also configured with an annotation `argocd.argoproj.io/hook-delete-policy` on the hook resource.
+
+```yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  generateName: schema-migrate-
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+...
+```
+
+* `HookSucceeded`: will be deleted after the hook succeeded
+* `HookFailed`: will be deleted after a hook failed
+* `BeforeHookCreation`: Any hook resource will be deleted before the new one is created.
+
+
+## Task {{% param sectionnumber %}}.1: Hook Example
+
+In this task we're going to deploy an [example](https://github.com/acend/argocd-training-examples/tree/master/pre-post-sync-hook) which has `pre` and `post` hooks.
+
+Create the new application `argo-hook-$LAB_USER` with the following command. It will create a service, a deployment and two hooks as soon as the application is synced.
+
+```bash
+argocd app create argo-hook-$LAB_USER --repo https://{{% param giteaUrl %}}/$LAB_USER/argocd-training-examples.git --path 'pre-post-sync-hook' --dest-server https://kubernetes.default.svc --dest-namespace $LAB_USER
+```
+
+Sync the application:
+
+```bash
+argocd app sync argo-hook-$LAB_USER
+```
+
+And verify the deployment:
+
+```bash
+oc get pod --namespace $LAB_USER -w
+```
