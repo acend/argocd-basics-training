@@ -28,7 +28,15 @@ Managing Kubernetes resources using a GitOps approach brings the following benef
 * Die Entwickler beschreiben die Infrastruktur in bereits bekannten Formaten und Tools wie yaml und Git.
 
 
-Argo CD follows the GitOps pattern of using Git repositories as the source of truth for defining the desired application state. Kubernetes manifests can be specified in several ways:
+Argo CD follows the GitOps pattern of using Git repositories as the source of truth for defining the desired application state.
+
+{{% alert title="Warning" color="secondary" %}}
+Argo CD provides a mechanism to override the parameters of Argo CD applications. [The Argo CD parameter overrides](https://argoproj.github.io/argo-cd/user-guide/parameters/) feature is provided mainly as a convenience to developers and is intended to be used in dev/test environments, vs. production environments.
+
+Many consider this feature as anti-pattern to GitOps. So only use this feature when no other option is available!
+{{% /alert %}}
+
+Kubernetes manifests can be specified in several ways:
 
 * [kustomize](https://kustomize.io/) applications
 * [helm](https://helm.sh/) charts
