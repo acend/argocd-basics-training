@@ -81,6 +81,9 @@ techlabClusterDomainName = "techlab.openshift.ch"
 techlabArgoCdUrl = "argocd.techlab.openshift.ch"
 techlabGiteaUrl = "gitea.techlab.openshift.ch"
 
+cliToolName = "oc"
+argoInfraNamespace = "pitc-infra-argocd"
+
 # Enable Lunr.js offline search
 offlineSearch = true
 
