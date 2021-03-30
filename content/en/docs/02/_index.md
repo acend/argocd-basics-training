@@ -61,12 +61,6 @@ git config --local --list
 
 Now we want to deploy the resource manifests contained in the cloned repository with Argo CD to demonstrate the basic features of Argo CD.
 
-Change to your main Namespace.
-
-```bash
-kubectl config set-context --current --namespace=$LAB_USER
-```
-
 To deploy the resources using the Argo CD CLI use the following command:
 
 ```bash
@@ -111,7 +105,7 @@ The application status is initially in OutOfSync state. To sync (deploy) the res
 argocd app sync argo-$LAB_USER
 ```
 
-This command retrieves the manifests from the git repository and performs a `kubectl apply` on them. Because all our manifests has been deployed manually before, no new rollout of them will be triggered on OpenShift. But form now on, all resources are managed by Argo CD. Congrats, the first step in direction GitOps! :)
+This command retrieves the manifests from the git repository and performs a `{{% param cliToolName %}} apply` on them. Because all our manifests has been deployed manually before, no new rollout of them will be triggered on OpenShift. But form now on, all resources are managed by Argo CD. Congrats, the first step in direction GitOps! :)
 
 You should see an output similar to the following lines:
 
@@ -325,13 +319,13 @@ argocd app set argo-$LAB_USER --self-heal
 Watch the deployment `example-php-docker-helloworld` in a separate terminal
 
 ```bash
-kubectl get deployment example-php-docker-helloworld -w
+{{% param cliToolName %}} get deployment example-php-docker-helloworld -w --namespace=$LAB_USER
 ```
 
 Let's scale our `example-php-docker-helloworld` Deployment and observe whats happening:
 
 ```bash
-kubectl scale deployment example-php-docker-helloworld --replicas=3
+{{% param cliToolName %}} scale deployment example-php-docker-helloworld --replicas=3 --namespace=$LAB_USER
 ```
 
 Argo CD will immediately scale back the `example-php-docker-helloworld` Deployment to `1` replicas. You will see the desired replicas count in the watched Deployment.
@@ -403,12 +397,12 @@ The Service was successfully deleted by Argo CD because the manifest was removed
 
 Argo CD is largely built stateless. The configuration is persisted as native Kubernetes objects. And those are stored in Kubernetes _etcd_. There is no additional storage layer needed to run ArgoCD. The Redis storage under the hood acts just as a throw-away cache and can be evicted anytime without any data loss.
 
-The configuration changes made on ArgoCD objects through the UI or by cli tool `argocd` are reflected in updates of the ArgoCD Kubernetes objects `Application` and `AppProject`.
+The configuration changes made on ArgoCD objects through the UI or by cli tool `argocd` are reflected in updates of the ArgoCD Kubernetes objects `Application` and `AppProject` in the `{{% param argoInfraNamespace %}}` namespace.
 
 Let's list all Kubernetes objects of type `Application` (short form: `app`)
 
 ```bash
-kubectl get app
+{{% param cliToolName %}} get app --namespace={{% param argoInfraNamespace %}}
 ```
 
 ```
@@ -419,13 +413,13 @@ argo-<username>    Synced        Healthy
 You will see the application which we created some chapters ago by cli command `argocd app create...`. To see the complete configuration of the `Application` as _yaml_ use:
 
 ```bash
-kubectl get app argo-<username> -oyaml
+{{% param cliToolName %}} get app argo-<username> -oyaml --namespace={{% param argoInfraNamespace %}}
 ```
 
 You even can edit the `Application` resource by using:
 
 ```bash
-kubectl edit app argo-<username>
+{{% param cliToolName %}} edit app argo-<username> --namespace={{% param argoInfraNamespace %}}
 ```
 
 This allows us to manage the ArgoCD application definitions in a declarative way as well. It is a common pattern to have one ArgoCD application which references n child Applications which allows us a fast bootstrapping of a whole environment or a new cluster. This pattern is well known as the [App of apps](https://argoproj.github.io/argo-cd/operator-manual/cluster-bootstrapping/#app-of-apps-pattern) pattern.
