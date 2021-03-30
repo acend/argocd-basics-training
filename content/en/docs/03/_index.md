@@ -35,7 +35,7 @@ or replace $LAB_USER in every command accordingly
 
 
 ```bash
-argocd app create argo-complex-$LAB_USER --repo https://{{% param giteaUrl %}}/$LAB_USER/amm-argocd-example.git --path 'complex-application' --dest-server https://kubernetes.default.svc --dest-namespace $LAB_USER
+argocd app create argo-complex-$LAB_USER --repo https://{{% param giteaUrl %}}/$LAB_USER/argocd-training-examples.git --path 'complex-application' --dest-server https://kubernetes.default.svc --dest-namespace $LAB_USER
 ```
 
 Expected output: `application 'argo-complex-<username>' created`
@@ -88,7 +88,7 @@ argocd app set argo-complex-$LAB_USER --auto-prune
 
 ## Task {{% param sectionnumber %}}.3: Scale up the data-producer deployment
 
-Let's now test the setup and scale the data-producer deployment to `2` replicas by editing the `amm-argocd-example/complex-application/producer.yaml`
+Let's now test the setup and scale the data-producer deployment to `2` replicas by editing the `argocd-training-examples/complex-application/producer.yaml`
 
 {{% details title="Hint" %}}
 ```yaml
