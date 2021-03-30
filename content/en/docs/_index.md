@@ -7,11 +7,11 @@ menu:
 ---
 
 
-[Argo CD](https://argoproj.github.io/argo-cd/) ist ein Teil des [Argo Projektes](https://argoproj.github.io/) und unter der [Cloud Native Computing Foundation (CNCF)](https://www.cncf.io/) angegliedert. Das Projekt ist knapp dreijährig, komplett OpenSource und primär in Go implementiert.
+[Argo CD](https://argoproj.github.io/argo-cd/) is a part of the [Argo Project](https://argoproj.github.io/) and affiliated under the [Cloud Native Computing Foundation (CNCF)](https://www.cncf.io/). The project is just under three years old, completely open source, and primarily implemented in Go.
 
-Wie der Name schon verrät kümmert sich Argo CD um den continuous delivery-Aspekt von CI/CD. Die continuous integration wird durch ein CI-Tool wie GitLab CI/CD, Jenkins, Tekton oder GitHub Actions wahrgenommen. Der Core von Argo CD besteht aus einem Kubernetes-Controller, welcher kontinuierlich den live-State mit dem desired-State vergleicht. Der live-State wird dabei von der Kubernetes-API abgegriffen, und der desired-State ist in Form von Manifests in YAML oder JSON in einem Git Repository persistiert. Argo CD hilft dabei auf Abweichungen der States hinzuweisen, die Abweichungen darzustellen oder auch autonom den desired-State wiederherzustellen.
+As the name suggests, Argo CD takes care of the continuous delivery aspect of CI/CD. Continuous integration is handled by a CI tool such as GitLab CI/CD, Jenkins, Tekton or GitHub Actions. The core of Argo CD consists of a Kubernetes controller, which continuously compares the live-state with the desired-state. The live-state is tapped from the Kubernetes API, and the desired-state is persisted in the form of manifests in YAML or JSON in a Git repository. Argo CD helps to point out deviations of the states, to display the deviations or to autonomously restore the desired state.
 
-Argo CD wird auf einer Kubernetes-basierten Container Plattform deployed und betrieben. Es ist möglich mehrere Kubernetes und OpenShift Cluster an eine ArgoCD Instanz anzubinden.
+Argo CD is deployed and operated on a Kubernetes-based container platform. It is possible to connect multiple Kubernetes and OpenShift clusters to one ArgoCD instance.
 
 {{% alert  color="primary" %}}
 [Argo CD](https://argoproj.github.io/argo-cd/) is a declarative, GitOps continuous delivery tool for Kubernetes.
@@ -21,11 +21,13 @@ Argo CD wird auf einer Kubernetes-basierten Container Plattform deployed und bet
 
 Managing Kubernetes resources using a GitOps approach brings the following benefits:
 
-* Die Definition der Manifests erfolgt auf eine deklarative Art und ein Tool sorgt für den Abgleich zwischen den desired- und live-Manifests. Die Differenzen zwischen den gewünschten Konfigurationen und den effektiv applizierten Manifests ist jederzeit einfach ersichtlich.
-* Rollbacks auf ältere Versionen sind mit git revert oder via des eingesetzten GitOps Tool einfach möglich (vorausgesetzt die Applikation unterstützt dies auch)
-* Manuelle Anpassungen direkt auf der Container Plattform werden sofort ersichtlich und können automatisiert auch überschrieben werden (self-healing)
-* Die git Commit History ist zugleich ein detailliertes Audit Log
-* Die Entwickler beschreiben die Infrastruktur in bereits bekannten Formaten und Tools wie yaml und Git.
+* The definition of the manifests is done in a declarative way and a tool ensures the comparison between the desired and live manifests. The differences between the desired configurations and the actually applied manifests can be easily seen at any time.
+* Rollbacks to older versions are easily possible with git revert or via the used GitOps tool (provided that the application also supports this).
+* Manual adjustments directly on the container platform are immediately visible and can be automatically overwritten (self-healing).
+* The git commit history is also a detailed audit log
+* The developers describe the infrastructure in already known formats and tools like yaml and git.
+
+Translated with www.DeepL.com/Translator (free version)
 
 
 Argo CD follows the GitOps pattern of using Git repositories as the source of truth for defining the desired application state.
