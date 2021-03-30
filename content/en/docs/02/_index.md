@@ -59,6 +59,14 @@ https://github.com/<github-username>/amm-argocd-example
 
 Change the working directory to the cloned git repository: `cd amm-argocd-example`
 
+When using the Web IDE: Configure the Git Client and verify the output
+
+```bash
+git config user.name "$LAB_USER"
+git config user.email "foo@bar.org"
+git config --local --list
+```
+
 
 ## Task {{% param sectionnumber %}}.3: Deploying the resources with Argo CD
 
@@ -73,7 +81,7 @@ kubectl config set-context --current --namespace=$LAB_USER
 To deploy the resources using the Argo CD CLI use the following command:
 
 ```bash
-argocd app create argo-$LAB_USER --repo https://{{% param giteaUrl %}}/$LAB_USER/amm-argocd-example.git --path 'example-app' --dest-server https://kubernetes.default.svc --project  --dest-namespace $LAB_USER
+argocd app create argo-$LAB_USER --repo https://{{% param giteaUrl %}}/$LAB_USER/amm-argocd-example.git --path 'example-app' --dest-server https://kubernetes.default.svc --dest-namespace $LAB_USER
 ```
 
 
