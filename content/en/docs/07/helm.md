@@ -153,6 +153,8 @@ git push
 ```
 {{% /details %}}
 
+Open your Browser and verify whether you can access the application.
+
 
 ## Task {{% param sectionnumber %}}.4: Create a second application representing the production stage
 
@@ -190,7 +192,6 @@ And verify the deployment:
 oc get pod --namespace $LAB_USER -w
 ```
 
-
 Tell the Argo CD app to use the `values-production.yaml` values file
 
 {{% details title="Hint" %}}
@@ -199,7 +200,7 @@ argocd app set argo-helm-$LAB_USER --values values-production.yaml
 ```
 {{% /details %}}
 
-Change for example the ingress hostname to something different in the `values-production.yaml` and verify whether you can access the new hostname
+Change for example the ingress hostname to something different in the `values-production.yaml` and verify whether you can access the new hostname.
 
 
 ## Task {{% param sectionnumber %}}.4: Delete the Applications
