@@ -123,6 +123,5 @@ Delete the application after you've explored the Argo CD Resources and the manag
 {{% details title="Hint" %}}
 ```bash
 argocd app delete argo-complex-$LAB_USER
-
 ```
 {{% /details %}}

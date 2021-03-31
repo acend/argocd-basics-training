@@ -69,6 +69,11 @@ In this task we're going to deploy an [example](https://github.com/acend/argocd-
 
 Create the new application `argo-hook-$LAB_USER` with the following command. It will create a service, a deployment and two hooks as soon as the application is synced.
 
+* PreSync: before Job
+* Sync: Deployment with name `pre-post-sync-hook`
+* PostSync: after Job
+
+
 ```bash
 argocd app create argo-hook-$LAB_USER --repo https://{{% param giteaUrl %}}/$LAB_USER/argocd-training-examples.git --path 'pre-post-sync-hook' --dest-server https://kubernetes.default.svc --dest-namespace $LAB_USER
 ```
@@ -92,3 +97,14 @@ Alter the post sync hook command from `sleep` to `curl https://acend.ch` (Could 
 The curl command is not available in the minimal `quay.io/acend/example-web-go` image. You can use `quay.io/acend/example-web-python` or different image.
 
 Edit the hook under `argocd-training-examples/pre-post-sync-hook/post-sync-job.yaml` accordingly, commit and push the changes and trigger the sync operation.
+
+
+## Task {{% param sectionnumber %}}.3: Delete the Application
+
+Delete the application after you've explored the Argo CD Resources and the managed Kubernetes resources.
+
+{{% details title="Hint" %}}
+```bash
+argocd app delete argo-hook-$LAB_USER
+```
+{{% /details %}}
