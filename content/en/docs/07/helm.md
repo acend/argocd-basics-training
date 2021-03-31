@@ -6,10 +6,6 @@ sectionnumber: 7.1
 
 This lab explains how to use [Helm](https://helm.sh/) as manifest format together with Argo CD.
 
-{{% alert title="Note" color="primary" %}}
-This lab is work in progress
-{{% /alert %}}
-
 
 ## Helm
 
@@ -71,6 +67,128 @@ Read more about the helm integration in the [official documentation](https://arg
 
 ## Task {{% param sectionnumber %}}.1: Deploy the simple-example as Helm Chart
 
-Use the [simple-example](https://github.com/acend/argocd-training-examples/tree/master/example-app) from Lab 1 and implement it and create a new Helm Chart.
+Let's deploy the simple-example from lab 1 using a [helm chart](https://github.com/acend/argocd-training-examples/tree/master/helm/simple-example).
 
-You can find additional examples [here](https://github.com/argoproj/argocd-example-apps).
+First you'll have to create a new Argo CD application.
+
+```bash
+argocd app create argo-helm-$LAB_USER --repo https://{{% param giteaUrl %}}/$LAB_USER/argocd-training-examples.git --path 'helm/simple-example' --dest-server https://kubernetes.default.svc --dest-namespace $LAB_USER
+```
+
+Sync the application
+
+{{% details title="Hint" %}}
+
+To sync (deploy) the resources you can simply click sync in the web UI or execute the following command:
+
+```bash
+argocd app sync argo-helm-$LAB_USER
+```
+{{% /details %}}
+
+Tell the application to sync automatically, to enable self-healing and auto-prune
+```bash
+argocd app set argo-helm-$LAB_USER --sync-policy automated
+argocd app set argo-helm-$LAB_USER --self-heal
+argocd app set argo-helm-$LAB_USER --auto-prune
+```
+
+
+## Task {{% param sectionnumber %}}.2: Scale the deployment to 2 replicas
+
+We can set the `helm` parameter with the following command:
+
+```bash
+argocd app set argo-helm-$LAB_USER -p replicaCount=2
+```
+
+{{% alert title="Warning" color="secondary" %}}
+Only use this way of setting params in dev and test stages. Not for Production!
+{{% /alert %}}
+
+Since the `sync-policy` is set to `automated` the second pod will be deployed immediately.
+
+
+## Task {{% param sectionnumber %}}.3: Ingress
+
+The prober and production ready way of overwriting values is by doing it in git.
+
+Change the `helm/simple-example/values.yaml` file in your git repository
+
+```yaml
+...
+ingress:
+  enabled: true
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: helm-<namespace>.<appdomain>
+      paths:
+      - path: /
+  tls: []
+...
+```
+
+Commit and push the changes to your repository.
+
+{{% details title="Hint" %}}
+```bash
+git add helm/simple-example/values.yaml
+git commit -m "Expose ingress"
+git push
+```
+{{% /details %}}
+
+
+## Task {{% param sectionnumber %}}.4: Create a second application representing the production stage
+
+Let's now also deploy an application for the production stage.
+
+Create a new values.yaml file for the production stage: `helm/simple-example/values-production.yaml`
+
+Commit and push the changes to your repository.
+
+{{% details title="Hint" %}}
+```bash
+git add helm/simple-example/values-production.yaml
+git commit -m "Add prod stage"
+git push
+```
+{{% /details %}}
+
+
+Let's create the production stage Argo CD application with the name `argo-helm-prod-$LAB_USER` and enable automated sync, self-healing and pruning.
+
+{{% details title="Hint" %}}
+
+```bash
+argocd app create argo-helm-prod-$LAB_USER --repo https://{{% param giteaUrl %}}/$LAB_USER/argocd-training-examples.git --path 'helm/simple-example' --dest-server https://kubernetes.default.svc --dest-namespace $LAB_USER
+argocd app set argo-helm-prod-$LAB_USER --sync-policy automated
+argocd app set argo-helm-prod-$LAB_USER --self-heal
+argocd app set argo-helm-prod-$LAB_USER --auto-prune
+```
+
+{{% /details %}}
+
+Tell the Argo CD app to use the `values-production.yaml` values file
+
+{{% details title="Hint" %}}
+```bash
+argocd app set argo-helm-$LAB_USER --values values-production.yaml
+```
+{{% /details %}}
+
+Change for example the ingress hostname to something different in the `values-production.yaml`
+
+
+## Task {{% param sectionnumber %}}.4: Delete the Applications
+
+Delete the applications after you've explored the Argo CD Resources and the managed Kubernetes resources.
+
+{{% details title="Hint" %}}
+```bash
+argocd app delete argo-helm-$LAB_USER
+argocd app delete argo-helm-prod-$LAB_USER
+```
+{{% /details %}}

@@ -27,3 +27,5 @@ Many consider this feature as anti-pattern to GitOps. So only use this feature w
 {{% /alert %}}
 
 You are now going to deploy an application in the different formats.
+
+You can also find additional examples [here](https://github.com/argoproj/argocd-example-apps).
