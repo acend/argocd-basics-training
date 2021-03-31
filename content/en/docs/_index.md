@@ -42,7 +42,7 @@ Kubernetes manifests can be specified in several ways:
 
 * [kustomize](https://kustomize.io/) applications
 * [helm](https://helm.sh/) charts
-* [ksonnet](https://github.com/ksonnet/ksonnet) applications
+* [ksonnet](https://github.com/ksonnet/ksonnet) applications (deprecated)
 * [jsonnet](https://jsonnet.org/) files
 * Plain directory of YAML/json manifests
 * Any custom config management tool configured as a config management plugin

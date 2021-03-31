@@ -71,3 +71,14 @@ And verify the deployment:
 ```bash
 oc get pod --namespace $LAB_USER -w
 ```
+
+
+## Task {{% param sectionnumber %}}.2: Delete the Application
+
+Delete the application after you've explored the Argo CD Resources and the managed Kubernetes resources.
+
+{{% details title="Hint" %}}
+```bash
+argocd app delete argo-wave-$LAB_USER
+```
+{{% /details %}}

@@ -13,7 +13,7 @@ As mentioned in the [introduction](../) Argo CD supports many different formats 
 
 * [kustomize](https://kustomize.io/) applications
 * [helm](https://helm.sh/) charts
-* [ksonnet](https://github.com/ksonnet/ksonnet) applications
+* [ksonnet](https://github.com/ksonnet/ksonnet) applications (deprecated)
 * [jsonnet](https://jsonnet.org/) files
 * Plain directory of YAML/json manifests
 * Any custom config management tool configured as a config management plugin
@@ -26,10 +26,6 @@ Argo CD provides a mechanism to override the parameters of Argo CD applications.
 Many consider this feature as anti-pattern to GitOps. So only use this feature when no other option is available!
 {{% /alert %}}
 
+You are now going to deploy an application in the different formats.
 
-## Task {{% param sectionnumber %}}.1: Deploy the simple example rendered with your preferred Tool
-
-Use the [simple-example](https://github.com/acend/argocd-training-examples/tree/master/example-app) from Lab 1 and implement it in your preferred tool.
-
-You can find additional examples [here](https://github.com/argoproj/argocd-example-apps).
-
+You can also find additional examples [here](https://github.com/argoproj/argocd-example-apps).
