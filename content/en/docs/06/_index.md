@@ -4,6 +4,11 @@ weight: 6
 sectionnumber: 6
 ---
 
+{{% alert title="Note" color="primary" %}}
+This Lab only works on your local machine.
+{{% /alert %}}
+
+
 ## Backup and Restore
 
 As ArgoCD holds the whole state in native Kubernetes objects it's quite straightforward to make a backup and restore it in case of a disaster recovery.
@@ -29,13 +34,11 @@ export VERSION=v1.8.7
 
 ### Backup
 
-<!-- TODO bb: validate against the real lab environment -->
-
 ```bash
-docker run -v ~/.kube:/home/argocd/.kube --rm argoproj/argocd:$VERSION argocd-util export > argocd-backup.yaml
+docker run -v ~/.kube:/home/argocd/.kube --rm argoproj/argocd:$VERSION argocd-util export --namespace={{% param argoInfraNamespace %}} > argocd-backup.yaml
 ```
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="primary" %}}
 If you should encounter permission errors like `error loading config file \"/home/argocd/.kube/config\": open /home/argocd/.kube/config: permission denied` you should change temporarily the permission of the kube config:
 
 ```bash
@@ -54,7 +57,7 @@ chmod o-r ~/.kube/config
 The same utility can be used to restore a previously made backup:
 
 ```bash
-docker run -i -v ~/.kube:/home/argocd/.kube --rm argoproj/argocd:$VERSION argocd-util import - < argocd-backup.yaml
+docker run -i -v ~/.kube:/home/argocd/.kube --rm argoproj/argocd:$VERSION argocd-util import --namespace=<destination-namespace> - < argocd-backup.yaml
 ```
 
 Reference: [Disaster recovery](https://argoproj.github.io/argo-cd/operator-manual/disaster_recovery/)

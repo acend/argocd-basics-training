@@ -78,17 +78,21 @@ Create the new application `argo-hook-$LAB_USER` with the following command. It 
 argocd app create argo-hook-$LAB_USER --repo https://{{% param giteaUrl %}}/$LAB_USER/argocd-training-examples.git --path 'pre-post-sync-hook' --dest-server https://kubernetes.default.svc --dest-namespace $LAB_USER
 ```
 
-Sync the application:
+Sync the application
 
+{{% details title="Hint" %}}
 ```bash
 argocd app sync argo-hook-$LAB_USER
 ```
+{{% /details %}}
 
 And verify the deployment:
 
 ```bash
 oc get pod --namespace $LAB_USER -w
 ```
+
+Or in the web UI.
 
 
 ## Task {{% param sectionnumber %}}.2: Post-hook Curl (Optional)
@@ -97,6 +101,31 @@ Alter the post sync hook command from `sleep` to `curl https://acend.ch` (Could 
 The curl command is not available in the minimal `quay.io/acend/example-web-go` image. You can use `quay.io/acend/example-web-python` or different image.
 
 Edit the hook under `argocd-training-examples/pre-post-sync-hook/post-sync-job.yaml` accordingly, commit and push the changes and trigger the sync operation.
+
+```yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: after
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+spec:
+  template:
+    spec:
+      containers:
+      - name: sleep
+        image: quay.io/acend/example-web-python
+        command:
+        - 'bash'
+        - '-eo'
+        - 'pipefail'
+        - '-c'
+        - >
+          curl https://acend.ch
+      restartPolicy: Never
+  backoffLimit: 0
+```
 
 
 ## Task {{% param sectionnumber %}}.3: Delete the Application

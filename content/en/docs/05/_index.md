@@ -62,9 +62,11 @@ argocd app create argo-wave-$LAB_USER --repo https://{{% param giteaUrl %}}/$LAB
 
 Sync the application:
 
+{{% details title="Hint" %}}
 ```bash
 argocd app sync argo-wave-$LAB_USER
 ```
+{{% /details %}}
 
 And verify the deployment:
 
