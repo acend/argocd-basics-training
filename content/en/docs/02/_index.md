@@ -143,11 +143,13 @@ apps   Deployment  <username>  simple-example  Synced  Progressing        deploy
 
 Check the Argo CD UI to browse the application and their components. The URL of the Argo CD webinterface will be provided by the teacher.
 
-Application overview in unsynced and synced state <br/>
+Application overview in unsynced and synced state
+
 ![Application overview (unsynced state)](app-overview-unsynced.png)
 ![Application overview (synced state)](app-overview-synced.png)
 
-Detailed view of a application in unsynced and synced state <br/>
+Detailed view of a application in unsynced and synced state
+
 ![Application Tree (unsynced state)](app-tree-unsynced.png)
 
 ![Application Tree (synced state)](app-tree-sycned.png)
