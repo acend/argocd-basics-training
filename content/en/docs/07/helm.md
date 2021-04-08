@@ -86,12 +86,21 @@ argocd app sync argo-helm-$LAB_USER
 ```
 {{% /details %}}
 
+And verify the deployment:
+
+```bash
+oc get pod --namespace $LAB_USER -w
+```
+
 Tell the application to sync automatically, to enable self-healing and auto-prune
+
+{{% details title="Hint" %}}
 ```bash
 argocd app set argo-helm-$LAB_USER --sync-policy automated
 argocd app set argo-helm-$LAB_USER --self-heal
 argocd app set argo-helm-$LAB_USER --auto-prune
 ```
+{{% /details %}}
 
 
 ## Task {{% param sectionnumber %}}.2: Scale the deployment to 2 replicas
@@ -130,6 +139,10 @@ ingress:
 ...
 ```
 
+{{% alert title="Note" color="primary" %}}
+The `<appdomain>` is the default domain under which your applications will be accessible and is provided by your trainer.
+{{% /alert %}}
+
 Commit and push the changes to your repository.
 
 {{% details title="Hint" %}}
@@ -139,6 +152,8 @@ git commit -m "Expose ingress"
 git push
 ```
 {{% /details %}}
+
+Open your Browser and verify whether you can access the application.
 
 
 ## Task {{% param sectionnumber %}}.4: Create a second application representing the production stage
@@ -171,6 +186,12 @@ argocd app set argo-helm-prod-$LAB_USER --auto-prune
 
 {{% /details %}}
 
+And verify the deployment:
+
+```bash
+oc get pod --namespace $LAB_USER -w
+```
+
 Tell the Argo CD app to use the `values-production.yaml` values file
 
 {{% details title="Hint" %}}
@@ -179,7 +200,7 @@ argocd app set argo-helm-$LAB_USER --values values-production.yaml
 ```
 {{% /details %}}
 
-Change for example the ingress hostname to something different in the `values-production.yaml`
+Change for example the ingress hostname to something different in the `values-production.yaml` and verify whether you can access the new hostname.
 
 
 ## Task {{% param sectionnumber %}}.4: Delete the Applications

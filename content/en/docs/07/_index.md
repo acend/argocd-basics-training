@@ -26,6 +26,15 @@ Argo CD provides a mechanism to override the parameters of Argo CD applications.
 Many consider this feature as anti-pattern to GitOps. So only use this feature when no other option is available!
 {{% /alert %}}
 
+
+### Tool Detection
+
+When the build tool is not specified explicitly in the [Argo CD Application](https://argoproj.github.io/argo-cd/operator-manual/declarative-setup/) CRD it will be detected:
+
+* `Helm` if there's a file matching `Chart.yaml`.
+* `Kustomize` if there's a `kustomization.yaml`, `kustomization.yml`, or `Kustomization`
+* `jsonnet` if there's a `*.jsonnet` file.
+
 You are now going to deploy an application in the different formats.
 
 You can also find additional examples [here](https://github.com/argoproj/argocd-example-apps).
