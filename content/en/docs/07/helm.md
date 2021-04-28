@@ -32,7 +32,7 @@ Values files must be in the same git repository as the Helm chart. The files can
 Similar to when using `helm` directly (`helm install <release> --set replicaCount=2 ./mychart --namespace <namespace>`), you are able to overwrite values from the values.yaml, by setting parameters.
 
 ```bash
-argocd app set argo-helm-$LAB_USER -p replicaCount=2
+argocd app set argo-helm-$LAB_USER --parameter replicaCount=2
 ```
 
 {{% alert title="Warning" color="secondary" %}}
@@ -89,7 +89,7 @@ argocd app sync argo-helm-$LAB_USER
 And verify the deployment:
 
 ```bash
-oc get pod --namespace $LAB_USER -w
+oc get pod --namespace $LAB_USER --watch
 ```
 
 Tell the application to sync automatically, to enable self-healing and auto-prune
@@ -108,7 +108,7 @@ argocd app set argo-helm-$LAB_USER --auto-prune
 We can set the `helm` parameter with the following command:
 
 ```bash
-argocd app set argo-helm-$LAB_USER -p replicaCount=2
+argocd app set argo-helm-$LAB_USER --parameter replicaCount=2
 ```
 
 {{% alert title="Warning" color="secondary" %}}
@@ -189,7 +189,7 @@ argocd app set argo-helm-prod-$LAB_USER --auto-prune
 And verify the deployment:
 
 ```bash
-oc get pod --namespace $LAB_USER -w
+oc get pod --namespace $LAB_USER --watch
 ```
 
 Tell the Argo CD app to use the `values-production.yaml` values file

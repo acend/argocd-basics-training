@@ -71,7 +71,7 @@ argocd app sync argo-wave-$LAB_USER
 And verify the deployment:
 
 ```bash
-oc get pod --namespace $LAB_USER -w
+oc get pod --namespace $LAB_USER --watch
 ```
 
 

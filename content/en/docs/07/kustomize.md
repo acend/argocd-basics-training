@@ -38,7 +38,7 @@ The following configuration options are available for Kustomize:
 Use the following command to set those parameters:
 
 ```bash
-argocd app set argo-kustomize-$LAB_USER -p namePrefix=<namePrefix>
+argocd app set argo-kustomize-$LAB_USER --parameter namePrefix=<namePrefix>
 ```
 
 
@@ -71,7 +71,7 @@ argocd app sync argo-kustomize-$LAB_USER
 And verify the deployment:
 
 ```bash
-oc get pod --namespace $LAB_USER -w
+oc get pod --namespace $LAB_USER --watch
 ```
 
 Tell the application to sync automatically, to enable self-healing and auto-prune
@@ -90,7 +90,7 @@ argocd app set argo-kustomize-$LAB_USER --auto-prune
 We can set the `kustomize` configuration parameter with the following command:
 
 ```bash
-argocd app set argo-kustomize-$LAB_USER -p namePrefix=acend
+argocd app set argo-kustomize-$LAB_USER --parameter namePrefix=acend
 ```
 
 And take a look at the application in the web UI or using the command line tool
@@ -129,7 +129,7 @@ argocd app set argo-kustomize-prod-$LAB_USER --auto-prune
 And verify the deployment:
 
 ```bash
-oc get pod --namespace $LAB_USER -w
+oc get pod --namespace $LAB_USER --watch
 ```
 
 

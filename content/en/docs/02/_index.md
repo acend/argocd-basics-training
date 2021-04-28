@@ -321,7 +321,7 @@ argocd app set argo-$LAB_USER --self-heal
 Watch the deployment `simple-example` in a separate terminal
 
 ```bash
-{{% param cliToolName %}} get deployment simple-example -w --namespace=$LAB_USER
+{{% param cliToolName %}} get deployment simple-example --watch --namespace=$LAB_USER
 ```
 
 Let's scale our `simple-example` Deployment and observe whats happening:
