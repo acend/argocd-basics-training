@@ -18,17 +18,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - 
+      -
         name: Checkout
         uses: actions/checkout@v2
         with:
           submodules: recursive
-      - 
-        name: Lint Markdown
-        uses: nosborn/github-action-markdown-cli@v1.1.1
+      -
+        name: Set up npm for linting
+        uses: actions/setup-node@v2
         with:
-          files: "content *.md"
-          config_file: ".markdownlint.json"
+          node-version: '15.x'
+      -
+        name: Lint Markdown
+        run: npm ci && npm run mdlint
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -42,7 +44,7 @@ jobs:
           registry: quay.io
           username: ${{ secrets.QUAYIO_USERNAME }}
           password: ${{ secrets.QUAYIO_TOKEN }}
-      - 
+      -
         name: Build Latest Version
         uses: docker/build-push-action@v2
         with:
@@ -51,7 +53,18 @@ jobs:
           push: true
           tags: |
             quay.io/acend/argocd-training:pr-${{ github.event.pull_request.number }}
-      - 
+      -
+        name: Run vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          # changeme
+          image-ref: 'quay.io/acend/argocd-training:pr-${{ github.event.pull_request.number }}'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os'
+          severity: 'CRITICAL,HIGH'
+      -
         name: Build Puzzle Version
         uses: docker/build-push-action@v2
         with:
@@ -62,7 +75,18 @@ jobs:
           push: true
           tags: |
             quay.io/acend/argocd-training:pr-${{ github.event.pull_request.number }}-puzzle
-      - 
+      -
+        name: Run vulnerability scanner Puzzle
+        uses: aquasecurity/trivy-action@master
+        with:
+          # changeme
+          image-ref: 'quay.io/acend/argocd-training:pr-${{ github.event.pull_request.number }}-puzzle'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os'
+          severity: 'CRITICAL,HIGH'
+      -
         name: 'Deploy Helm Release'
         uses: 'deliverybot/helm@v1'
         with:
@@ -77,24 +101,23 @@ jobs:
             [
               "helm-chart/values.yaml"
             ]
-
         env:
           KUBECONFIG_FILE: '${{ secrets.KUBECONFIG_TEST }}'
-      - 
+      -
         name: Redeploy acend Deployment
         uses: actions-hub/kubectl@master
         env:
           KUBE_CONFIG: ${{ secrets.KUBECONFIG_TEST_BASE64 }}
         with:
           args: rollout restart deployment/pr-${{ github.event.pull_request.number }}-argocd-training-acend --namespace acend-argocd-training-test
-      - 
+      -
         name: Redeploy Puzzle Deployment
         uses: actions-hub/kubectl@master
         env:
           KUBE_CONFIG: ${{ secrets.KUBECONFIG_TEST_BASE64 }}
         with:
           args: rollout restart deployment/pr-${{ github.event.pull_request.number }}-argocd-training-puzzle --namespace acend-argocd-training-test
-      - 
+      -
         name: Comment PR Environments in PR
         uses: marocchino/sticky-pull-request-comment@v2
         with:
