@@ -1,6 +1,6 @@
 # argocd-training 
 # Change the following parts to your current installation
-# - entire Docker Build steps accordingly to the amount of different versions or tags your building ACEND_HUGO_ENV
+# - entire Docker Build steps accordingly to the amount of different versions or tags your building TRAINING_HUGO_ENV
 #   - Tags
 # - Helm Target Namespace
 # - Name of K8S Deployment to trigger and namespace
@@ -58,7 +58,7 @@ jobs:
           context: .
           file: ./Dockerfile
           build-args: |
-            ACEND_HUGO_ENV=puzzle
+            TRAINING_HUGO_ENV=puzzle
           push: true
           tags: |
             quay.io/acend/argocd-training:pr-${{ github.event.pull_request.number }}-puzzle
