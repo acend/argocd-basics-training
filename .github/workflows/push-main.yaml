@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - master
 
 jobs:
   build:
@@ -37,7 +36,7 @@ jobs:
           username: ${{ secrets.QUAYIO_USERNAME }}
           password: ${{ secrets.QUAYIO_TOKEN }}
       -
-        name: Build Acend Version
+        name: Build and Push Acend Version
         uses: docker/build-push-action@v2
         with:
           context: .
@@ -49,7 +48,6 @@ jobs:
         name: Run vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          # changeme
           image-ref: 'quay.io/acend/argocd-training:latest'
           format: 'table'
           exit-code: '1'
@@ -57,7 +55,7 @@ jobs:
           vuln-type: 'os'
           severity: 'CRITICAL,HIGH'
       -
-        name: Build Puzzle Version
+        name: Build and Push Puzzle Version
         uses: docker/build-push-action@v2
         with:
           context: .
@@ -71,7 +69,6 @@ jobs:
         name: Run vulnerability scanner Puzzle
         uses: aquasecurity/trivy-action@master
         with:
-          # changeme
           image-ref: 'quay.io/acend/argocd-training:latest-puzzle'
           format: 'table'
           exit-code: '1'
@@ -103,7 +100,7 @@ jobs:
         with:
           args: rollout restart deployment/latest-argocd-training-acend --namespace acend-argocd-training-prod
       -
-        name: Redeploy puzzle Deployment
+        name: Redeploy Puzzle Deployment
         uses: actions-hub/kubectl@master
         env:
           KUBE_CONFIG: ${{ secrets.KUBECONFIG_BASE64 }}
