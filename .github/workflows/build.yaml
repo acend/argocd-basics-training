@@ -1,14 +1,3 @@
-# argocd-training 
-# Change the following parts to your current installation
-# - entire Docker Build steps accordingly to the amount of different versions or tags your building TRAINING_HUGO_ENV
-#   - Tags
-# - Helm Target Namespace
-# - Name of K8S Deployment to trigger and namespace
-# - URL that gets commented on the PR
-# - Secrets
-#   - QUAYIO_USERNAME and QUAYIO_TOKEN must be set accordingly to your registry, existing users must have access to the repos
-#   - KUBECONFIG_TEST content of the Kubeconfig File, Account must have access to the k8s namespace. It's used in the helm steps
-#   - KUBECONFIG_TEST_BASE64 same as KUBECONFIG but Base64 encoded. It's used in the kubectl steps
 name: Build Training and Publish
 
 on:
