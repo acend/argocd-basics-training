@@ -48,7 +48,7 @@ git submodule update --remote
 Build the image:
 
 ```bash
-docker build --build-arg ACEND_HUGO_ENV=puzzle -t acend/argocd-training .
+docker build --build-arg TRAINING_HUGO_ENV=puzzle -t acend/argocd-training .
 ```
 
 Run it locally:
@@ -85,7 +85,14 @@ For local checks, you can either use Visual Studio Code with the corresponding e
 
 ```shell script
 npm install
-node_modules/.bin/markdownlint content
+npm run mdlint
+```
+
+Npm not installed? no problem
+
+```bash
+export HUGO_VERSION=$(grep "FROM klakegg/hugo" Dockerfile | sed 's/FROM klakegg\/hugo://g' | sed 's/ AS builder//g')
+docker run --rm --interactive -v $(pwd):/src klakegg/hugo:${HUGO_VERSION}-ci /bin/bash -c "set -euo pipefail;npm install; npm run mdlint;"
 ```
 
 
