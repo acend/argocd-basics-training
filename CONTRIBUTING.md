@@ -1,4 +1,4 @@
-# How to contribute to our labs
+# How to contribute to the acend ArgoCD Training
 
 :+1::tada: First off, thanks for taking the time to contribute! :tada::+1:
 
@@ -26,6 +26,6 @@
 
 ## Do you have questions about the training
 
-* Ask your question as an issue on GitHub
+* Ask your question as an issue on GitHub.
 
 Thanks!
