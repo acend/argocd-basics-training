@@ -27,9 +27,6 @@ Managing Kubernetes resources using a GitOps approach brings the following benef
 * The git commit history is also a detailed audit log
 * The developers describe the infrastructure in already known formats and tools like yaml and git.
 
-Translated with www.DeepL.com/Translator (free version)
-
-
 Argo CD follows the GitOps pattern of using Git repositories as the source of truth for defining the desired application state.
 
 {{% alert title="Warning" color="secondary" %}}
