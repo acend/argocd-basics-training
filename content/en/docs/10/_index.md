@@ -65,7 +65,7 @@ This service will be detected as orphaned resource because it is not managed by 
 {{% /alert %}}
 
 
-Print all resources 
+Print all resources
 ```bash
 argocd app resources argo-$LAB_USER
 ```

@@ -9,6 +9,7 @@ onlyWhen: implemented
 
 This lab contains some important cli commands of the `argocd` binary.
 
+
 ### Autocompletion
 
 Autocompletion is available for `bash` and `zsh` shell. Enable autocompletion for `bash`:
@@ -18,6 +19,7 @@ source <(argocd completion bash)
 ```
 
 After typing `argocd` you can autocomplete the subcommands with a double tap the tabulator key. This works even for deployed artifacts on the cluster: A double tab after `argocd app get` lists all defined Argo CD applications.
+
 
 ### Manage Applications
 

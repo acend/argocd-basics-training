@@ -37,6 +37,7 @@ project-hannelore15               <none>        <none>   <none>                 
 ...
 ```
 
+
 ## Task {{% param sectionnumber %}}.2: Define permitted sources and destinations
 
 The next step is to deploy a new application and assign it to the created project `project-hanneloreXX` by using the flag `--project`
