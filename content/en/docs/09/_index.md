@@ -6,7 +6,9 @@ sectionnumber: 9
 
 This lab contains demonstrates how to find orphaned top-level resources with Argo CD. Orphaned resources are not managed by Argo CD and could be potentially removed from cluster.
 
-Create an example application
+
+## Task {{% param sectionnumber %}}.1: Create application and project
+
 ```bash
 argocd app create argo-$LAB_USER --repo https://github.com/acend/argocd-training-examples.git --path 'example-app' --dest-server https://kubernetes.default.svc --dest-namespace $LAB_USER
 argocd app sync argo-$LAB_USER
@@ -28,6 +30,8 @@ With the flag `--orphaned-resources-warn` enabled, for each Argo CD application 
 {{% /alert %}}
 
 
+## Task {{% param sectionnumber %}}.2: Assign application to project
+
 Assign application to newly created project
 ```bash
 argocd app set argo-$LAB_USER --project apps-$LAB_USER
@@ -42,6 +46,8 @@ Refresh the application
 ```bash
 argocd app get --refresh argo-$LAB_USER
 ```
+
+## Task {{% param sectionnumber %}}.3: Create orphaned resource
 
 Now create the orphan service `black-hole` in the same target namespace the Argo CD application has:
 
@@ -88,6 +94,14 @@ OrphanedResourceWarning  Application has 1 orphaned resources  2021-09-02 16:20:
 ...
 ```
 
+
+## Task {{% param sectionnumber %}}.4: Housekeeping
+
 Clean up the resources created in this lab
+
+```bash
+argocd app delete argo-$LAB_USER -y
+argocd proj delete apps-$LAB_USER
+```
 
 Find more information about [Orphaned Resources] https://argoproj.github.io/argo-cd/user-guide/orphaned-resources/ the docs.
