@@ -47,6 +47,7 @@ Refresh the application
 argocd app get --refresh argo-$LAB_USER
 ```
 
+
 ## Task {{% param sectionnumber %}}.3: Create orphaned resource
 
 Now create the orphan service `black-hole` in the same target namespace the Argo CD application has:
