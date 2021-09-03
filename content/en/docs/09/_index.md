@@ -105,4 +105,4 @@ argocd app delete argo-$LAB_USER -y
 argocd proj delete apps-$LAB_USER
 ```
 
-Find more information about [Orphaned Resources] https://argoproj.github.io/argo-cd/user-guide/orphaned-resources/ the docs.
+Find more detailed information about [Orphaned Resources in the docs](https://argoproj.github.io/argo-cd/user-guide/orphaned-resources/).
