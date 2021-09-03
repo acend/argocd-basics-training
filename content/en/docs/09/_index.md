@@ -1,5 +1,5 @@
 ---
-title: "9. Argo CD Projects"
+title: "9. Projects"
 weight: 9
 sectionnumber: 9
 ---
