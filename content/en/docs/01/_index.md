@@ -113,3 +113,48 @@ Using project "<username>" on server "https://<theClusterAPIURL>".
 ```
 
 The returned project name should correspond to your username.
+
+
+## Task {{% param sectionnumber %}}.2: Argo CD CLI
+
+The [Argo CD CLI](https://argoproj.github.io/argo-cd/cli_installation/) is a powerful tool to manage Argo CD and different applications. It's a self contained binary written in Go and available for Linux, Mac OS and Windows. Thanks to the fact that the CLI is implemented in Go, it can be easily integrated into scripts and build servers for automation purposes.
+
+
+### Task {{% param sectionnumber %}}.2: Getting familiar with the CLI
+
+Print out the help of the CLI by typing
+
+```bash
+argocd --help
+```
+
+You will see a list with the available commands and flags. If you prefer to browse the manual in the browser you'll find it in the [online documentation](https://argoproj.github.io/argo-cd/user-guide/commands/argocd/).
+
+
+The `--help` flag is available for every command and subcommand of the CLI. Beside the documentation for every flag and subcommand in the current context, it prints out example command lines for the most common use cases.
+
+Now get the help of the `app create` subcommand and find the examples and documentation of the flags.
+
+```bash
+argocd app create --help
+```
+
+
+### Task {{% param sectionnumber %}}.2: Autocomplete
+
+A productivity booster when working with the CLI is the autocompletion feature. It can be used for `bash` and `zsh` shells. You can enable the autocompletion for the current `bash` with the following command:
+
+```bash
+source <(argocd completion bash)
+```
+
+After typing `argocd` you can autocomplete the subcommands with a double tap the tabulator key. This works even for deployed artifacts on the cluster: A double tab after `argocd app get` lists all defined Argo CD applications.
+
+To install autocompletion permanently you can add the following command in the `~/.bashrc` file.
+
+```bash
+echo "source <(argocd completion bash)" >> ~/.bashrc
+source ~/.bashrc
+```
+
+Find further information in the [official documentation](https://argoproj.github.io/argo-cd/user-guide/commands/argocd_completion/)
