@@ -427,7 +427,51 @@ You even can edit the `Application` resource by using:
 This allows us to manage the ArgoCD application definitions in a declarative way as well. It is a common pattern to have one ArgoCD application which references n child Applications which allows us a fast bootstrapping of a whole environment or a new cluster. This pattern is well known as the [App of apps](https://argoproj.github.io/argo-cd/operator-manual/cluster-bootstrapping/#app-of-apps-pattern) pattern.
 
 
-## Task {{% param sectionnumber %}}.7: Delete the Application
+## Task {{% param sectionnumber %}}.7: Accessing a private Git repository
+
+The Git repository we have imported to Gitea is public available for the whole world. When accessing a private repository we have to provide credentials in form of a username/password pair or a ssh private key. In this task you will learn how to access a protected repo from Argo CD.
+
+First make the Git repository in Gitea private by checking the option `Visibility: Make Repository Private` under `Settings -> Repository`. Now sync the app again.
+
+```bash
+argocd app sync argo-$LAB_USER 
+```
+
+You will see the following error
+```
+FATA[0000] rpc error: code = FailedPrecondition desc = authentication required 
+```
+Argo CD can't any longer access the protected repository without providing credentials for authentication. Next assign credentials to used Git repository. You have to provide the Gitea password interactively.
+
+```bash
+argocd repo add https://$LAB_USER@{{% param giteaUrl %}}/$LAB_USER/argocd-training-examples.git --username $LAB_USERNAME
+```
+
+{{% alert title="Note" color="primary" %}}
+You can provide the password through the cli by using the flag `--password`.
+{{% /alert %}}
+
+Now the sync should work. Argo CD use the configured credentials to authenticate against your repository in Gitea.
+
+```bash
+argocd app sync argo-$LAB_USER 
+```
+
+You can define [credential templates](https://argoproj.github.io/argo-cd/user-guide/private-repositories/#credential-templates) when using the same credential for multiple Git repositories. The configured credentials are used for each Git repository beginning with the configured URL. The following command will create a credential which matches all git repositories for your username (e.g. https://hannelore15@{{% param giteaUrl %}}/hannelore15)
+```bash
+argocd repocreds add https://$LAB_USER@{{% param giteaUrl %}}/$LAB_USER --username $LAB_USER
+```
+
+Finally make your personal Git repository public again for the following labs. Uncheck the option `Visibility: Make Repository Private` under `Settings -> Repository` in the Gitea UI.
+
+{{% alert title="Note" color="primary" %}}
+TLS certificates and SSH private keys are supported alternative authentication methods by Argo CD. Proxy support can be configured as well in the repository settings.
+{{% /alert %}}
+
+Have a look in the [documentation](https://argoproj.github.io/argo-cd/user-guide/private-repositories/) for detailed information about accessing private repositories.
+
+
+## Task {{% param sectionnumber %}}.8: Delete the Application
 
 You can cascading delete the ArgoCD Application with the following command:
 
