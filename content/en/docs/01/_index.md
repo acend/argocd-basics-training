@@ -130,6 +130,51 @@ argocd --help
 
 You will see a list with the available commands and flags. If you prefer to browse the manual in the browser you'll find it in the [online documentation](https://argoproj.github.io/argo-cd/user-guide/commands/argocd/).
 
+```
+argocd controls a Argo CD server
+
+Usage:
+  argocd [flags]
+  argocd [command]
+
+Available Commands:
+  account     Manage account settings
+  admin       Contains a set of commands useful for Argo CD administrators and requires direct Kubernetes access
+  app         Manage applications
+  cert        Manage repository certificates and SSH known hosts entries
+  cluster     Manage cluster credentials
+  completion  output shell completion code for the specified shell (bash or zsh)
+  context     Switch between contexts
+  gpg         Manage GPG keys used for signature verification
+  help        Help about any command
+  login       Log in to Argo CD
+  logout      Log out from Argo CD
+  proj        Manage projects
+  relogin     Refresh an expired authenticate token
+  repo        Manage repository connection parameters
+  repocreds   Manage repository connection parameters
+  version     Print version information
+
+Flags:
+      --auth-token string               Authentication token
+      --client-crt string               Client certificate file
+      --client-crt-key string           Client certificate key file
+      --config string                   Path to Argo CD config (default "/home/bbuehlmann/.argocd/config")
+      --core                            If set to true then CLI talks directly to Kubernetes instead of talking to Argo CD API server
+      --grpc-web                        Enables gRPC-web protocol. Useful if Argo CD server is behind proxy which does not support HTTP2.
+      --grpc-web-root-path string       Enables gRPC-web protocol. Useful if Argo CD server is behind proxy which does not support HTTP2. Set web root.
+  -H, --header strings                  Sets additional header to all requests made by Argo CD CLI. (Can be repeated multiple times to add multiple headers, also supports comma separated headers)
+  -h, --help                            help for argocd
+      --http-retry-max int              Maximum number of retries to establish http connection to Argo CD server
+      --insecure                        Skip server certificate and domain verification
+      --logformat string                Set the logging format. One of: text|json (default "text")
+      --loglevel string                 Set the logging level. One of: debug|info|warn|error (default "info")
+      --plaintext                       Disable TLS
+      --port-forward                    Connect to a random argocd-server port using port forwarding
+      --port-forward-namespace string   Namespace name which should be used for port forwarding
+      --server string                   Argo CD server address
+      --server-crt string               Server certificate file
+```
 
 The `--help` flag is available for every command and subcommand of the CLI. Beside the documentation for every flag and subcommand in the current context, it prints out example command lines for the most common use cases.
 
@@ -140,7 +185,7 @@ argocd app create --help
 ```
 
 
-### Task {{% param sectionnumber %}}.2: Autocomplete
+### Task {{% param sectionnumber %}}.2: Autocompletion
 
 A productivity booster when working with the CLI is the autocompletion feature. It can be used for `bash` and `zsh` shells. You can enable the autocompletion for the current `bash` with the following command:
 
