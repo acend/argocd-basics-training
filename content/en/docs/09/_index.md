@@ -1,108 +1,132 @@
 ---
-title: "9. Orphaned Resources"
+title: "9. Projects"
 weight: 9
 sectionnumber: 9
 ---
 
-This lab contains demonstrates how to find orphaned top-level resources with Argo CD. Orphaned resources are not managed by Argo CD and could be potentially removed from cluster.
+Argo CD applications can be linked to a project which provides a logical grouping of applications. The following configurations can be made on a project:
+
+* Source repositories: Git repositories where application manifests are permitted to be retrieved from
+* Destination Clusters: Permitted destination K8s or OpenShift clusters
+* Destination Namespaces: Destination namespaces where the manifests are permitted to be deployed to
+* Permitted resource kinds to be synced (e.g. `ConfigMap`)
+* Sync windows: Time windows when an application is permitted to be synced by Argo CD.
+* Roles: Roles and policies assigned to the project. The roles are bound to OIDC groups and/or JWT tokens)
+* GPG Signature Keys: GnuPG keys that commits must be signed with in order to be allowed to sync them
+* Resource Monitoring: Visualization and monitoring of orphaned resources
+
+In summary, a project defines who can deploy what to which destination. This is very useful to keep the isolation between different user groups working on the same Argo CD instance and enables the capability of multi tenancy.
 
 
-## Task {{% param sectionnumber %}}.1: Create application and project
+## Task {{% param sectionnumber %}}.1: Create a new empty project
 
-```bash
-argocd app create argo-$LAB_USER --repo https://github.com/acend/argocd-training-examples.git --path 'example-app' --dest-server https://kubernetes.default.svc --dest-namespace $LAB_USER
-argocd app sync argo-$LAB_USER
-```
-
-Create new Argo CD project without restrictions for Git source repository (--src) nor destination cluster/namespace (--dest)
-```bash
-argocd proj create --src "*" --dest "*,*" apps-$LAB_USER
-```
-
-Enable visualization and monitoring of Orphaned Resources for the newly created project `apps-hanneloreXX`
-```bash
-argocd proj set apps-$LAB_USER --orphaned-resources --orphaned-resources-warn
-```
-
-{{% alert title="Note" color="primary" %}}
-The flag `--orphaned-resources` enables the determinability of orphaned resources in Argo CD. After a refresh you will see them in the user interface on the project when selecting the checkbox _Orphaned Resources_.
-With the flag `--orphaned-resources-warn` enabled, for each Argo CD application with orphaned resources in the destination namespace a warning will be shown in the user interface.
-{{% /alert %}}
-
-
-## Task {{% param sectionnumber %}}.2: Assign application to project
-
-Assign application to newly created project
-```bash
-argocd app set argo-$LAB_USER --project apps-$LAB_USER
-```
-
-Ensure that the application is now assigned to the new project `apps-hanneloreXX`
-```bash
-argocd app get argo-$LAB_USER
-```
-
-Refresh the application
-```bash
-argocd app get --refresh argo-$LAB_USER
-```
-
-
-## Task {{% param sectionnumber %}}.3: Create orphaned resource
-
-Now create the orphan service `black-hole` in the same target namespace the Argo CD application has:
+Now we want to create a new empty Argo CD project.
 
 ```bash
-cat <<EOF | kubectl apply -f -
-apiVersion: v1
-kind: Service
-metadata:
-  name: black-hole
-spec:
-  ports:
-  - port: 1234
-    targetPort: 1234
-EOF
+argocd proj create project-$LAB_USER
+argocd proj list
 ```
 
-{{% alert title="Note" color="primary" %}}
-This service will be detected as orphaned resource because it is not managed by Argo CD. All resources which are managed by Argo CD are marked with the label `app.kubernetes.io/instance` per default. The key of the label can be changed with the setting `application.instanceLabelKey`. See [documentation](https://argoproj.github.io/argo-cd/faq/#why-is-my-app-out-of-sync-even-after-syncing) for further details.
-{{% /alert %}}
-
-
-Print all resources
-```bash
-argocd app resources argo-$LAB_USER
-```
-
-You see in the output that the manually created service `black-hole` is marked as orphaned:
-```
-GROUP  KIND        NAMESPACE    NAME            ORPHANED
-       Service     hannelore15  simple-example  No
-apps   Deployment  hannelore15  simple-example  No
-       Service     hannelore15  black-hole      Yes
-```
-
-When viewing the details of the application you will see the warning about the orphaned resource
-```bash
-argocd app get --refresh argo-$LAB_USER
-```
+You should find in the output your newly created project:
 
 ```
+NAME                 DESCRIPTION  DESTINATIONS  SOURCES  CLUSTER-RESOURCE-WHITELIST  NAMESPACE-RESOURCE-BLACKLIST  SIGNATURE-KEYS  ORPHANED-RESOURCES
 ...
-CONDITION                MESSAGE                               LAST TRANSITION
-OrphanedResourceWarning  Application has 1 orphaned resources  2021-09-02 16:20:36 +0200 CEST
+default                           *,*           *        */*                         <none>                        <none>          disabled
+project-hannelore15               <none>        <none>   <none>                      <none>                        <none>          disabled
 ...
 ```
 
 
-## Task {{% param sectionnumber %}}.4: Housekeeping
+## Task {{% param sectionnumber %}}.2: Define permitted sources and destinations
 
-Clean up the resources created in this lab
+The next step is to deploy a new application and assign it to the created project `project-hanneloreXX` by using the flag `--project`
 
 ```bash
-argocd app delete argo-$LAB_USER -y
-argocd proj delete apps-$LAB_USER
+argocd app create project-app-$LAB_USER --repo https://github.com/acend/argocd-training-examples.git --path 'example-app' --dest-server https://kubernetes.default.svc --dest-namespace $LAB_USER --project project-$LAB_USER
 ```
 
-Find more detailed information about [Orphaned Resources in the docs](https://argoproj.github.io/argo-cd/user-guide/orphaned-resources/).
+You will receive an error when trying to create the new application
+```
+FATA[0000] rpc error: code = InvalidArgument desc = application spec is invalid: InvalidSpecError: application repo https://github.com/acend/argocd-training-examples.git is not permitted in project 'project-hannelore15';InvalidSpecError: application destination {https://kubernetes.default.svc hannelore15} is not permitted in project 'project-hannelore15' 
+```
+
+The cause for this error is the missing setting for the allowed destination clusters and namespaces on the project. We will fix that by setting the allowed destination cluster to `https://kubernetes.default.svc` and using the wildcard expression `hannelore*` as allowed namespace names.
+
+```bash
+argocd proj add-destination project-$LAB_USER https://kubernetes.default.svc "hannelore*"
+```
+
+The same issue would happen because of the missing source repository expression. We will use the wildcard "*" to allow all source repositories.
+
+```bash
+argocd proj add-source project-$LAB_USER "*"
+```
+
+Now print out the details of the project again
+
+```bash
+argocd proj get project-$LAB_USER
+```
+
+... and you will see the permitted source repository and destination cluster/namespace:
+
+```
+...
+Destinations:                https://kubernetes.default.svc,hannelore*
+Repositories:                *
+...
+```
+
+Now you should be able to create a new application linked with the project
+
+```bash
+argocd app create project-app-$LAB_USER --repo https://github.com/acend/argocd-training-examples.git --path 'example-app' --dest-server https://kubernetes.default.svc --dest-namespace $LAB_USER --project project-$LAB_USER
+```
+
+Now sync the application manifest
+
+```bash
+argocd app sync project-app-$LAB_USER
+```
+
+{{% alert title="Note" color="primary" %}}
+The feature of limiting source repositories and destination clusters/namespaces is a powerful construct of Argo CD as roles and policies can be assigned to projects. With this tool you can enforce a fine grained permission model to control the access of the users to the different clusters and namespaces.
+{{% /alert %}}
+
+
+## Task {{% param sectionnumber %}}.3: Deny resources by kind
+
+On a project there is the possibility to restrict the kind of resources that can be synchronized. The restrictions are defined by whitelisting for cluster scoped resources and blacklisted for namespace scoped resources.
+
+Let's extend our existing project and deny the synchronization of `Services`.
+
+```bash
+argocd proj deny-namespace-resource project-$LAB_USER "" Service
+```
+
+Now sync the application
+```bash
+argocd app sync project-app-$LAB_USER
+```
+
+The sync operation will fail with the following error
+
+```
+...
+GROUP  KIND        NAMESPACE    NAME            STATUS   HEALTH   HOOK  MESSAGE
+       Service     hannelore15  simple-example  Unknown  Missing        Resource :Service is not permitted in project project-hannelore15.
+apps   Deployment  hannelore15  simple-example  Synced   Healthy        
+FATA[0001] Operation has completed with phase: Failed   
+```
+
+Remove the kind `Service` from the deny list by using `allow-namespace-resource`
+
+```bash
+argocd proj allow-namespace-resource project-$LAB_USER "" Service
+```
+
+... and sync the app again
+```bash
+argocd app sync project-app-$LAB_USER
+```
