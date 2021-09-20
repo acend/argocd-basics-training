@@ -48,14 +48,13 @@ Commit or version pinning can achieved in two ways. Eiteher you van specifiy the
 
 ## Task {{% param sectionnumber %}}.1: Git tracking
 
-In this task we're going to configure a version pinning with a Git tag.
+In this task we're going to configure a version tracking with a Git tag. The goal of this task to show you how to tack the patch version from a Git tag and therefore freeze the deployment to specific commits.
 
 First we create a Git tag `v1.0.0` and push the tag to the repository.
 
 {{% details title="Hint" %}}
 
 To create and push a Git tag execute the following command:
-
 ```bash
 git tag v1.0.0
 git push origin --tags
@@ -63,13 +62,12 @@ git push origin --tags
 {{% /details %}}
 
 Next we pinn our application to this version
-
 {{% details title="Hint" %}}
 
-To pinn the v1.0.0 Git tag on our application execute the following command:
+To track the v1.0 patch version tag on our application execute the following command:
 
 ```bash
-argocd app set argo-complex-$LAB_USER --revision v1.0.0
+argocd app set argo-complex-$LAB_USER --revision v1.0
 ```
 {{% /details %}}
 
@@ -78,8 +76,8 @@ Increase the number of replicas in your file `<workspace>/complex-application/pr
 After that commit and push your changes to the Git repository.
 
 {{% details title="Hint" %}}
-```
-{{< highlight YAML "hl_lines=8" >}}
+
+{{< highlight YAML "hl_lines=9" >}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -138,8 +136,8 @@ spec:
               cpu: 50m
               memory: 100Mi
 {{< / highlight >}}
-```
 
+For commiting and pushing your changes to your Git repository, execute follwing command:
 
 ```bash
 git add . && git commit -m "scale producer replicas to 2" && git push origin
@@ -147,9 +145,90 @@ git add . && git commit -m "scale producer replicas to 2" && git push origin
 
 {{% /details %}}
 
-
+Now you can try to sync your applicaion with following command:
 
 ```bash
 argocd app sync argo-complex-$LAB_USER
 ```
 
+Check the number of configured replicas on the consumer deployment.
+
+{{% details title="Hint" %}}
+To see the number of configured replicas execute follwing command:
+
+```bash
+kubectl describe deployment producer
+```
+
+You can see in the command output, the number of replicas didn't changed and remains to one. This is because we only track tagged version `1.0.*` or `>=1.0.0 <1.1.0.`
+
+{{< highlight YAML "hl_lines=1" >}}
+TODO: insert command output
+{{< / highlight >}}
+
+
+{{% /details %}}
+
+Let ArgoCD pickup the latest change, for that we have to create a git tag that is tracked with the configured tracking stratiegie.
+Let's create a new Git tag with the patch version `v.1.0.1` and push it to the repsitory. Then resync the ArgoCD app and checkt the status.
+
+{{% details title="Hint" %}}
+Execute the following command to create and push a new Git tag
+
+```bash
+git tag v1.0.1 && git push origin --tags
+```
+
+{{% /details %}}
+
+With the new created tag, ArgoCD is goingt to pick up and apply the latest changes and scales up the replica count to 2.
+First let us sync the changes and check if the ArgoCD App is in Sync.
+
+```bash
+argocd app sync argo-complex-$LAB_USER
+```
+
+Then diplay the status with following command:
+
+```bash
+argocd app get argo-complex-$LAB_USER
+```
+
+If the app is in sync, you can check the number of replicas of the producer deployment.
+
+
+```bash
+kubectl describe deployment producer
+```
+
+Now you can see in the output that the replica count has changed to 2.
+
+```bash
+TODO
+```
+
+
+## Task {{% param sectionnumber %}}.2: Cleanup
+
+Let us clean up the tracking task.
+
+First remove the tracked version and set the revision to the HEAD reference. So ArgoCD is tracking again the latest commit of the configured branch. And then set the producer replica count back to 1 and commit your changes.
+
+{{% details title="Hint" %}}
+To remove the pinned version on our application execute the following command:
+
+```bash
+argocd app set argo-complex-$LAB_USER --revision HEAD
+```
+
+Open yout producer.yaml file and set the replica count back to 1.
+```yaml
+Deployment.yaml
+```
+
+At last commit and push your changes with the following command:
+```bash
+git add . && git commit -m "revert replica count to 1" && git push origin
+```
+
+{{% /details %}}

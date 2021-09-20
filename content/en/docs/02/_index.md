@@ -434,12 +434,12 @@ The Git repository we have imported to Gitea is public available for the whole w
 First make the Git repository in Gitea private by checking the option `Visibility: Make Repository Private` under `Settings -> Repository`. Now sync the app again.
 
 ```bash
-argocd app sync argo-$LAB_USER 
+argocd app sync argo-$LAB_USER
 ```
 
 You will see the following error
 ```
-FATA[0000] rpc error: code = FailedPrecondition desc = authentication required 
+FATA[0000] rpc error: code = FailedPrecondition desc = authentication required
 ```
 Argo CD can't any longer access the protected repository without providing credentials for authentication. Next assign credentials to used Git repository. You have to provide the Gitea password interactively.
 
@@ -454,7 +454,7 @@ You can provide the password through the cli by using the flag `--password`.
 Now the sync should work. Argo CD use the configured credentials to authenticate against your repository in Gitea.
 
 ```bash
-argocd app sync argo-$LAB_USER 
+argocd app sync argo-$LAB_USER
 ```
 
 You can define [credential templates](https://argoproj.github.io/argo-cd/user-guide/private-repositories/#credential-templates) when using the same credential for multiple Git repositories. The configured credentials are used for each Git repository beginning with the configured URL. The following command will create a credential which matches all git repositories for your username (e.g. https://hannelore15@{{% param giteaUrl %}}/hannelore15)
