@@ -148,6 +148,7 @@ git add . && git commit -m "scale producer replicas to 2" && git push origin
 {{% /details %}}
 
 
+
 ```bash
 argocd app sync argo-complex-$LAB_USER
 ```
