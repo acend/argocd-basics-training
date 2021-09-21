@@ -32,7 +32,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: app-of-apps-3
-  namespace: argocd
+  namespace: pitc-infra-argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
@@ -46,8 +46,7 @@ spec:
     targetRevision: HEAD
 ```
 
-Now let us create the parent Application which deploys our child applications
-
+Now let us create the parent Application which deploys our child applications.
 
 ```bash
 argocd app create argo-aoa-$LAB_USER --repo https://{{% param giteaUrl %}}/$LAB_USER/argocd-training-examples.git --path 'app-of-apps/apps' --dest-server https://kubernetes.default.svc --dest-namespace $LAB_USER
@@ -55,5 +54,8 @@ argocd app create argo-aoa-$LAB_USER --repo https://{{% param giteaUrl %}}/$LAB_
 
 Expected output: `application 'argo-aoa-<username>' created`
 
-Explore the Argo application and its resources in the web UI or via CLI.
+Explore the Argo parent application in the web UI.
+
+As you can see our newly created parent app consits of another three apps. 
+![App of apps](appofapps.png)
 
