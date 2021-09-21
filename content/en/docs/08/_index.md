@@ -48,7 +48,7 @@ argocd app create project-app-$LAB_USER --repo https://github.com/acend/argocd-t
 
 You will receive an error when trying to create the new application
 ```
-FATA[0000] rpc error: code = InvalidArgument desc = application spec is invalid: InvalidSpecError: application repo https://github.com/acend/argocd-training-examples.git is not permitted in project 'project-hannelore15';InvalidSpecError: application destination {https://kubernetes.default.svc hannelore15} is not permitted in project 'project-hannelore15' 
+FATA[0000] rpc error: code = InvalidArgument desc = application spec is invalid: InvalidSpecError: application repo https://github.com/acend/argocd-training-examples.git is not permitted in project 'project-hannelore15';InvalidSpecError: application destination {https://kubernetes.default.svc hannelore15} is not permitted in project 'project-hannelore15'
 ```
 
 The cause for this error is the missing setting for the allowed destination clusters and namespaces on the project. We will fix that by setting the allowed destination cluster to `https://kubernetes.default.svc` and using the wildcard expression `hannelore*` as allowed namespace names.
@@ -116,8 +116,8 @@ The sync operation will fail with the following error
 ...
 GROUP  KIND        NAMESPACE    NAME            STATUS   HEALTH   HOOK  MESSAGE
        Service     hannelore15  simple-example  Unknown  Missing        Resource :Service is not permitted in project project-hannelore15.
-apps   Deployment  hannelore15  simple-example  Synced   Healthy        
-FATA[0001] Operation has completed with phase: Failed   
+apps   Deployment  hannelore15  simple-example  Synced   Healthy
+FATA[0001] Operation has completed with phase: Failed
 ```
 
 Remove the kind `Service` from the deny list by using `allow-namespace-resource`

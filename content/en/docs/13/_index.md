@@ -75,7 +75,7 @@ spec:
     metadata:
       name: '{{name}}-guestbook' # 'name' field of the cluster
     spec:
-      source: 
+      source:
         # (...)
       destination:
         server: '{{server}}' # 'server' field of the cluster
@@ -91,7 +91,6 @@ The Git generator allows you to create Applications based on files within a Git 
 ### Matrix
 
 The Matrix generator may be used to combine the generated parameters of two separate generators.
-
 
 
 ## Task {{% param sectionnumber %}}.1: Create an ApplicationSet
