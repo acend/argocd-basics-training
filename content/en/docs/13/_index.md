@@ -6,6 +6,7 @@ sectionnumber: 13
 
 {{% alert title="Note" color="primary" %}}
 ArgoCD ApplicationSet ressources are in an early alpha stage!
+If you wanna try the application set by yourself, make sure that the [ApplicationSet Controller is installed](https://argocd-applicationset.readthedocs.io/en/stable/Getting-Started/#a-install-applicationset-into-an-existing-argo-cd-install) alongside the ArgoCD controller.
 {{% /alert %}}
 
 With the ApplicationSet ArgoCD adds support for managing ArgoCD Application across a large number of clusters and environments. Plus it adds the capability of managing multitenant Kubernetes clusters.
@@ -99,33 +100,66 @@ In this lab section we're going to create an ApplicationSet for an multi-environ
 First create a ApplicationSet definition in `<workspace>/appSet.yaml` with following properties:
 
 * Name: `example-app`
-* List generator with two clusters, named `prod` and `dev`
-* Url for both clusters is: `https://kubernetes.default.svc`
-* As name template use: `{{cluster}}-example-app`
-* Source repository: `https://github.com/acend/argocd-training-examples.git` with revision to `HEAD` and path `example-app`
+* Matrix generator with two child generators
+  * Git directory generator pointing on `applications/*`
+  * List generator with two clusters, named `prod` and `dev`, both with the default Kubernetes API url `https://kubernetes.default.svc`
+* As name template use: `as-{{path.basename}}-{{cluster}}`
+* Source repository: `https://github.com/schlapzz/argocd-applicationset.git` with revision to `HEAD` and path `{{path}}`
+* For the namespace use `<LAB_USER>-{{cluster}}`
+
+In the end the matrix generator should produce in total 4 Applications with following properties:
+
+```yaml
+- name: as-producer-dev
+  path: applications/producer/
+  path.basename: producer
+  namespace: <LAB_USER>-dev
+
+- name: as-consumer-prod
+  path: applications/consumer/
+  path.basename: consumer
+  namespace: <LAB_USER>-prod
+
+- name: as-producer-dev
+  path: applications/producer/
+  namespace: <LAB_USER>-dev
+
+- name: as-consumer-prod
+  path: applications/consumer/
+  path.basename: consumer
+  namespace: <LAB_USER>-prod
+```
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: example-app
+  name: application-set-example
 spec:
   generators:
-  - list:
-      elements:
-      - cluster: dev
-        url: https://kubernetes.default.svc
-      - cluster: prod
-        url: https://kubernetes.default.svc
+    - matrix:
+        generators:
+          - list:
+              elements:
+              - cluster: dev
+                url: https://kubernetes.default.svc
+              - cluster: prod
+                url: https://kubernetes.default.svc
+          - git:
+              repoURL: https://github.com/schlapzz/argocd-applicationset.git
+              revision: HEAD
+              directories:
+                - path: applications/*
   template:
     metadata:
-      name: '{{cluster}}-example-app'
+      name: 'as-{{path.basename}}-{{cluster}}'
     spec:
+      project: default
       source:
-        repoURL: https://github.com/acend/argocd-training-examples.git
+        repoURL: https://github.com/schlapzz/argocd-applicationset.git
         targetRevision: HEAD
-        path: example-app
+        path: '{{path}}'
       destination:
         server: https://kubernetes.default.svc
-        namespace: <LAB_USER>
+        namespace: '<LAB_USER>-{{cluster}}'
 ```
