@@ -1,112 +1,99 @@
 ---
-title: "10. Sync Windows"
+title: "10. Orphaned Resources"
 weight: 10
 sectionnumber: 10
 ---
 
-With Sync windows the user can define at which time applications can be synchronized automatically and manually by Argo CD. Allowed and forbidden time windows can be defined. Sync windows can be restricted to a subset of applications, clusters and namespaces and thus offer great flexibility.
+This lab contains demonstrates how to find orphaned top-level resources with Argo CD. Orphaned resources are not managed by Argo CD and could be potentially removed from cluster.
 
 
 ## Task {{% param sectionnumber %}}.1: Create application and project
 
-Now we want to create a new empty Argo CD project.
-
 ```bash
-argocd proj create -s "*" -d "*,*" project-sync-windows-$LAB_USER
-argocd app create sync-windows-$LAB_USER --repo https://github.com/acend/argocd-training-examples.git --path 'example-app' --dest-server https://kubernetes.default.svc --dest-namespace $LAB_USER --project project-sync-windows-$LAB_USER
-argocd app sync sync-windows-$LAB_USER
+argocd app create argo-$LAB_USER --repo https://github.com/acend/argocd-training-examples.git --path 'example-app' --dest-server https://kubernetes.default.svc --dest-namespace $LAB_USER
+argocd app sync argo-$LAB_USER
 ```
 
-You should see the following message after a successful sync
-
-```
-...
-Message:            successfully synced (all tasks run)
-...
-```
-
-
-## Task {{% param sectionnumber %}}.2: Create sync windows
-
-Per default no sync windows are pre-configured in Argo CD. That means manual and automatic sync operations are allowed all the time. Now we want to create a sync window which denies syncs during the day between 08:00 and 20:00.
-
-
+Create new Argo CD project without restrictions for Git source repository (--src) nor destination cluster/namespace (--dest)
 ```bash
-argocd proj windows add project-sync-windows-$LAB_USER \
-    --kind deny \
-    --schedule "0 8 * * *" \
-    --duration 12h \
-    --applications "*" \
-    --namespaces "" \
-    --clusters ""
+argocd proj create --src "*" --dest "*,*" apps-$LAB_USER
 ```
 
-List all registered sync windows for the project.
-
+Enable visualization and monitoring of Orphaned Resources for the newly created project `apps-hanneloreXX`
 ```bash
-argocd proj windows list project-sync-windows-$LAB_USER
-```
-
-..prints out
-
-```
-ID  STATUS  KIND  SCHEDULE   DURATION  APPLICATIONS  NAMESPACES  CLUSTERS  MANUALSYNC
-0   Active  deny  0 8 * * *  12h       *             *           *         Disabled
-```
-The window starts at 08:00 in the morning an lasts for 12 hours and denies all sync operation for all applications.
-
-{{% alert title="Note" color="primary" %}}
-Paste the cron expression on [Crontab Guru](https://crontab.guru/#0_8_*_*_*) to get an explanation of it.
-{{% /alert %}}
-
-Now try to sync the previously created application
-
-```bash
-argocd app sync sync-windows-$LAB_USER
-```
-
-This manual sync request will be blocked due to the active sync window with the following output
-```bash
-FATA[0000] rpc error: code = PermissionDenied desc = Cannot sync: Blocked by sync window
+argocd proj set apps-$LAB_USER --orphaned-resources --orphaned-resources-warn
 ```
 
 {{% alert title="Note" color="primary" %}}
-If there is an active matching allow window and an active matching deny window then syncs will be denied as deny windows override allow windows.
+The flag `--orphaned-resources` enables the determinability of orphaned resources in Argo CD. After a refresh you will see them in the user interface on the project when selecting the checkbox _Orphaned Resources_.
+With the flag `--orphaned-resources-warn` enabled, for each Argo CD application with orphaned resources in the destination namespace a warning will be shown in the user interface.
 {{% /alert %}}
 
 
-## Task {{% param sectionnumber %}}.2: Updating the sync window
+## Task {{% param sectionnumber %}}.2: Assign application to project
 
-Now we want to restrict the defined sync windows just for the application with name `sketchy-app`. We update the existing sync window with the new application name.
-
+Assign application to newly created project
 ```bash
-argocd proj windows update project-sync-windows-$LAB_USER 0 --applications "sketchy-app"
+argocd app set argo-$LAB_USER --project apps-$LAB_USER
 ```
 
-Sync the application again
+Ensure that the application is now assigned to the new project `apps-hanneloreXX`
 ```bash
-argocd app sync sync-windows-$LAB_USER
+argocd app get argo-$LAB_USER
 ```
 
-.. which now works because the sync window only applies for applications with the name `sketchy-app`.
-
-Revert the changes and use wildcard `*` again to match all applications
-
+Refresh the application
 ```bash
-argocd proj windows update project-sync-windows-$LAB_USER 0 --applications "*"
+argocd app get --refresh argo-$LAB_USER
 ```
 
 
-## Task {{% param sectionnumber %}}.2: Enabling manual syncs
+## Task {{% param sectionnumber %}}.3: Create orphaned resource
 
-Now enable the manual sync for the window and try again to sync manually
+Now create the orphan service `black-hole` in the same target namespace the Argo CD application has:
 
 ```bash
-argocd proj windows enable-manual-sync project-sync-windows-$LAB_USER 0
-argocd app sync sync-windows-$LAB_USER
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: Service
+metadata:
+  name: black-hole
+spec:
+  ports:
+  - port: 1234
+    targetPort: 1234
+EOF
 ```
 
-Which now work flawless. Automatic syncs are still forbidden and will not occur between 08:00 and 20:00.
+{{% alert title="Note" color="primary" %}}
+This service will be detected as orphaned resource because it is not managed by Argo CD. All resources which are managed by Argo CD are marked with the label `app.kubernetes.io/instance` per default. The key of the label can be changed with the setting `application.instanceLabelKey`. See [documentation](https://argoproj.github.io/argo-cd/faq/#why-is-my-app-out-of-sync-even-after-syncing) for further details.
+{{% /alert %}}
+
+
+Print all resources
+```bash
+argocd app resources argo-$LAB_USER
+```
+
+You see in the output that the manually created service `black-hole` is marked as orphaned:
+```
+GROUP  KIND        NAMESPACE    NAME            ORPHANED
+       Service     hannelore15  simple-example  No
+apps   Deployment  hannelore15  simple-example  No
+       Service     hannelore15  black-hole      Yes
+```
+
+When viewing the details of the application you will see the warning about the orphaned resource
+```bash
+argocd app get --refresh argo-$LAB_USER
+```
+
+```
+...
+CONDITION                MESSAGE                               LAST TRANSITION
+OrphanedResourceWarning  Application has 1 orphaned resources  2021-09-02 16:20:36 +0200 CEST
+...
+```
 
 
 ## Task {{% param sectionnumber %}}.4: Housekeeping
@@ -114,9 +101,8 @@ Which now work flawless. Automatic syncs are still forbidden and will not occur 
 Clean up the resources created in this lab
 
 ```bash
-argocd proj windows delete project-sync-windows-$LAB_USER 0
-argocd app delete sync-windows-$LAB_USER -y
-argocd proj delete project-sync-windows-$LAB_USER
+argocd app delete argo-$LAB_USER -y
+argocd proj delete apps-$LAB_USER
 ```
 
-Find more detailed information about [Sync Windows in the docs](https://argoproj.github.io/argo-cd/user-guide/sync_windows/#sync-windows).
+Find more detailed information about [Orphaned Resources in the docs](https://argoproj.github.io/argo-cd/user-guide/orphaned-resources/).

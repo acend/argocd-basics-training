@@ -1,132 +1,234 @@
 ---
-title: "8. Projects"
+title: "8. Tracking and Deployment Strategies"
 weight: 8
 sectionnumber: 8
 ---
 
-Argo CD applications can be linked to a project which provides a logical grouping of applications. The following configurations can be made on a project:
-
-* Source repositories: Git repositories where application manifests are permitted to be retrieved from
-* Destination Clusters: Permitted destination K8s or OpenShift clusters
-* Destination Namespaces: Destination namespaces where the manifests are permitted to be deployed to
-* Permitted resource kinds to be synced (e.g. `ConfigMap`)
-* Sync windows: Time windows when an application is permitted to be synced by Argo CD.
-* Roles: Roles and policies assigned to the project. The roles are bound to OIDC groups and/or JWT tokens)
-* GPG Signature Keys: GnuPG keys that commits must be signed with in order to be allowed to sync them
-* Resource Monitoring: Visualization and monitoring of orphaned resources
-
-In summary, a project defines who can deploy what to which destination. This is very useful to keep the isolation between different user groups working on the same Argo CD instance and enables the capability of multi tenancy.
+If you are using ArgoCD with Git or Helm tools, ArgoCD gives you the availability to configure different tracking and deployment strategies.
 
 
-## Task {{% param sectionnumber %}}.1: Create a new empty project
+## Helm
 
-Now we want to create a new empty Argo CD project.
+For Helm you can use Semver versions either to pin to a specific version or to track minor / patch changes.
+
+| Use Case                                   | How                    | Examples                |
+|--------------------------------------------|------------------------|-------------------------|
+| Pin to a version (e.g. in production)      | Use the version number | 1.2.0                   |
+| Track patches (e.g. in pre-production)     | Use a range            | 1.2.* or >=1.2.0 <1.3.0 |
+| Track minor releases (e.g. in QA)          | Use a range            | 1.* or >=1.0.0 <2.0.0   |
+| Use the latest (e.g. in local development) | Use star range         | * or >=0.0.0            |
+
+
+## Git
+
+
+| Use Case                                   | How                                                                                     | Notes                      |
+|--------------------------------------------|-----------------------------------------------------------------------------------------|----------------------------|
+| Pin to a version (e.g. in production)      | Either (a) tag the commit with (e.g. v1.2.0) and use that tag, or (b) using commit SHA. | See commit pinning.        |
+| Track patches (e.g. in pre-production)     | Tag/re-tag the commit, e.g. (e.g. v1.2) and use that tag.                               | See tag tracking           |
+| Track minor releases (e.g. in QA)          | Re-tag the commit as (e.g. v1) and use that tag.                                        | See tag tracking           |
+| Use the latest (e.g. in local development) | Use HEAD or master (assuming master is your master branch).                             | See HEAD / Branch Tracking |
+
+
+### Head / Branch Tracking
+
+Either a branch name or a symbolic reference (like HEAD). For branches ArgoCD will take the latest commit of this branch.
+This method is often used in development environment where you want to apply the latest changes.
+
+
+### Tag Tracking
+
+The state at the specified Git tag will be applied to the cluster. This provides some advantages over branch tracking. Tags are less frequently updated and more stable than a tracked branch. It is more suitable for staging environments due the capability of tracking minor and patch releases.
+
+
+### Commit Pinning
+
+Commit or version pinning can achieved in two ways. Eiteher you van specifiy the full semver Git tag (v1.2.0) or a commit SHA. Usually the Git tag offers more flexibility while the commit SHA offers more immutuability. Commit pinning is generally the first choice for production environments.
+
+
+## Task {{% param sectionnumber %}}.1: Git tracking
+
+In this task we're going to configure a version tracking with a Git tag. The goal of this task to show you how to tack the patch version from a Git tag and therefore freeze the deployment to specific commits.
+
+First we create a Git tag `v1.0.0` and push the tag to the repository.
+
+{{% details title="Hint" %}}
+
+To create and push a Git tag execute the following command:
+```bash
+git tag v1.0.0
+git push origin --tags
+```
+{{% /details %}}
+
+Next we pinn our application to this version
+{{% details title="Hint" %}}
+
+To track the v1.0 patch version tag on our application execute the following command:
 
 ```bash
-argocd proj create project-$LAB_USER
-argocd proj list
+argocd app set argo-complex-$LAB_USER --revision v1.0
 ```
-
-You should find in the output your newly created project:
-
-```
-NAME                 DESCRIPTION  DESTINATIONS  SOURCES  CLUSTER-RESOURCE-WHITELIST  NAMESPACE-RESOURCE-BLACKLIST  SIGNATURE-KEYS  ORPHANED-RESOURCES
-...
-default                           *,*           *        */*                         <none>                        <none>          disabled
-project-hannelore15               <none>        <none>   <none>                      <none>                        <none>          disabled
-...
-```
+{{% /details %}}
 
 
-## Task {{% param sectionnumber %}}.2: Define permitted sources and destinations
+Increase the number of replicas in your file `<workspace>/complex-application/producer.yaml` to 2.
+After that commit and push your changes to the Git repository.
 
-The next step is to deploy a new application and assign it to the created project `project-hanneloreXX` by using the flag `--project`
+{{% details title="Hint" %}}
+
+{{< highlight YAML "hl_lines=9" >}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: data-producer
+    application: amm-techlab
+  name: data-producer
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      deployment: data-producer
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        application: amm-techlab
+        deployment: data-producer
+        app: data-producer
+    spec:
+      containers:
+        - image: quay.io/puzzle/quarkus-techlab-data-producer:jaegerkafka
+          imagePullPolicy: Always
+          env:
+            - name: PRODUCER_JAEGER_ENABLED
+              value: 'true'
+          livenessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /health/live
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 3
+            periodSeconds: 20
+            timeoutSeconds: 15
+          readinessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /health/ready
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 3
+            periodSeconds: 20
+            timeoutSeconds: 15
+          name: data-producer
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          resources:
+            limits:
+              cpu: '1'
+              memory: 500Mi
+            requests:
+              cpu: 50m
+              memory: 100Mi
+{{< / highlight >}}
+
+For commiting and pushing your changes to your Git repository, execute follwing command:
 
 ```bash
-argocd app create project-app-$LAB_USER --repo https://github.com/acend/argocd-training-examples.git --path 'example-app' --dest-server https://kubernetes.default.svc --dest-namespace $LAB_USER --project project-$LAB_USER
+git add . && git commit -m "scale producer replicas to 2" && git push origin
 ```
 
-You will receive an error when trying to create the new application
-```
-FATA[0000] rpc error: code = InvalidArgument desc = application spec is invalid: InvalidSpecError: application repo https://github.com/acend/argocd-training-examples.git is not permitted in project 'project-hannelore15';InvalidSpecError: application destination {https://kubernetes.default.svc hannelore15} is not permitted in project 'project-hannelore15' 
-```
+{{% /details %}}
 
-The cause for this error is the missing setting for the allowed destination clusters and namespaces on the project. We will fix that by setting the allowed destination cluster to `https://kubernetes.default.svc` and using the wildcard expression `hannelore*` as allowed namespace names.
+Now you can try to sync your applicaion with following command:
 
 ```bash
-argocd proj add-destination project-$LAB_USER https://kubernetes.default.svc "hannelore*"
+argocd app sync argo-complex-$LAB_USER
 ```
 
-The same issue would happen because of the missing source repository expression. We will use the wildcard "*" to allow all source repositories.
+Check the number of configured replicas on the consumer deployment.
+
+{{% details title="Hint" %}}
+To see the number of configured replicas execute follwing command:
 
 ```bash
-argocd proj add-source project-$LAB_USER "*"
+kubectl describe deployment producer
 ```
 
-Now print out the details of the project again
+You can see in the command output, the number of replicas didn't changed and remains to one. This is because we only track tagged version `1.0.*` or `>=1.0.0 <1.1.0.`
+
+{{< highlight YAML "hl_lines=1" >}}
+TODO: insert command output
+{{< / highlight >}}
+
+
+{{% /details %}}
+
+Let ArgoCD pickup the latest change, for that we have to create a git tag that is tracked with the configured tracking stratiegie.
+Let's create a new Git tag with the patch version `v.1.0.1` and push it to the repsitory. Then resync the ArgoCD app and checkt the status.
+
+{{% details title="Hint" %}}
+Execute the following command to create and push a new Git tag
 
 ```bash
-argocd proj get project-$LAB_USER
+git tag v1.0.1 && git push origin --tags
 ```
 
-... and you will see the permitted source repository and destination cluster/namespace:
+{{% /details %}}
 
-```
-...
-Destinations:                https://kubernetes.default.svc,hannelore*
-Repositories:                *
-...
-```
-
-Now you should be able to create a new application linked with the project
+With the new created tag, ArgoCD is goingt to pick up and apply the latest changes and scales up the replica count to 2.
+First let us sync the changes and check if the ArgoCD App is in Sync.
 
 ```bash
-argocd app create project-app-$LAB_USER --repo https://github.com/acend/argocd-training-examples.git --path 'example-app' --dest-server https://kubernetes.default.svc --dest-namespace $LAB_USER --project project-$LAB_USER
+argocd app sync argo-complex-$LAB_USER
 ```
 
-Now sync the application manifest
+Then diplay the status with following command:
 
 ```bash
-argocd app sync project-app-$LAB_USER
+argocd app get argo-complex-$LAB_USER
 ```
 
-{{% alert title="Note" color="primary" %}}
-The feature of limiting source repositories and destination clusters/namespaces is a powerful construct of Argo CD as roles and policies can be assigned to projects. With this tool you can enforce a fine grained permission model to control the access of the users to the different clusters and namespaces.
-{{% /alert %}}
+If the app is in sync, you can check the number of replicas of the producer deployment.
 
-
-## Task {{% param sectionnumber %}}.3: Deny resources by kind
-
-On a project there is the possibility to restrict the kind of resources that can be synchronized. The restrictions are defined by whitelisting for cluster scoped resources and blacklisted for namespace scoped resources.
-
-Let's extend our existing project and deny the synchronization of `Services`.
 
 ```bash
-argocd proj deny-namespace-resource project-$LAB_USER "" Service
+kubectl describe deployment producer
 ```
 
-Now sync the application
-```bash
-argocd app sync project-app-$LAB_USER
-```
-
-The sync operation will fail with the following error
-
-```
-...
-GROUP  KIND        NAMESPACE    NAME            STATUS   HEALTH   HOOK  MESSAGE
-       Service     hannelore15  simple-example  Unknown  Missing        Resource :Service is not permitted in project project-hannelore15.
-apps   Deployment  hannelore15  simple-example  Synced   Healthy        
-FATA[0001] Operation has completed with phase: Failed   
-```
-
-Remove the kind `Service` from the deny list by using `allow-namespace-resource`
+Now you can see in the output that the replica count has changed to 2.
 
 ```bash
-argocd proj allow-namespace-resource project-$LAB_USER "" Service
+TODO
 ```
 
-... and sync the app again
+
+## Task {{% param sectionnumber %}}.2: Cleanup
+
+Let us clean up the tracking task.
+
+First remove the tracked version and set the revision to the HEAD reference. So ArgoCD is tracking again the latest commit of the configured branch. And then set the producer replica count back to 1 and commit your changes.
+
+{{% details title="Hint" %}}
+To remove the pinned version on our application execute the following command:
+
 ```bash
-argocd app sync project-app-$LAB_USER
+argocd app set argo-complex-$LAB_USER --revision HEAD
 ```
+
+Open yout producer.yaml file and set the replica count back to 1.
+```yaml
+Deployment.yaml
+```
+
+At last commit and push your changes with the following command:
+```bash
+git add . && git commit -m "revert replica count to 1" && git push origin
+```
+
+{{% /details %}}
