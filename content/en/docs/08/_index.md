@@ -59,7 +59,7 @@ To create and push a Git tag execute the following command:
 git tag v1.0.0
 git push origin --tags
 ```
-{{% /details %}}
+
 
 You will receive an error when trying to create the new application
 ```
