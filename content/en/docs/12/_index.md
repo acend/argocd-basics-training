@@ -23,7 +23,7 @@ First let us examine our ArgoCD example repository with the child applications.
 │       └── app3.yaml
 ```
 
-As we can see the diroctory consists of three ArgoCD applications. Each of them has its own source pointing on the corresponding directory (app1.yaml -> app1/). Each app directory contains a single deployment file.
+As we can see the diroctory consists of three ArgoCD applications. Each of them has its own source path pointing on the corresponding directory (app1.yaml -> app1/). Each app directory contains a single kubernetes deployment file.
 
 Here the content of the ArgoCD Application 3
 
