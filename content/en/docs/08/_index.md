@@ -59,10 +59,12 @@ To create and push a Git tag execute the following command:
 git tag v1.0.0
 git push origin --tags
 ```
-{{% /details %}}
 
-Next we pinn our application to this version
-{{% details title="Hint" %}}
+
+You will receive an error when trying to create the new application
+```
+FATA[0000] rpc error: code = InvalidArgument desc = application spec is invalid: InvalidSpecError: application repo https://github.com/acend/argocd-training-examples.git is not permitted in project 'project-hannelore15';InvalidSpecError: application destination {https://kubernetes.default.svc hannelore15} is not permitted in project 'project-hannelore15'
+```
 
 To track the v1.0 patch version tag on our application execute the following command:
 
@@ -208,7 +210,17 @@ TODO
 ```
 
 
+```
+...
+GROUP  KIND        NAMESPACE    NAME            STATUS   HEALTH   HOOK  MESSAGE
+       Service     hannelore15  simple-example  Unknown  Missing        Resource :Service is not permitted in project project-hannelore15.
+apps   Deployment  hannelore15  simple-example  Synced   Healthy
+FATA[0001] Operation has completed with phase: Failed
+```
+
+
 ## Task {{% param sectionnumber %}}.2: Cleanup
+
 
 Let us clean up the tracking task.
 
