@@ -1,7 +1,7 @@
 ---
-title: "11. Sync Windows"
-weight: 11
-sectionnumber: 11
+title: "9.2 Sync Windows"
+weight: 92
+sectionnumber: 9.2
 ---
 
 With Sync windows the user can define at which time applications can be synchronized automatically and manually by Argo CD. Allowed and forbidden time windows can be defined. Sync windows can be restricted to a subset of applications, clusters and namespaces and thus offer great flexibility.
@@ -75,7 +75,7 @@ If there is an active matching allow window and an active matching deny window t
 {{% /alert %}}
 
 
-## Task {{% param sectionnumber %}}.2: Updating the sync window
+## Task {{% param sectionnumber %}}.3: Updating the sync window
 
 Now we want to restrict the defined sync windows just for the application with name `sketchy-app`. We update the existing sync window with the new application name.
 
@@ -97,7 +97,7 @@ argocd proj windows update project-sync-windows-$LAB_USER 0 --applications "*"
 ```
 
 
-## Task {{% param sectionnumber %}}.2: Enabling manual syncs
+## Task {{% param sectionnumber %}}.4: Enabling manual syncs
 
 Now enable the manual sync for the window and try again to sync manually
 
@@ -109,7 +109,7 @@ argocd app sync sync-windows-$LAB_USER
 Which now work flawless. Automatic syncs are still forbidden and will not occur between 08:00 and 20:00.
 
 
-## Task {{% param sectionnumber %}}.4: Housekeeping
+## Task {{% param sectionnumber %}}.5: Housekeeping
 
 Clean up the resources created in this lab
 
