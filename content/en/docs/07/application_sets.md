@@ -1,7 +1,7 @@
 ---
-title: "13. Application Sets"
-weight: 13
-sectionnumber: 13
+title: "7.1 Application Sets"
+weight: 71
+sectionnumber: 7.1
 ---
 
 {{% alert title="Note" color="primary" %}}
@@ -21,7 +21,7 @@ The ApplicationSet provides following features
 * Within multitenant clusters, improves the ability of individual cluster tenants to deploy applications using Argo CD (without needing to involve privileged cluster administrators in enabling the destination clusters/namespaces)
 
 Here is a graphical overview how ArgoCD process an ApplicationSet.
-![How ApplicationSet are processed](applicationSet-overview.png)
+![How ApplicationSet are processed](../applicationSet-overview.png)
 
 Here is an example of a ApplicationSet resource with a list generator and a sample guestbook application:
 
@@ -256,4 +256,4 @@ spec:
 
 Next check the ArgoCD web ui, you should see the 4 generator and deployed ArgoCD applications.
 
-![Application generator from ApplicationSet](applicationSet-ui.png)
+![Application generator from ApplicationSet](../applicationSet-ui.png)
