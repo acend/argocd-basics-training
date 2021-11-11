@@ -78,10 +78,11 @@ giteaUrl = "gitea.techlab.openshift.ch"
 enabledModule = "base"
 techlabClusterWebConsolePrefix = "console"
 techlabClusterDomainName = "techlab.openshift.ch"
-techlabArgoCdUrl = "argocd.techlab.openshift.ch"
-techlabGiteaUrl = "gitea.techlab.openshift.ch"
+techlabArgoCdUrl = "argocd.labapp.acend.ch"
+techlabGiteaUrl = "gitea.labapp.acend.ch"
 
-cliToolName = "oc"
+cliToolName = "kubectl"
+distroName = "Rancher"
 argoInfraNamespace = "pitc-infra-argocd"
 
 # Enable Lunr.js offline search

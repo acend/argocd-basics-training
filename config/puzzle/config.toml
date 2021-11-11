@@ -3,6 +3,10 @@ theme = ["docsy-puzzle", "docsy-plus", "docsy"]
 [params]
 copyright = "Puzzle ITC GmbH"
 imagePrefix = "puzzle_"
+distroName = "Rancher"
+cliToolName = "kubectl"
+
+enabledModule = "base rancher"
 
 [[Languages.en.menu.main]]
 copyright = "Puzzle ITC GmbH"

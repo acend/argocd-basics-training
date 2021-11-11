@@ -89,7 +89,7 @@ argocd app sync argo-hook-$LAB_USER
 And verify the deployment:
 
 ```bash
-oc get pod --namespace $LAB_USER --watch
+{{% param cliToolName %}} get pod --namespace $LAB_USER --watch
 ```
 
 Or in the web UI.

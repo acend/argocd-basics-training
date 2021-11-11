@@ -89,7 +89,7 @@ argocd app sync argo-helm-$LAB_USER
 And verify the deployment:
 
 ```bash
-oc get pod --namespace $LAB_USER --watch
+{{% param cliToolName %}} get pod --namespace $LAB_USER --watch
 ```
 
 Tell the application to sync automatically, to enable self-healing and auto-prune
@@ -189,7 +189,7 @@ argocd app set argo-helm-prod-$LAB_USER --auto-prune
 And verify the deployment:
 
 ```bash
-oc get pod --namespace $LAB_USER --watch
+{{% param cliToolName %}} get pod --namespace $LAB_USER --watch
 ```
 
 Tell the Argo CD app to use the `values-production.yaml` values file
