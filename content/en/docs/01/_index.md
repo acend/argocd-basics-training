@@ -52,7 +52,9 @@ You can access Argo CD via Web UI (URL and Credentials are provided by your teac
 argocd login {{% param techlabArgoCdUrl %}} --grpc-web --username <username>
 ```
 
+
 #### Task {{% param sectionnumber %}}.1.2.1: Login on your local computer (Optional)
+
 
 {{% alert title="Warning" color="secondary" %}}
 Please make sure you completed [the setup](../../setup/) before you continue with this lab.
@@ -66,9 +68,11 @@ argocd login {{% param techlabArgoCdUrl %}} --sso --grpc-web
 
 {{% alert title="Note" color="primary" %}}Follow the sso login steps in the new browser window. The `--grpc-web` parameter is necessary due to missing http 2.0 router.{{% /alert %}}
 
-
 {{% onlyWhen openshift %}}
+
+
 ### Task {{% param sectionnumber %}}.1.3: Lab Setup
+
 
 Most of the labs will be done inside the {{% param distroName %}} project with your username. Verify that your oc tool is configured to point to the right project:
 
