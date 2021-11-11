@@ -71,7 +71,7 @@ argocd app sync argo-kustomize-$LAB_USER
 And verify the deployment:
 
 ```bash
-oc get pod --namespace $LAB_USER --watch
+{{% param cliToolName %}} get pod --namespace $LAB_USER --watch
 ```
 
 Tell the application to sync automatically, to enable self-healing and auto-prune
@@ -129,7 +129,7 @@ argocd app set argo-kustomize-prod-$LAB_USER --auto-prune
 And verify the deployment:
 
 ```bash
-oc get pod --namespace $LAB_USER --watch
+{{% param cliToolName %}} get pod --namespace $LAB_USER --watch
 ```
 
 

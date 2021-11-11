@@ -23,7 +23,7 @@ In this Training its required to have the following tools locally installed on y
 
 ## Argo CD Command line tool
 
-Follow the instructions on [this](https://argoproj.github.io/argo-cd/cli_installation/) page to install the oc tool on your local computer.
+Follow the instructions on [this](https://argoproj.github.io/argo-cd/cli_installation/) page to install the ArgoCD tool on your local computer.
 
 
 ## oc tool
