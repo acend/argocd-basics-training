@@ -213,8 +213,8 @@ TODO
 ```
 ...
 GROUP  KIND        NAMESPACE    NAME            STATUS   HEALTH   HOOK  MESSAGE
-       Service     hannelore15  simple-example  Unknown  Missing        Resource :Service is not permitted in project project-hannelore15.
-apps   Deployment  hannelore15  simple-example  Synced   Healthy
+       Service     student15  simple-example  Unknown  Missing        Resource :Service is not permitted in project project-student15.
+apps   Deployment  student15  simple-example  Synced   Healthy
 FATA[0001] Operation has completed with phase: Failed
 ```
 

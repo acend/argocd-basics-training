@@ -457,7 +457,7 @@ Now the sync should work. Argo CD use the configured credentials to authenticate
 argocd app sync argo-$LAB_USER
 ```
 
-You can define [credential templates](https://argoproj.github.io/argo-cd/user-guide/private-repositories/#credential-templates) when using the same credential for multiple Git repositories. The configured credentials are used for each Git repository beginning with the configured URL. The following command will create a credential which matches all git repositories for your username (e.g. https://hannelore15@{{% param giteaUrl %}}/hannelore15)
+You can define [credential templates](https://argoproj.github.io/argo-cd/user-guide/private-repositories/#credential-templates) when using the same credential for multiple Git repositories. The configured credentials are used for each Git repository beginning with the configured URL. The following command will create a credential which matches all git repositories for your username (e.g. https://student15@{{% param giteaUrl %}}/student15)
 ```bash
 argocd repocreds add https://$LAB_USER@{{% param giteaUrl %}}/$LAB_USER --username $LAB_USER
 ```
