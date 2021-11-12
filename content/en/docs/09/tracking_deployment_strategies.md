@@ -63,7 +63,7 @@ git push origin --tags
 
 Re-create the complex application example:
 ```bash
-argocd app create argo-complex-$LAB_USER --repo https://gitea.techlab.openshift.ch/$LAB_USER/argocd-training-examples.git --path 'complex-application' --dest-server https://kubernetes.default.svc --dest-namespace $LAB_USER
+argocd app create argo-complex-$LAB_USER --repo https://{{% param techlabGiteaUrl % }}/$LAB_USER/argocd-training-examples.git --path 'complex-application' --dest-server https://kubernetes.default.svc --dest-namespace $LAB_USER
 ```
 
 To track the v1.0 patch version tag on our application execute the following command:
