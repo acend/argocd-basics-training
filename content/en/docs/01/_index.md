@@ -49,7 +49,7 @@ Create a new folder for your \<workspace> in your Web IDE  (for example ./amm-te
 You can access Argo CD via Web UI (URL and Credentials are provided by your teacher) or using the CLI. The Argo CD CLI Tool is already installed on the web IDE.
 
 ```bash
-argocd login {{% param techlabArgoCdUrl %}} --grpc-web --username <username>
+argocd login {{% param argoCdUrl %}} --grpc-web --username <username>
 ```
 
 
@@ -63,7 +63,7 @@ Please make sure you completed [the setup](../../setup/) before you continue wit
 You can access Argo CD via Web UI (URL is provided by your teacher) or using the CLI. For CLI usage use the following command to login (credentials are given by your teacher):
 
 ```bash
-argocd login {{% param techlabArgoCdUrl %}} --sso --grpc-web
+argocd login {{% param argoCdUrl %}} --sso --grpc-web
 ```
 
 {{% alert title="Note" color="primary" %}}Follow the sso login steps in the new browser window. The `--grpc-web` parameter is necessary due to missing http 2.0 router.{{% /alert %}}
