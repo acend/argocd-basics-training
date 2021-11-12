@@ -69,7 +69,7 @@ FATA[0000] rpc error: code = InvalidArgument desc = application spec is invalid:
 To track the v1.0 patch version tag on our application execute the following command:
 
 ```bash
-argocd app set argo-complex-$LAB_USER --revision v1.0
+argocd app set argo-complex-$LAB_USER --revision v1.0.0
 ```
 {{% /details %}}
 
@@ -171,7 +171,7 @@ TODO: insert command output
 
 {{% /details %}}
 
-Let ArgoCD pickup the latest change, for that we have to create a git tag that is tracked with the configured tracking stratiegie.
+Let ArgoCD pickup the latest change, for that we have to create a git tag that is tracked with the configured tracking strategy.
 Let's create a new Git tag with the patch version `v.1.0.1` and push it to the repsitory. Then resync the ArgoCD app and checkt the status.
 
 {{% details title="Hint" %}}
