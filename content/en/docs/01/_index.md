@@ -16,7 +16,7 @@ The namespace with the name corresponding to your username is going to be used f
 {{% alert title="Note" color="primary" %}}The URL and Credentials to the Web IDE will provided by the teacher. Use Chrome for the best experience.{{% /alert %}}
 
 
-Once you're successfully logged into the web IDE open a new Terminal by hitting `CTRL + SHIFT + C` or clicking the Menu button --> Terminal --> new Terminal and check the installed {{% param cliToolName %}}version by executing the following command:
+Once you're successfully logged into the web IDE open a new Terminal by hitting `CTRL + SHIFT + ¨` or clicking the Menu button --> Terminal --> new Terminal and check the installed {{% param cliToolName %}}version by executing the following command:
 
 ```bash
 {{% param cliToolName %}} version
@@ -41,8 +41,11 @@ The files in the home directory under `/home/coder` are stored in a persistence 
 
 During the lab, you’ll be using local files (eg. YAML resources) which will be applied in your lab project.
 
-Create a new folder for your \<workspace> in your Web IDE  (for example ./amm-techlab/). Either you can create it with `right-mouse-click -> New Folder` or in the Web IDE terminal `mkdir argocd-techlab`
+Create a new folder for your \<workspace> in your Web IDE  (for example ./amm-techlab/). Either you can create it with `right-mouse-click -> New Folder` or in the Web IDE terminal 
 
+```bash
+mkdir argocd-techlab
+```
 
 ### Task {{% param sectionnumber %}}.1.2: Login on ArgoCD using argocd CLI
 
@@ -51,24 +54,6 @@ You can access Argo CD via Web UI (URL and Credentials are provided by your teac
 ```bash
 argocd login {{% param argoCdUrl %}} --grpc-web --username <username>
 ```
-
-
-#### Task {{% param sectionnumber %}}.1.2.1: Login on your local computer (Optional)
-
-
-{{% alert title="Warning" color="secondary" %}}
-Please make sure you completed [the setup](../../setup/) before you continue with this lab.
-{{% /alert %}}
-
-You can access Argo CD via Web UI (URL is provided by your teacher) or using the CLI. For CLI usage use the following command to login (credentials are given by your teacher):
-
-```bash
-argocd login {{% param argoCdUrl %}} --sso --grpc-web
-```
-
-{{% alert title="Note" color="primary" %}}Follow the sso login steps in the new browser window. The `--grpc-web` parameter is necessary due to missing http 2.0 router.{{% /alert %}}
-
-{{% onlyWhen openshift %}}
 
 
 ### Task {{% param sectionnumber %}}.1.3: Lab Setup
