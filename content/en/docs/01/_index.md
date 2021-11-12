@@ -54,6 +54,7 @@ You can access Argo CD via Web UI (URL and Credentials are provided by your teac
 ```bash
 argocd login {{% param argoCdUrl %}} --grpc-web --username <username>
 ```
+{{% onlyWhen openshift %}}
 
 
 ### Task {{% param sectionnumber %}}.1.3: Lab Setup
