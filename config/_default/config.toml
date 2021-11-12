@@ -82,7 +82,7 @@ giteaUrl = "gitea.labapp.acend.ch"
 
 cliToolName = "kubectl"
 distroName = "Rancher"
-argoInfraNamespace = "pitc-infra-argocd"
+argoInfraNamespace = "argocd"
 
 # Enable Lunr.js offline search
 offlineSearch = true
