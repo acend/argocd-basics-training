@@ -6,7 +6,7 @@ sectionnumber: 7.1
 
 {{% alert title="Note" color="primary" %}}
 ArgoCD ApplicationSet ressources are in an early alpha stage!
-If you wanna try the application set by yourself, make sure that the [ApplicationSet Controller is installed](https://argocd-applicationset.readthedocs.io/en/stable/Getting-Started/#a-install-applicationset-into-an-existing-argo-cd-install) alongside the ArgoCD controller.
+If you want to try the application set by yourself, make sure that the [ApplicationSet Controller is installed](https://argocd-applicationset.readthedocs.io/en/stable/Getting-Started/#a-install-applicationset-into-an-existing-argo-cd-install) alongside the ArgoCD controller.
 {{% /alert %}}
 
 With the ApplicationSet ArgoCD adds support for managing ArgoCD Application across a large number of clusters and environments. Plus it adds the capability of managing multitenant Kubernetes clusters.
