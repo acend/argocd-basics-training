@@ -50,7 +50,7 @@ Commit or version pinning can achieved in two ways. Eiteher you van specifiy the
 
 In this task we're going to configure a version tracking with a Git tag. The goal of this task to show you how to tack the patch version from a Git tag and therefore freeze the deployment to specific commits.
 
-First we create a Git tag `v1.0.0` and push the tag to the repository.
+First we create a Git tag `v1.0.0` and push the tag to the repository. We want to re-create the complex example application and let it track the created git tag `v1.0.0`.
 
 {{% details title="Hint" %}}
 
@@ -61,9 +61,9 @@ git push origin --tags
 ```
 
 
-You will receive an error when trying to create the new application
-```
-FATA[0000] rpc error: code = InvalidArgument desc = application spec is invalid: InvalidSpecError: application repo https://github.com/acend/argocd-training-examples.git is not permitted in project 'project-hannelore15';InvalidSpecError: application destination {https://kubernetes.default.svc hannelore15} is not permitted in project 'project-hannelore15'
+Re-create the complex application example:
+```bash
+argocd app create argo-complex-$LAB_USER --repo https://gitea.techlab.openshift.ch/$LAB_USER/argocd-training-examples.git --path 'complex-application' --dest-server https://kubernetes.default.svc --dest-namespace $LAB_USER
 ```
 
 To track the v1.0 patch version tag on our application execute the following command:
