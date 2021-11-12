@@ -116,13 +116,7 @@ spec:
       containers:
       - name: sleep
         image: quay.io/acend/example-web-python
-        command:
-        - 'bash'
-        - '-eo'
-        - 'pipefail'
-        - '-c'
-        - >
-          curl https://acend.ch
+        command: ["curl", "https://acend.ch"]
       restartPolicy: Never
   backoffLimit: 0
 ```
