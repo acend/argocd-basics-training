@@ -13,7 +13,7 @@ As we are proceeding according to the GitOps principle we need some example reso
 
 Users which have a personal Github account can just fork the Repository [argocd-training-examples](https://github.com/acend/argocd-training-examples) to their personal account. To fork the repository click on the top right of the Github on _Fork_.
 
-All other users can use the provided Gitea installation of the personal lab environment. Visit `https://{{% param giteaUrl %}}/` with your browser and register a new account with your personal username and a password that you can remember ;)
+All other users can use the provided Gitea installation of the personal lab environment. Visit [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/) with your browser and register a new account with your personal username and a password that you can remember ;)
 
 {{% alert title="Note" color="primary" %}}All the cli commands in this chapter must be executed in the terminal of the provided Web IDE.{{% /alert %}}
 
@@ -141,7 +141,7 @@ GROUP  KIND        NAMESPACE    NAME           STATUS  HEALTH       HOOK  MESSAG
 apps   Deployment  <username>  simple-example  Synced  Progressing        deployment.apps/simple-example created
 ```
 
-Check the Argo CD UI to browse the application and their components. The URL of the Argo CD webinterface will be provided by the teacher.
+Check the [Argo CD UI](https://{{% param argoCdUrl %}}) to browse the application and their components. The URL of the Argo CD webinterface will be provided by the teacher.
 
 Application overview in unsynced and synced state
 
@@ -444,7 +444,7 @@ FATA[0000] rpc error: code = FailedPrecondition desc = authentication required
 Argo CD can't any longer access the protected repository without providing credentials for authentication. Next assign credentials to used Git repository. You have to provide the Gitea password interactively.
 
 ```bash
-argocd repo add https://$LAB_USER@{{% param giteaUrl %}}/$LAB_USER/argocd-training-examples.git --username $LAB_USERNAME
+argocd repo add https://$LAB_USER@{{% param giteaUrl %}}/$LAB_USER/argocd-training-examples.git --username $LAB_USER
 ```
 
 {{% alert title="Note" color="primary" %}}
