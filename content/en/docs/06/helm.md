@@ -196,7 +196,7 @@ Tell the Argo CD app to use the `values-production.yaml` values file
 
 {{% details title="Hint" %}}
 ```bash
-argocd app set argo-helm-$LAB_USER --values values-production.yaml
+argocd app set argo-helm-prod-$LAB_USER --values values-production.yaml
 ```
 {{% /details %}}
 
