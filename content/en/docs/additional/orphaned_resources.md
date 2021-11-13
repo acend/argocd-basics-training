@@ -78,9 +78,9 @@ argocd app resources argo-$LAB_USER
 You see in the output that the manually created service `black-hole` is marked as orphaned:
 ```
 GROUP  KIND        NAMESPACE    NAME            ORPHANED
-       Service     student15  simple-example  No
-apps   Deployment  student15  simple-example  No
-       Service     student15  black-hole      Yes
+       Service     studentXX  simple-example  No
+apps   Deployment  studentXX  simple-example  No
+       Service     studentXX  black-hole      Yes
 ```
 
 When viewing the details of the application you will see the warning about the orphaned resource

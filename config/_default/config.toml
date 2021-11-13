@@ -75,8 +75,6 @@ github_branch = "main"
 
 
 enabledModule = "base"
-techlabClusterWebConsolePrefix = "console"
-techlabClusterDomainName = "techlab.openshift.ch"
 argoCdUrl = "argocd.labapp.acend.ch"
 giteaUrl = "gitea.labapp.acend.ch"
 

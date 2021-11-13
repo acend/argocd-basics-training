@@ -41,10 +41,10 @@ The files in the home directory under `/home/coder` are stored in a persistence 
 
 During the lab, you’ll be using local files (eg. YAML resources) which will be applied in your lab project.
 
-Create a new folder for your \<workspace> in your Web IDE  (for example ./argocd-techlab/). Either you can create it with `right-mouse-click -> New Folder` or in the Web IDE terminal
+Create a new folder for your \<workspace> in your Web IDE  (for example ./argocd-training/). Either you can create it with `right-mouse-click -> New Folder` or in the Web IDE terminal
 
 ```bash
-mkdir argocd-techlab && cd argocd-techlab
+mkdir argocd-training && cd argocd-training
 ```
 
 
