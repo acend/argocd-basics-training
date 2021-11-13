@@ -32,7 +32,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: app-of-apps-3
-  namespace: pitc-infra-argocd
+  namespace: {{% param argoInfraNamespace %}}
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
