@@ -142,11 +142,11 @@ Then diplay the status with following command:
 argocd app get argo-example-$LAB_USER
 ```
 
-If the app is in sync, you can check the number of replicas of the producer deployment.
+If the app is in sync, you can check the number of replicas of the deployment.
 
 
 ```bash
-kubectl describe deployment producer
+kubectl describe deployment simple-example
 ```
 
 Now you can see in the output that the replica count has changed to 2.
