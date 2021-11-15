@@ -1,127 +1,133 @@
 ---
-title: "3. Complex Example"
+title: "3. Resource Hooks"
 weight: 3
 sectionnumber: 3
 ---
 
-In this lab we're going to deploy and manage a complex  application with Argo CD.
+In this Lab you are going to learn about [Resource Hooks](https://argoproj.github.io/argo-cd/user-guide/resource_hooks/).
 
 
-## Complex Example
+## Resource Hooks
 
-The complex example consists of the following components:
+Hooks allow to run scripts before, during and after the Argo CD **sync** operation is running. They give you more control over the sync process. They can also run when the sync operation fails for example. The concept is very similar to the concept of [Helm Hooks](https://helm.sh/docs/topics/charts_hooks/#the-available-hooks).
 
-* data-consumer: deployment, configmap, service and route
-* data-producer: deployment, service and route
-* kafka-cluster: Kafka CRD, Kafka topic
-* jaeger: Jaeger Tracing CRD
+Some examples when hooks can be useful:
 
-In the same git repository you cloned/forked/mirrored in the previous labs, you also find the manifests for the more complex application under `complex-application`.
+* `PreSync` hook. Upgrading a Database, Performing a migration before deploying a new version of the application.
+* `PostSync` hook. Run integration, smoke and other tests after the deployment to verify its status.
+* `Sync` hook. Allows to run more complex deployment strategies. e.g.: Blue-Green or Canary Deployments
+* `SyncFail` hook. Clean up a failed deployment.
 
+Hooks are annotated `argocd.argoproj.io/hook: <hook>` Kubernetes resources in the source repository, which Argo CD will apply during the sync operation.
 
-## Task {{% param sectionnumber %}}.1: Create Argo CD application for the complex example
+A `PreSync` Hook to run a database migration might therefore look like this:
 
-First you'll have to create a new Argo CD application.
+```yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  generateName: schema-migrate-
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+...
+```
+
+It's basically a [Kubernetes Job](https://kubernetes.io/docs/concepts/workloads/controllers/job/) which starts a Pod that executes some sort of code.
 
 {{% alert  color="primary" title="Note" %}}
-We're going to deploy the complex example into the **same namespace** as we did with the simple example.
-Make sure the variable `LAB_USER` is set correctly
-```bash
-export LAB_USER=<username>
-echo $LAB_USER
-```
-or replace $LAB_USER in every command accordingly
+Named hooks (i.e. ones with `/metadata/name`) will only be created once. If you want a hook to be re-created each time either use BeforeHookCreation policy or `/metadata/generateName`.
+{{% /alert %}}
+
+{{% alert  color="primary" title="Note" %}}
+Hooks are not run during a [selective sync](https://argoproj.github.io/argo-cd/user-guide/selective_sync/)
 {{% /alert %}}
 
 
-```bash
-argocd app create argo-complex-$LAB_USER --repo https://{{% param giteaUrl %}}/$LAB_USER/argocd-training-examples.git --path 'complex-application' --dest-server https://kubernetes.default.svc --dest-namespace $LAB_USER
-```
+### Hook Deletion Policies
 
-Expected output: `application 'argo-complex-<username>' created`
+The hook deletion policy defines when a hook should be deleted. It's also configured with an annotation `argocd.argoproj.io/hook-delete-policy` on the hook resource.
 
-Explore the Argo application and its resources in the web UI or via CLI.
-
-{{% details title="Hint" %}}
-
-```bash
-argocd app get argo-complex-$LAB_USER
-```
-{{% /details %}}
-
-
-## Task {{% param sectionnumber %}}.2: Sync the application
-
-The application status is in OutOfSync state. Let's sync it, and make sure the resources are deployed on the cluster.
-
-{{% details title="Hint" %}}
-
-To sync (deploy) the resources you can simply click sync in the web UI or execute the following command:
-
-```bash
-argocd app sync argo-complex-$LAB_USER
-```
-{{% /details %}}
-
-Let's also make sure that the application will be **synced** automatically, by defining a so called `sync-policy`.
-
-{{% details title="Hint" %}}
-
-The `sync-policy` can be either set in the web UI or via CLI:
-
-```bash
-argocd app set argo-complex-$LAB_USER --sync-policy automated
-```
-{{% /details %}}
-
-Also make sure `self-healing` and `auto-pruning` is enabled.
-
-{{% details title="Hint" %}}
-
-
-```bash
-argocd app set argo-complex-$LAB_USER --self-heal
-argocd app set argo-complex-$LAB_USER --auto-prune
-```
-{{% /details %}}
-
-
-## Task {{% param sectionnumber %}}.3: Scale up the data-producer deployment
-
-Let's now test the setup and scale the data-producer deployment to `2` replicas by editing the `argocd-training-examples/complex-application/producer.yaml`
-
-{{% details title="Hint" %}}
 ```yaml
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: batch/v1
+kind: Job
 metadata:
-  labels:
-    app: data-producer
-    application: amm-techlab
-  name: data-producer
-spec:
-  replicas: 2
-  ...
+  generateName: schema-migrate-
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+...
 ```
-{{% /details %}}
 
-Commit and push the changes to your repository.
+* `HookSucceeded`: will be deleted after the hook succeeded
+* `HookFailed`: will be deleted after a hook failed
+* `BeforeHookCreation`: Any hook resource will be deleted before the new one is created.
+
+
+## Task {{% param sectionnumber %}}.1: Hook Example
+
+In this task we're going to deploy an [example](https://github.com/acend/argocd-training-examples/tree/master/pre-post-sync-hook) which has `pre` and `post` hooks.
+
+Create the new application `argo-hook-$LAB_USER` with the following command. It will create a service, a deployment and two hooks as soon as the application is synced.
+
+* PreSync: before Job
+* Sync: Deployment with name `pre-post-sync-hook`
+* PostSync: after Job
+
+
+```bash
+argocd app create argo-hook-$LAB_USER --repo https://{{% param giteaUrl %}}/$LAB_USER/argocd-training-examples.git --path 'pre-post-sync-hook' --dest-server https://kubernetes.default.svc --dest-namespace $LAB_USER
+```
+
+Sync the application
 
 {{% details title="Hint" %}}
 ```bash
-git add complex-application/producer.yaml
-git commit -m "Increased replicas to 2"
-git push
+argocd app sync argo-hook-$LAB_USER
 ```
 {{% /details %}}
 
+And verify the deployment:
 
-## Task {{% param sectionnumber %}}.4: Delete the Application
+```bash
+{{% param cliToolName %}} get pod --namespace $LAB_USER --watch
+```
+
+Or in the web UI.
+
+
+## Task {{% param sectionnumber %}}.2: Post-hook Curl (Optional)
+
+Alter the post sync hook command from `sleep` to `curl https://acend.ch` (Could be used to send a notification to a Chat channel)
+The curl command is not available in the minimal `quay.io/acend/example-web-go` image. You can use `quay.io/acend/example-web-python` or different image.
+
+Edit the hook under `argocd-training-examples/pre-post-sync-hook/post-sync-job.yaml` accordingly, commit and push the changes and trigger the sync operation.
+
+```yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: after
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+spec:
+  template:
+    spec:
+      containers:
+      - name: sleep
+        image: quay.io/acend/example-web-python
+        command: ["curl", "https://acend.ch"]
+      restartPolicy: Never
+  backoffLimit: 0
+```
+
+
+## Task {{% param sectionnumber %}}.3: Delete the Application
 
 Delete the application after you've explored the Argo CD Resources and the managed Kubernetes resources.
 
 {{% details title="Hint" %}}
 ```bash
-argocd app delete argo-complex-$LAB_USER
+argocd app delete argo-hook-$LAB_USER
 ```
 {{% /details %}}

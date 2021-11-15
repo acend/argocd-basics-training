@@ -1,7 +1,7 @@
 ---
-title: "10.2 Backup and Restore"
-weight: 102
-sectionnumber: 10.2
+title: "9.2 Backup and Restore"
+weight: 902
+sectionnumber: 90.2
 ---
 
 {{% alert title="Note" color="primary" %}}

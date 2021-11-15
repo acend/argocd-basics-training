@@ -1,7 +1,7 @@
 ---
-title: "6.2 Kustomize"
-weight: 62
-sectionnumber: 6.2
+title: "5.2 Kustomize"
+weight: 52
+sectionnumber: 5.2
 ---
 
 This lab explains how to use [kustomize](https://kustomize.io/)  as manifest format together with Argo CD.
