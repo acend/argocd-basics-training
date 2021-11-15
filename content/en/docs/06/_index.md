@@ -1,7 +1,7 @@
 ---
-title: "7. App of Apps"
-weight: 7
-sectionnumber: 7
+title: "6. App of Apps"
+weight: 6
+sectionnumber: 6
 ---
 The App Of Apps pattern is a declarative specification of one ArgoCD app that consists only of other apps.
 This way we have the possibility to deploy multiple apps within just one single App definition.
