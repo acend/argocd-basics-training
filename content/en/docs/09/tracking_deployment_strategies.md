@@ -159,6 +159,7 @@ simple-example   2/2     2            2           7m43s
 
 ## Task {{% param sectionnumber %}}.2: Delete the Application
 
+
 You can cascading delete the ArgoCD Application with the following command:
 
 ```bash

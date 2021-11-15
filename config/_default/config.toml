@@ -72,18 +72,15 @@ url = "https://www.acend.ch"
 copyright = "acend gmbh"
 github_repo = "https://github.com/acend/argocd-training"
 github_branch = "main"
-argoCdUrl = "argocd.techlab.openshift.ch"
-giteaUrl = "gitea.techlab.openshift.ch"
+
 
 enabledModule = "base"
-techlabClusterWebConsolePrefix = "console"
-techlabClusterDomainName = "techlab.openshift.ch"
-techlabArgoCdUrl = "argocd.labapp.acend.ch"
-techlabGiteaUrl = "gitea.labapp.acend.ch"
+argoCdUrl = "argocd.labapp.acend.ch"
+giteaUrl = "gitea.labapp.acend.ch"
 
 cliToolName = "kubectl"
 distroName = "Rancher"
-argoInfraNamespace = "pitc-infra-argocd"
+argoInfraNamespace = "argocd"
 
 # Enable Lunr.js offline search
 offlineSearch = true
