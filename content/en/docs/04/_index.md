@@ -1,88 +1,70 @@
 ---
-title: "4. Resource Hooks"
+title: "4. Sync Phases and Waves"
 weight: 4
 sectionnumber: 4
 ---
 
-In this Lab you are going to learn about [Resource Hooks](https://argoproj.github.io/argo-cd/user-guide/resource_hooks/).
+In this Lab you are going to learn about [Sync Phases and Waves](https://argoproj.github.io/argo-cd/user-guide/sync-waves/).
+
+{{< youtube zIHe3EVp528 >}}
 
 
-## Resource Hooks
+## Sync Phases and Waves
 
-Hooks allow to run scripts before, during and after the Argo CD **sync** operation is running. They give you more control over the sync process. They can also run when the sync operation fails for example. The concept is very similar to the concept of [Helm Hooks](https://helm.sh/docs/topics/charts_hooks/#the-available-hooks).
+At a high-level, Argo CD executes the sync operation in the three phases pre-sync, sync and post-sync.
 
-Some examples when hooks can be useful:
+Within each phase you can have one or more waves, that allows you to ensure certain resources are healthy before subsequent resources are synced.
 
-* `PreSync` hook. Upgrading a Database, Performing a migration before deploying a new version of the application.
-* `PostSync` hook. Run integration, smoke and other tests after the deployment to verify its status.
-* `Sync` hook. Allows to run more complex deployment strategies. e.g.: Blue-Green or Canary Deployments
-* `SyncFail` hook. Clean up a failed deployment.
+When Argo CD starts a sync, it orders the resources in the following precedence:
 
-Hooks are annotated `argocd.argoproj.io/hook: <hook>` Kubernetes resources in the source repository, which Argo CD will apply during the sync operation.
+* The phase
+* The wave they are in (lower values first)
+* By kind (e.g. namespaces first)
+* By name
 
-A `PreSync` Hook to run a database migration might therefore look like this:
+It then determines the number of the next wave to apply. This is the first number where any resource is out-of-sync or unhealthy.
 
-```yaml
-apiVersion: batch/v1
-kind: Job
-metadata:
-  generateName: schema-migrate-
-  annotations:
-    argocd.argoproj.io/hook: PreSync
-...
-```
+It applies resources in that wave.
 
-It's basically a [Kubernetes Job](https://kubernetes.io/docs/concepts/workloads/controllers/job/) which starts a Pod that executes some sort of code.
-
-{{% alert  color="primary" title="Note" %}}
-Named hooks (i.e. ones with `/metadata/name`) will only be created once. If you want a hook to be re-created each time either use BeforeHookCreation policy or `/metadata/generateName`.
-{{% /alert %}}
-
-{{% alert  color="primary" title="Note" %}}
-Hooks are not run during a [selective sync](https://argoproj.github.io/argo-cd/user-guide/selective_sync/)
-{{% /alert %}}
+It repeats this process until all phases and waves are in-sync and healthy.
 
 
-### Hook Deletion Policies
+### How to specify waves and phases
 
-The hook deletion policy defines when a hook should be deleted. It's also configured with an annotation `argocd.argoproj.io/hook-delete-policy` on the hook resource.
+Pre-sync and post-sync can only contain hooks defined on annotations `argocd.argoproj.io/hook: PreSync`.
 
-```yaml
-apiVersion: batch/v1
-kind: Job
-metadata:
-  generateName: schema-migrate-
-  annotations:
-    argocd.argoproj.io/hook: PreSync
-    argocd.argoproj.io/hook-delete-policy: HookSucceeded
-...
-```
-
-* `HookSucceeded`: will be deleted after the hook succeeded
-* `HookFailed`: will be deleted after a hook failed
-* `BeforeHookCreation`: Any hook resource will be deleted before the new one is created.
+You can specify the wave in the sync phase by setting an annotation `argocd.argoproj.io/sync-wave`. Hooks and resources are assigned to wave zero by default. The wave can be negative, so you can create a wave that runs before all other resources.
 
 
-## Task {{% param sectionnumber %}}.1: Hook Example
+## Task {{% param sectionnumber %}}.1: Sync Wave Example
 
-In this task we're going to deploy an [example](https://github.com/acend/argocd-training-examples/tree/master/pre-post-sync-hook) which has `pre` and `post` hooks.
+Let's now get our hands on a sync wave example.
 
-Create the new application `argo-hook-$LAB_USER` with the following command. It will create a service, a deployment and two hooks as soon as the application is synced.
+Create the new application `argo-wave-$LAB_USER` with the following command. The Application consist of the following resources, phases and waves:
 
-* PreSync: before Job
-* Sync: Deployment with name `pre-post-sync-hook`
-* PostSync: after Job
+* PreSync
+  * Job: upgrade-sql-schema
+* Sync Wave 0
+  * Deployment: backend
+  * Service: backend
+* Sync Wave 1
+  * Job: maintenance-page-up
+* Sync Wave 2
+  * Deployment: frontend
+  * Service: frontend
+* Sync Wave 3
+  * Job: maintenance-page-down
 
 
 ```bash
-argocd app create argo-hook-$LAB_USER --repo https://{{% param giteaUrl %}}/$LAB_USER/argocd-training-examples.git --path 'pre-post-sync-hook' --dest-server https://kubernetes.default.svc --dest-namespace $LAB_USER
+argocd app create argo-wave-$LAB_USER --repo https://{{% param giteaUrl %}}/$LAB_USER/argocd-training-examples.git --path 'sync-wave' --dest-server https://kubernetes.default.svc --dest-namespace $LAB_USER
 ```
 
-Sync the application
+Sync the application:
 
 {{% details title="Hint" %}}
 ```bash
-argocd app sync argo-hook-$LAB_USER
+argocd app sync argo-wave-$LAB_USER
 ```
 {{% /details %}}
 
@@ -92,42 +74,13 @@ And verify the deployment:
 {{% param cliToolName %}} get pod --namespace $LAB_USER --watch
 ```
 
-Or in the web UI.
 
-
-## Task {{% param sectionnumber %}}.2: Post-hook Curl (Optional)
-
-Alter the post sync hook command from `sleep` to `curl https://acend.ch` (Could be used to send a notification to a Chat channel)
-The curl command is not available in the minimal `quay.io/acend/example-web-go` image. You can use `quay.io/acend/example-web-python` or different image.
-
-Edit the hook under `argocd-training-examples/pre-post-sync-hook/post-sync-job.yaml` accordingly, commit and push the changes and trigger the sync operation.
-
-```yaml
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: after
-  annotations:
-    argocd.argoproj.io/hook: PostSync
-    argocd.argoproj.io/hook-delete-policy: HookSucceeded
-spec:
-  template:
-    spec:
-      containers:
-      - name: sleep
-        image: quay.io/acend/example-web-python
-        command: ["curl", "https://acend.ch"]
-      restartPolicy: Never
-  backoffLimit: 0
-```
-
-
-## Task {{% param sectionnumber %}}.3: Delete the Application
+## Task {{% param sectionnumber %}}.2: Delete the Application
 
 Delete the application after you've explored the Argo CD Resources and the managed Kubernetes resources.
 
 {{% details title="Hint" %}}
 ```bash
-argocd app delete argo-hook-$LAB_USER
+argocd app delete argo-wave-$LAB_USER
 ```
 {{% /details %}}

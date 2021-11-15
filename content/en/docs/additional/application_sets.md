@@ -1,7 +1,7 @@
 ---
-title: "10.3 Application Sets"
-weight: 103
-sectionnumber: 10.3
+title: "9.3 Application Sets"
+weight: 93
+sectionnumber: 9.3
 ---
 
 {{% alert title="Note" color="primary" %}}

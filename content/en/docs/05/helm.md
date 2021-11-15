@@ -1,7 +1,7 @@
 ---
-title: "6.1 Helm"
-weight: 61
-sectionnumber: 6.1
+title: "5.1 Helm"
+weight: 51
+sectionnumber: 5.1
 ---
 
 This lab explains how to use [Helm](https://helm.sh/) as manifest format together with Argo CD.

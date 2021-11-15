@@ -1,40 +1,61 @@
 ---
-title: "6. Tools"
-weight: 6
-sectionnumber: 6
+title: "7. App of Apps"
+weight: 7
+sectionnumber: 7
 ---
+The App Of Apps pattern is a declarative specification of one ArgoCD app that consists only of other apps.
+This way we have the possibility to deploy multiple apps within just one single App definition.
 
-In this Lab you are going to learn about different [application source tools](https://argoproj.github.io/argo-cd/user-guide/application_sources/).
+First let us examine our ArgoCD example repository with the child applications.
 
+```
+.
+├── app-of-apps
+│   ├── app1
+│   │   └── deployment.yaml
+│   ├── app2
+│   │   └── deployment.yaml
+│   ├── app3
+│   │   └── deployment.yaml
+│   └── apps
+│       ├── app1.yaml
+│       ├── app2.yaml
+│       └── app3.yaml
+```
 
-## Tools
+As we can see the diroctory consists of three ArgoCD applications. Each of them has its own source path pointing on the corresponding directory (app1.yaml -> app1/). Each app directory contains a single kubernetes deployment file.
 
-As mentioned in the [introduction](../) Argo CD supports many different formats in which the Kubernetes manifests can be defined:
+Here the content of the ArgoCD Application 3
 
-* [kustomize](https://kustomize.io/) applications
-* [helm](https://helm.sh/) charts
-* [ksonnet](https://github.com/ksonnet/ksonnet) applications (deprecated)
-* [jsonnet](https://jsonnet.org/) files
-* Plain directory of YAML/json manifests
-* Any custom config management tool configured as a config management plugin
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app-of-apps-3
+  namespace: {{% param argoInfraNamespace %}}
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: default
+    name: in-cluster
+  project: default
+  source:
+    path: app-of-apps/app3
+    repoURL: https://github.com/acend/argocd-training
+    targetRevision: HEAD
+```
 
-So far you have been using **plain YAML** manifest in the previous labs.
+Now let us create the parent Application which deploys our child applications.
 
-{{% alert title="Warning" color="secondary" %}}
-Argo CD provides a mechanism to override the parameters of Argo CD applications. [The Argo CD parameter overrides](https://argoproj.github.io/argo-cd/user-guide/parameters/) feature is provided mainly as a convenience to developers and is intended to be used in dev/test environments, vs. production environments.
+```bash
+argocd app create argo-aoa-$LAB_USER --repo https://{{% param giteaUrl %}}/$LAB_USER/argocd-training-examples.git --path 'app-of-apps/apps' --dest-server https://kubernetes.default.svc --dest-namespace $LAB_USER
+```
 
-Many consider this feature as anti-pattern to GitOps. So only use this feature when no other option is available!
-{{% /alert %}}
+Expected output: `application 'argo-aoa-<username>' created`
 
+Explore the Argo parent application in the web UI.
 
-### Tool Detection
+As you can see our newly created parent app consits of another three apps.
+![App of apps](appofapps.png)
 
-When the build tool is not specified explicitly in the [Argo CD Application](https://argoproj.github.io/argo-cd/operator-manual/declarative-setup/) CRD it will be detected:
-
-* `Helm` if there's a file matching `Chart.yaml`.
-* `Kustomize` if there's a `kustomization.yaml`, `kustomization.yml`, or `Kustomization`
-* `jsonnet` if there's a `*.jsonnet` file.
-
-You are now going to deploy an application in the different formats.
-
-You can also find additional examples [here](https://github.com/argoproj/argocd-example-apps).

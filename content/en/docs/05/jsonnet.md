@@ -1,7 +1,7 @@
 ---
-title: "6.3 Jsonnet"
-weight: 63
-sectionnumber: 6.3
+title: "5.3 Jsonnet"
+weight: 53
+sectionnumber: 5.3
 ---
 
 This lab explains how to use [jsonnet](https://jsonnet.org/)  as manifest format together with Argo CD.

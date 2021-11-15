@@ -1,7 +1,7 @@
 ---
-title: "10. Additional Concepts"
-weight: 100
-sectionnumber: 10
+title: "9. Additional Concepts"
+weight: 90
+sectionnumber: 9
 ---
 
 In this chapter you'll learn additional concepts of ArgoCD
