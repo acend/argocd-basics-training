@@ -444,7 +444,7 @@ FATA[0000] rpc error: code = FailedPrecondition desc = authentication required
 Argo CD can't any longer access the protected repository without providing credentials for authentication. Next assign credentials to used Git repository. You have to provide the Gitea password interactively.
 
 ```bash
-argocd repo add https://$LAB_USER@{{% param giteaUrl %}}/$LAB_USER/argocd-training-examples.git --username $LAB_USER
+argocd repo add https://{{% param giteaUrl %}}/$LAB_USER/argocd-training-examples.git --username $LAB_USER
 ```
 
 {{% alert title="Note" color="primary" %}}
@@ -459,7 +459,7 @@ argocd app sync argo-$LAB_USER
 
 You can define [credential templates](https://argoproj.github.io/argo-cd/user-guide/private-repositories/#credential-templates) when using the same credential for multiple Git repositories. The configured credentials are used for each Git repository beginning with the configured URL. The following command will create a credential which matches all git repositories for your username (e.g. https://student15@{{% param giteaUrl %}}/student15)
 ```bash
-argocd repocreds add https://$LAB_USER@{{% param giteaUrl %}}/$LAB_USER --username $LAB_USER
+argocd repocreds add https://{{% param giteaUrl %}}/$LAB_USER --username $LAB_USER
 ```
 
 Finally make your personal Git repository public again for the following labs. Uncheck the option `Visibility: Make Repository Private` under `Settings -> Repository` in the Gitea UI.
