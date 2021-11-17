@@ -46,6 +46,9 @@ spec:
     targetRevision: HEAD
 ```
 
+{{% alert title="Note" color="primary" %}}Make sure that the namespace in all of your yamls under `apps` are set to `{{% param argoInfraNamespace %}}`.{{% /alert %}}
+
+
 Now let us create the parent Application which deploys our child applications.
 
 ```bash
