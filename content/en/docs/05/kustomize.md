@@ -38,7 +38,7 @@ The following configuration options are available for Kustomize:
 Use the following command to set those parameters:
 
 ```bash
-argocd app set argo-kustomize-$LAB_USER --parameter namePrefix=<namePrefix>
+argocd app set argo-kustomize-$LAB_USER --nameprefix=<namePrefix>
 ```
 
 
