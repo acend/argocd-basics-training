@@ -9,5 +9,8 @@ menu:
 
 {{< blocks/section color="light">}}
 
+{{% blocks/feature icon="fa-chalkboard-teacher" url="https://drive.google.com/drive/folders/1IgCIBVybSDrxxdYyvT8HKpZugIdWMnRY?usp=sharing" title="ArgoCD Training Presentations" %}}
+{{% /blocks/feature %}}
+
 
 {{< /blocks/section >}}
