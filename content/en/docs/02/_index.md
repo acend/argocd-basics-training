@@ -471,7 +471,39 @@ TLS certificates and SSH private keys are supported alternative authentication m
 Have a look in the [documentation](https://argoproj.github.io/argo-cd/user-guide/private-repositories/) for detailed information about accessing private repositories.
 
 
-## Task {{% param sectionnumber %}}.8: Delete the Application
+## Task {{% param sectionnumber %}}.8: Expose Application (Optional)
+
+This is an optional task. To expose an application we need to specify a so called `ingress` resource. Create an `ingress.yaml` file next to the `deployment.yaml` in the example-app directory.
+
+Commit and Push the changes again, like you did before
+
+{{% alert title="Note" color="primary" %}}
+Make sure to replace the host value with the actual value. Ask your teacher for the `appdomain`.
+{{% /alert %}}
+
+
+```yaml
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: simple-example
+spec:
+  rules:
+    - host: simple-example-<username>.<appdomain>
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service: 
+                name: simple-example
+                port: 
+                  number: 5000
+```
+
+
+## Task {{% param sectionnumber %}}.9: Delete the Application
 
 You can cascading delete the ArgoCD Application with the following command:
 
