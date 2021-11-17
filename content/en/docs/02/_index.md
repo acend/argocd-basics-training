@@ -404,7 +404,7 @@ The configuration changes made on ArgoCD objects through the UI or by cli tool `
 Let's list all Kubernetes objects of type `Application` (short form: `app`)
 
 ```bash
-{{% param cliToolName %}} get app --namespace={{% param argoInfraNamespace %}}
+{{% param cliToolName %}} get applications --namespace={{% param argoInfraNamespace %}}
 ```
 
 ```
@@ -415,13 +415,13 @@ argo-<username>    Synced        Healthy
 You will see the application which we created some chapters ago by cli command `argocd app create...`. To see the complete configuration of the `Application` as _yaml_ use:
 
 ```bash
-{{% param cliToolName %}} get app argo-$LAB_USER -oyaml --namespace={{% param argoInfraNamespace %}}
+{{% param cliToolName %}} get applications argo-$LAB_USER -oyaml --namespace={{% param argoInfraNamespace %}}
 ```
 
 You even can edit the `Application` resource by using:
 
 ```bash
-{{% param cliToolName %}} edit app argo-$LAB_USER --namespace={{% param argoInfraNamespace %}}
+{{% param cliToolName %}} edit applications argo-$LAB_USER --namespace={{% param argoInfraNamespace %}}
 ```
 
 This allows us to manage the ArgoCD application definitions in a declarative way as well. It is a common pattern to have one ArgoCD application which references n child Applications which allows us a fast bootstrapping of a whole environment or a new cluster. This pattern is well known as the [App of apps](https://argoproj.github.io/argo-cd/operator-manual/cluster-bootstrapping/#app-of-apps-pattern) pattern.
