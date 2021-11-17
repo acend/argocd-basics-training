@@ -54,8 +54,6 @@ spec:
 {{< / highlight >}}
 <!-- markdownlint-restore -->
 
-Then add, commit and push the changes to your git repository.
-
 
 ## Task {{% param sectionnumber %}}.2: Create Argo CD Application
 
