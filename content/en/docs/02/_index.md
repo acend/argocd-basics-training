@@ -348,15 +348,56 @@ simple-example   1/1     1            1           114m
 This is a great way to enforce a strict GitOps principle. Changes which are manually made on deployed resource manifests are reverted immediately back to the desired state by the ArgoCD controller.
 
 
-## Task {{% param sectionnumber %}}.5: Pruning
+## Task {{% param sectionnumber %}}.5: Expose Application
+
+This is an optional task. To expose an application we need to specify a so called `ingress` resource. Create an `ingress.yaml` file next to the `deployment.yaml` in the example-app directory.
+
+Commit and Push the changes again, like you did before:
+
+
+{{% alert title="Note" color="primary" %}}
+Make sure to replace the host value with the actual value. Ask your teacher for the `appdomain`.
+{{% /alert %}}
+
+```bash
+git add ingress.yaml
+git commit -m "Add ingress"
+git push
+```
+
+
+```yaml
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: simple-example
+spec:
+  rules:
+    - host: simple-example-<username>.<appdomain>
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service: 
+                name: simple-example
+                port: 
+                  number: 5000
+```
+
+After ArgoCD syncs the changes, you can access the example applications url: `http://simple-example-<username>.<appdomain>`
+
+
+## Task {{% param sectionnumber %}}.6: Pruning
 
 You probably asked yourself how can I delete deployed resources on the container platform? Argo CD can be configured to delete resources that no longer exist in the Git repository.
 
-First delete the file `svc.yaml` from Git repository and push the changes
+First delete the files `svc.yaml` and `ingress.yaml` from Git repository and push the changes
 
 ```bash
-git rm svc.yaml
-git add --all && git commit -m 'Removes service' && git push
+git rm svc.yaml ingress.yaml
+git add --all && git commit -m 'Removes service and ingress' && git push
 
 ```
 
@@ -369,9 +410,10 @@ argocd app get argo-$LAB_USER --refresh
 You will see that even with auto-sync and self-healing enabled the status is still OutOfSync
 
 ```
-GROUP  KIND        NAMESPACE    NAME            STATUS     HEALTH   HOOK  MESSAGE
-apps   Deployment  <username>   simple-example  Synced     Healthy        deployment.apps/simple-exampleconfigured
-       Service     <username>   simple-example  OutOfSync  Healthy
+GROUP              KIND        NAMESPACE  NAME            STATUS  HEALTH   HOOK  MESSAGE
+networking.k8s.io  Ingress     studentxx  simple-example  Synced  Healthy        ingress.networking.k8s.io/simple-example created
+                   Service     studentxx  simple-example  Synced  Healthy        
+apps               Deployment  studentxx  simple-example  Synced  Healthy
 ```
 
 Now enable the auto pruning explicitly:
@@ -387,15 +429,16 @@ argocd app get argo-$LAB_USER --refresh
 ```
 
 ```
-GROUP  KIND        NAMESPACE    NAME            STATUS     HEALTH   HOOK  MESSAGE
-       Service     <username>   simple-example  Succeeded  Pruned         pruned
-apps   Deployment  <username>   simple-example  Synced     Healthy        deployment.apps/simple-example unchanged
+GROUP       KIND        NAMESPACE  NAME            STATUS     HEALTH   HOOK  MESSAGE
+extensions  Ingress     studentxx   simple-example  Succeeded  Pruned         pruned
+            Service     studentxx   simple-example  Succeeded  Pruned         pruned
+apps        Deployment  studentxx   simple-example  Synced     Healthy        deployment.apps/simple-example unchanged
 ```
 
 The Service was successfully deleted by Argo CD because the manifest was removed from git. See the HEALTH and MESSAGE of the previous console output.
 
 
-## Task {{% param sectionnumber %}}.6: State of ArgoCD
+## Task {{% param sectionnumber %}}.7: State of ArgoCD
 
 Argo CD is largely built stateless. The configuration is persisted as native Kubernetes objects. And those are stored in Kubernetes _etcd_. There is no additional storage layer needed to run ArgoCD. The Redis storage under the hood acts just as a throw-away cache and can be evicted anytime without any data loss.
 
@@ -427,7 +470,7 @@ You even can edit the `Application` resource by using:
 This allows us to manage the ArgoCD application definitions in a declarative way as well. It is a common pattern to have one ArgoCD application which references n child Applications which allows us a fast bootstrapping of a whole environment or a new cluster. This pattern is well known as the [App of apps](https://argoproj.github.io/argo-cd/operator-manual/cluster-bootstrapping/#app-of-apps-pattern) pattern.
 
 
-## Task {{% param sectionnumber %}}.7: Accessing a private Git repository
+## Task {{% param sectionnumber %}}.8: Accessing a private Git repository
 
 The Git repository we have imported to Gitea is public available for the whole world. When accessing a private repository we have to provide credentials in form of a username/password pair or a ssh private key. In this task you will learn how to access a protected repo from Argo CD.
 
@@ -469,38 +512,6 @@ TLS certificates and SSH private keys are supported alternative authentication m
 {{% /alert %}}
 
 Have a look in the [documentation](https://argoproj.github.io/argo-cd/user-guide/private-repositories/) for detailed information about accessing private repositories.
-
-
-## Task {{% param sectionnumber %}}.8: Expose Application (Optional)
-
-This is an optional task. To expose an application we need to specify a so called `ingress` resource. Create an `ingress.yaml` file next to the `deployment.yaml` in the example-app directory.
-
-Commit and Push the changes again, like you did before
-
-{{% alert title="Note" color="primary" %}}
-Make sure to replace the host value with the actual value. Ask your teacher for the `appdomain`.
-{{% /alert %}}
-
-
-```yaml
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: simple-example
-spec:
-  rules:
-    - host: simple-example-<username>.<appdomain>
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service: 
-                name: simple-example
-                port: 
-                  number: 5000
-```
 
 
 ## Task {{% param sectionnumber %}}.9: Delete the Application
