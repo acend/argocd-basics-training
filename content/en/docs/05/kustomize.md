@@ -90,7 +90,7 @@ argocd app set argo-kustomize-$LAB_USER --auto-prune
 We can set the `kustomize` configuration parameter with the following command:
 
 ```bash
-argocd app set argo-kustomize-$LAB_USER --parameter namePrefix=acend
+argocd app set argo-kustomize-$LAB_USER --nameprefix=acend
 ```
 
 And take a look at the application in the web UI or using the command line tool
