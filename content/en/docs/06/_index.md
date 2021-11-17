@@ -46,7 +46,7 @@ spec:
     targetRevision: HEAD
 ```
 
-{{% alert title="Note" color="primary" %}}Make sure that the namespace in all of your yamls under `apps` are set to `{{% param argoInfraNamespace %}}`.{{% /alert %}}
+{{% alert title="Note" color="primary" %}}Make sure that the namespace in all of your yamls under `apps` are set to `{{% param argoInfraNamespace %}}` under metadata - namespace and the repoUrl (spec - source) is set to the correct URL eg. `https://{{% param giteaUrl %}}/studentxx/argocd-training-examples.git`.{{% /alert %}}
 
 
 Now let us create the parent Application which deploys our child applications.
