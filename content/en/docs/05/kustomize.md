@@ -6,10 +6,6 @@ sectionnumber: 5.2
 
 This lab explains how to use [kustomize](https://kustomize.io/)  as manifest format together with Argo CD.
 
-{{% alert title="Note" color="primary" %}}
-This lab is work in progress
-{{% /alert %}}
-
 
 ## Kustomize
 
@@ -38,7 +34,7 @@ The following configuration options are available for Kustomize:
 Use the following command to set those parameters:
 
 ```bash
-argocd app set argo-kustomize-$LAB_USER --parameter namePrefix=<namePrefix>
+argocd app set argo-kustomize-$LAB_USER --nameprefix=<namePrefix>
 ```
 
 
