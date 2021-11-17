@@ -42,7 +42,7 @@ spec:
   project: default
   source:
     path: app-of-apps/app3
-    repoURL: https://github.com/acend/argocd-training
+    repoURL: https://github.com/acend/argocd-training-examples # update repo to your own repo
     targetRevision: HEAD
 ```
 
