@@ -33,7 +33,7 @@ To deploy the app of apps into our `student` namespace we need to edit the three
 * Replace all occurrences `<username>` in the three yaml files.
 * Set the correct `<repourl>` eg. (`https://{{% param giteaUrl %}}/studentxx/argocd-training-examples.git`)
 
-```
+<!-- markdownlint-disable -->
 {{< highlight YAML "hl_lines=4 10 15" >}}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -52,7 +52,7 @@ spec:
     repoURL: <repourl>
     targetRevision: HEAD
 {{< / highlight >}}
-```
+<!-- markdownlint-restore -->
 
 Then add, commit and push the changes to your git repository.
 
