@@ -1,5 +1,5 @@
 baseurl = "/"
-title = "ArgoCD Training"
+title = "ArgoCD Basics Training"
 
 enableGitInfo = true
 
@@ -46,7 +46,7 @@ anchor = "smart"
 
 [Languages]
 [Languages.en]
-title = "ArgoCD Training"
+title = "ArgoCD Basics Training"
 languageName = "English"
 weight = 1
 
@@ -70,7 +70,7 @@ url = "https://www.acend.ch"
 
 [params]
 copyright = "acend gmbh"
-github_repo = "https://github.com/acend/argocd-training"
+github_repo = "https://github.com/acend/argocd-basics-training"
 github_branch = "main"
 
 
@@ -102,7 +102,7 @@ footer_about_disable = true
 [[params.links.developer]]
 name = "GitHub"
 icon = "fab fa-github"
-url = "https://github.com/acend/argocd-training"
+url = "https://github.com/acend/argocd-basics-training"
 
 [[params.links.user]]
 name = "Twitter"

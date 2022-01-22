@@ -1,4 +1,4 @@
-# ArgoCD Training
+# ArgoCD Basics Training
 
 
 ## Content Sections
@@ -48,13 +48,13 @@ git submodule update --remote
 Build the image:
 
 ```bash
-docker build --build-arg TRAINING_HUGO_ENV=puzzle -t acend/argocd-training .
+docker build --build-arg TRAINING_HUGO_ENV=puzzle -t acend/argocd-basics-training .
 ```
 
 Run it locally:
 
 ```bash
-docker run -i -p 8080:8080 acend/argocd-training
+docker run -i -p 8080:8080 acend/argocd-basics-training
 ```
 
 
