@@ -7,7 +7,7 @@ sectionnumber: 7
 Argo CD applications can be linked to a project which provides a logical grouping of applications. The following configurations can be made on a project:
 
 * Source repositories: Git repositories where application manifests are permitted to be retrieved from
-* Destination Clusters: Permitted destination K8s or OpenShift clusters
+* Destination Clusters: Permitted destination Kubernetes or OpenShift clusters
 * Destination Namespaces: Destination namespaces where the manifests are permitted to be deployed to
 * Permitted resource kinds to be synced (e.g. `ConfigMap`)
 * Sync windows: Time windows when an application is permitted to be synced by Argo CD.

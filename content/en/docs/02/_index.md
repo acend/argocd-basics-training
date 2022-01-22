@@ -6,6 +6,30 @@ sectionnumber: 2
 
 In this lab you will learn how to deploy a simple application using Argo CD.
 
+Our lab setup consists of the following components:
+
+* Git Server ([Gitea](https://gitea.io)): [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/)
+* Argo CD Server: [https://{{% param argoCdUrl %}}](https://{{% param argoCdUrl %}})
+* Kubernetes Cluster
+
+
+{{% onlyWhenNot manualFork %}}
+
+
+## Task {{% param sectionnumber %}}.1: Login to the Gitea and Clone the Repo
+
+For this Training we've installed a Git Server under [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/). We also forked the Argo CD Example Repo for your `<username>`.
+
+Open your Webbrowser and navigate to [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/).
+Login with the training credentials provided by the trainer (Login Button is in the upper right corner).
+
+{{% alert title="Note" color="primary" %}}Users which have a personal Github account can just fork the Repository [argocd-training-examples](https://github.com/acend/argocd-training-examples) to their personal account. To fork the repository click on the top right of the Github on _Fork_.{{% /alert %}}
+
+{{% /onlyWhenNot  %}}
+
+
+{{% onlyWhen manualFork %}}
+
 
 ## Task {{% param sectionnumber %}}.1: Fork the Git repository
 
@@ -25,9 +49,20 @@ Login with the new user and fork the existing Git repository from Github:
 1. Migrate / Clone From URL: https://github.com/acend/argocd-training-examples.git
 1. Click _Migrate Repository_
 
-The URL of the newly forked Git repository will look like `https://{{% param giteaUrl %}}/<username>/argocd-training-examples.git`
+{{% /onlyWhen  %}}
 
-Set the `LAB_USER` environment variable to your personal user:
+The Git Repository is available under your Repositories
+
+![The Git Repository](gitea-repository.png)
+
+By clicking on the repository link in the repository list you get to the detail page.
+
+![The Git Repository](gitea-repository-2.png)
+
+
+The **URL** of the Git repository, we'll be working with, will look like `https://{{% param giteaUrl %}}/<username>/argocd-training-examples.git`.
+
+Switch back to the Terminal inside the Web IDE and set the `LAB_USER` environment variable to your personal user:
 
 ```bash
 export LAB_USER=<username>
@@ -40,19 +75,30 @@ Clone the forked repository to your local workspace:
 git clone https://$LAB_USER@{{% param giteaUrl %}}/$LAB_USER/argocd-training-examples.git
 ```
 
-... or when forked to Github with:
+... or the corresponding URL if you have choosen to use your own Git Server.
+
+Change the working directory to the cloned git repository:
 
 ```bash
-https://github.com/<github-username>/argocd-training-examples
+cd argocd-training-examples/example-app
 ```
-
-Change the working directory to the cloned git repository: `cd argocd-training-examples/example-app`
 
 When using the Web IDE: Configure the Git Client and verify the output
 
 ```bash
 git config user.name "$LAB_USER"
-git config user.email "foo@bar.org"
+git config user.email "<username>@{{% param giteaUrl %}}"
+```
+
+And we also want git to store our Password for the whole day so that we don't need to login every single time we push something.
+
+```bash
+git config credential.helper 'cache --timeout=86400'
+```
+
+Then use the following command to verify whether the git config for username and email were correctly added:
+
+```bash
 git config --local --list
 ```
 
@@ -66,7 +112,6 @@ To deploy the resources using the Argo CD CLI use the following command:
 ```bash
 argocd app create argo-$LAB_USER --repo https://{{% param giteaUrl %}}/$LAB_USER/argocd-training-examples.git --path 'example-app' --dest-server https://kubernetes.default.svc --dest-namespace $LAB_USER
 ```
-
 
 Expected output: `application 'argo-<username>' created`
 
@@ -105,7 +150,7 @@ The application status is initially in OutOfSync state. To sync (deploy) the res
 argocd app sync argo-$LAB_USER
 ```
 
-This command retrieves the manifests from the git repository and performs a `{{% param cliToolName %}} apply` on them. Because all our manifests has been deployed manually before, no new rollout of them will be triggered on OpenShift. But form now on, all resources are managed by Argo CD. Congrats, the first step in direction GitOps! :)
+This command retrieves the manifests from the git repository and performs a `{{% param cliToolName %}} apply` on them. Because all our manifests has been deployed manually before, no new rollout of them will be triggered on Kubernetes. But form now on, all resources are managed by Argo CD. Congrats, the first step in direction GitOps! :)
 
 You should see an output similar to the following lines:
 
@@ -187,13 +232,10 @@ spec:
 ```
 
 
-<!--- TODO bb: verify initial authentication against git, describe if necessary -->
-
-
-Commit the changes and push them to your personal remote Git repository. After the Git push command a password input field will appear at the top of the Web IDE. You need to enter your Gitea password there.
+Commit the changes and push them to your personal remote Git repository. After the Git push command a **password** input field will appear at the top of the Web IDE.
 
 ```bash
-git add deployment.yaml
+git add .
 git commit -m "Increased replicas to 2"
 git push
 ```
@@ -350,21 +392,10 @@ This is a great way to enforce a strict GitOps principle. Changes which are manu
 
 ## Task {{% param sectionnumber %}}.5: Expose Application
 
-This is an optional task. To expose an application we need to specify a so called `ingress` resource. Create an `ingress.yaml` file next to the `deployment.yaml` in the example-app directory.
+This is an optional task.
 
-Commit and Push the changes again, like you did before:
-
-
-{{% alert title="Note" color="primary" %}}
-Make sure to replace the host value with the actual value. Ask your teacher for the `appdomain`.
-{{% /alert %}}
-
-```bash
-git add ingress.yaml
-git commit -m "Add ingress"
-git push
-```
-
+{{% onlyWhenNot openshift %}}
+To expose an application we need to specify a so called `ingress` resource. Create an `ingress.yaml` file next to the `deployment.yaml` in the example-app directory with the following content.
 
 ```yaml
 ---
@@ -386,17 +417,66 @@ spec:
                   number: 5000
 ```
 
+{{% /onlyWhenNot  %}}
+{{% onlyWhen openshift %}}
+To expose an application we need to specify a so called `route` resource. Create an `route.yaml` file next to the `deployment.yaml` in the example-app directory.
+
+```yaml
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: simple-example
+spec:
+  port:
+    targetPort: 5000
+  to:
+    kind: Service
+    name: simple-example
+    weight: 100
+  wildcardPolicy: None
+```
+{{% /onlyWhen  %}}
+
+{{% alert title="Note" color="primary" %}}
+Make sure to replace the host value with the actual value. Ask your teacher for the `appdomain`.
+{{% /alert %}}
+
+
+Commit and Push the changes again, like you did before:
+
+
+```bash
+git add .
+git commit -m "Expose application"
+git push
+```
+
 After ArgoCD syncs the changes, you can access the example applications url: `http://simple-example-<username>.<appdomain>`
+
+Verify using the following command:
+
+```bash
+curl http://simple-example-<username>.<appdomain>
+```
+
+The result should look similar to this:
+
+```bash
+<h1 style=color:#e81198>Hello golang</h1><h2>ID: e81198</h2>
+```
+
+{{% alert title="Note" color="primary" %}}Please note, that we didn't expose the application on `https` this might cause some errors, when you open the URL in certain browsers.{{% /alert %}}
 
 
 ## Task {{% param sectionnumber %}}.6: Pruning
 
 You probably asked yourself how can I delete deployed resources on the container platform? Argo CD can be configured to delete resources that no longer exist in the Git repository.
 
-First delete the files `svc.yaml` and `ingress.yaml` from Git repository and push the changes
+First delete the files `service.yaml` and `ingress.yaml` from Git repository and push the changes
 
 ```bash
-git rm svc.yaml ingress.yaml
+git add .
 git add --all && git commit -m 'Removes service and ingress' && git push
 
 ```
