@@ -90,6 +90,12 @@ git config user.name "$LAB_USER"
 git config user.email "<username>@{{% param giteaUrl %}}"
 ```
 
+And we also want git to store our Password for the whole day so that we don't need to login every single time we push something.
+
+```bash
+git config credential.helper 'cache --timeout=86400'
+```
+
 Then use the following command to verify whether the git config for username and email were correctly added:
 
 ```bash
@@ -226,13 +232,10 @@ spec:
 ```
 
 
-<!--- TODO bb: verify initial authentication against git, describe if necessary -->
-
-
-Commit the changes and push them to your personal remote Git repository. After the Git push command a password input field will appear at the top of the Web IDE. You need to enter your Gitea password there.
+Commit the changes and push them to your personal remote Git repository. After the Git push command a **password** input field will appear at the top of the Web IDE.
 
 ```bash
-git add deployment.yaml
+git add .
 git commit -m "Increased replicas to 2"
 git push
 ```
@@ -451,6 +454,20 @@ git push
 
 After ArgoCD syncs the changes, you can access the example applications url: `http://simple-example-<username>.<appdomain>`
 
+Verify using the following command:
+
+```bash
+curl http://simple-example-<username>.<appdomain>
+```
+
+The result should look similar to this:
+
+```bash
+<h1 style=color:#e81198>Hello golang</h1><h2>ID: e81198</h2>
+```
+
+{{% alert title="Note" color="primary" %}}Please note, that we didn't expose the application on `https` this might cause some errors, when you open the URL in certain browsers.{{% /alert %}}
+
 
 ## Task {{% param sectionnumber %}}.6: Pruning
 
@@ -459,7 +476,7 @@ You probably asked yourself how can I delete deployed resources on the container
 First delete the files `service.yaml` and `ingress.yaml` from Git repository and push the changes
 
 ```bash
-git rm service.yaml ingress.yaml
+git add .
 git add --all && git commit -m 'Removes service and ingress' && git push
 
 ```
