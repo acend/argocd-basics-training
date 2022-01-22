@@ -1,4 +1,4 @@
-# How to contribute to the acend ArgoCD Training
+# How to contribute to the acend ArgoCD Basics Training
 
 :+1::tada: First off, thanks for taking the time to contribute! :tada::+1:
 

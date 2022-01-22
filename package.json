@@ -1,10 +1,10 @@
 {
-  "name": "argocd-training",
+  "name": "argocd-basics-training",
   "version": "1.0.0",
-  "description": "ArgoCD Training",
+  "description": "ArgoCD Basics Training",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/acend/argocd-training.git"
+    "url": "git+https://github.com/acend/argocd-basics-training.git"
   },
   "author": "acend gmbh",
   "scripts": {
@@ -12,9 +12,9 @@
     "prepare": "husky install"
   },
   "bugs": {
-    "url": "https://github.com/acend/argocd-training/issues"
+    "url": "https://github.com/acend/argocd-basics-training/issues"
   },
-  "homepage": "https://github.com/acend/argocd-training#readme",
+  "homepage": "https://github.com/acend/argocd-basics-training#readme",
   "devDependencies": {
     "husky": "7.0.4",
     "markdownlint-cli": "0.30.0"
