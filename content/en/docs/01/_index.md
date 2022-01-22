@@ -34,14 +34,14 @@ The Web IDE Pod consists of the following tools:
 * odo
 * argocd
 
-The files in the home directory under `/home/coder` are stored in a persistence volume.
+The files in the home directory under `/home/project` are stored in a persistence volume, so please make sure to store all your persistence data in this directory.
 
 
 ### Task {{% param sectionnumber %}}.1.1: Local Workspace Directory
 
 During the lab, you’ll be using local files (eg. YAML resources) which will be applied in your lab project.
 
-Create a new folder for your \<workspace> in your Web IDE  (for example ./argocd-training/). Either you can create it with `right-mouse-click -> New Folder` or in the Web IDE terminal
+Create a new folder for your `<workspace>` in your Web IDE  (for example `./argocd-training/`). Either you can create it with `right-mouse-click -> New Folder` or in the Web IDE terminal
 
 ```bash
 mkdir argocd-training && cd argocd-training
@@ -148,6 +148,8 @@ argocd app create --help
 
 
 ### Task {{% param sectionnumber %}}.2: Autocompletion
+
+{{% alert title="Note" color="primary" %}}This step is only needed, when you're not working with the Web IDE we've provided. The autocompletion is already installed in the Web IDE{{% /alert %}}
 
 A productivity booster when working with the CLI is the autocompletion feature. It can be used for `bash` and `zsh` shells. You can enable the autocompletion for the current `bash` with the following command:
 

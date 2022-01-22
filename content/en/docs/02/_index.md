@@ -6,6 +6,30 @@ sectionnumber: 2
 
 In this lab you will learn how to deploy a simple application using Argo CD.
 
+Our lab setup consists of the following components:
+
+* Git Server ([Gitea](https://gitea.io)): [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/)
+* Argo CD Server: [https://{{% param argoCdUrl %}}](https://{{% param argoCdUrl %}})
+* Kubernetes Cluster
+
+
+{{% onlyWhenNot manualFork %}}
+
+
+## Task {{% param sectionnumber %}}.1: Login to the Gitea and Clone the Repo
+
+For this Training we've installed a Git Server under [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/). We also forked the Argo CD Example Repo for your `<username>`.
+
+Open your Webbrowser and navigate to [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/).
+Login with the training credentials provided by the trainer (Login Button is in the upper right corner).
+
+{{% alert title="Note" color="primary" %}}Users which have a personal Github account can just fork the Repository [argocd-training-examples](https://github.com/acend/argocd-training-examples) to their personal account. To fork the repository click on the top right of the Github on _Fork_.{{% /alert %}}
+
+{{% /onlyWhenNot  %}}
+
+
+{{% onlyWhen manualFork %}}
+
 
 ## Task {{% param sectionnumber %}}.1: Fork the Git repository
 
@@ -25,9 +49,20 @@ Login with the new user and fork the existing Git repository from Github:
 1. Migrate / Clone From URL: https://github.com/acend/argocd-training-examples.git
 1. Click _Migrate Repository_
 
-The URL of the newly forked Git repository will look like `https://{{% param giteaUrl %}}/<username>/argocd-training-examples.git`
+{{% /onlyWhen  %}}
 
-Set the `LAB_USER` environment variable to your personal user:
+The Git Repository is available under your Repositories
+
+![The Git Repository](gitea-repository.png)
+
+By clicking on the repository link in the repository list you get to the detail page.
+
+![The Git Repository](gitea-repository-2.png)
+
+
+The **URL** of the Git repository, we'll be working with, will look like `https://{{% param giteaUrl %}}/<username>/argocd-training-examples.git`.
+
+Switch back to the Terminal inside the Web IDE and set the `LAB_USER` environment variable to your personal user:
 
 ```bash
 export LAB_USER=<username>
@@ -40,19 +75,24 @@ Clone the forked repository to your local workspace:
 git clone https://$LAB_USER@{{% param giteaUrl %}}/$LAB_USER/argocd-training-examples.git
 ```
 
-... or when forked to Github with:
+... or the corresponding URL if you have choosen to use your own Git Server.
+
+Change the working directory to the cloned git repository:
 
 ```bash
-https://github.com/<github-username>/argocd-training-examples
+cd argocd-training-examples/example-app
 ```
-
-Change the working directory to the cloned git repository: `cd argocd-training-examples/example-app`
 
 When using the Web IDE: Configure the Git Client and verify the output
 
 ```bash
 git config user.name "$LAB_USER"
-git config user.email "foo@bar.org"
+git config user.email "<username>@{{% param giteaUrl %}}"
+```
+
+Then use the following command to verify whether the git config for username and email were correctly added:
+
+```bash
 git config --local --list
 ```
 
