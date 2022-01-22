@@ -107,7 +107,6 @@ To deploy the resources using the Argo CD CLI use the following command:
 argocd app create argo-$LAB_USER --repo https://{{% param giteaUrl %}}/$LAB_USER/argocd-training-examples.git --path 'example-app' --dest-server https://kubernetes.default.svc --dest-namespace $LAB_USER
 ```
 
-
 Expected output: `application 'argo-<username>' created`
 
 {{% alert title="Note" color="primary" %}}We don't need to provide Git credentials because the repository is readable for non-authenticated users as well{{% /alert %}}
@@ -145,7 +144,7 @@ The application status is initially in OutOfSync state. To sync (deploy) the res
 argocd app sync argo-$LAB_USER
 ```
 
-This command retrieves the manifests from the git repository and performs a `{{% param cliToolName %}} apply` on them. Because all our manifests has been deployed manually before, no new rollout of them will be triggered on OpenShift. But form now on, all resources are managed by Argo CD. Congrats, the first step in direction GitOps! :)
+This command retrieves the manifests from the git repository and performs a `{{% param cliToolName %}} apply` on them. Because all our manifests has been deployed manually before, no new rollout of them will be triggered on Kubernetes. But form now on, all resources are managed by Argo CD. Congrats, the first step in direction GitOps! :)
 
 You should see an output similar to the following lines:
 
@@ -390,21 +389,10 @@ This is a great way to enforce a strict GitOps principle. Changes which are manu
 
 ## Task {{% param sectionnumber %}}.5: Expose Application
 
-This is an optional task. To expose an application we need to specify a so called `ingress` resource. Create an `ingress.yaml` file next to the `deployment.yaml` in the example-app directory.
+This is an optional task.
 
-Commit and Push the changes again, like you did before:
-
-
-{{% alert title="Note" color="primary" %}}
-Make sure to replace the host value with the actual value. Ask your teacher for the `appdomain`.
-{{% /alert %}}
-
-```bash
-git add ingress.yaml
-git commit -m "Add ingress"
-git push
-```
-
+{{% onlyWhenNot openshift %}}
+To expose an application we need to specify a so called `ingress` resource. Create an `ingress.yaml` file next to the `deployment.yaml` in the example-app directory with the following content.
 
 ```yaml
 ---
@@ -426,6 +414,41 @@ spec:
                   number: 5000
 ```
 
+{{% /onlyWhenNot  %}}
+{{% onlyWhen openshift %}}
+To expose an application we need to specify a so called `route` resource. Create an `route.yaml` file next to the `deployment.yaml` in the example-app directory.
+
+```yaml
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: simple-example
+spec:
+  port:
+    targetPort: 5000
+  to:
+    kind: Service
+    name: simple-example
+    weight: 100
+  wildcardPolicy: None
+```
+{{% /onlyWhen  %}}
+
+{{% alert title="Note" color="primary" %}}
+Make sure to replace the host value with the actual value. Ask your teacher for the `appdomain`.
+{{% /alert %}}
+
+
+Commit and Push the changes again, like you did before:
+
+
+```bash
+git add .
+git commit -m "Expose application"
+git push
+```
+
 After ArgoCD syncs the changes, you can access the example applications url: `http://simple-example-<username>.<appdomain>`
 
 
@@ -433,10 +456,10 @@ After ArgoCD syncs the changes, you can access the example applications url: `ht
 
 You probably asked yourself how can I delete deployed resources on the container platform? Argo CD can be configured to delete resources that no longer exist in the Git repository.
 
-First delete the files `svc.yaml` and `ingress.yaml` from Git repository and push the changes
+First delete the files `service.yaml` and `ingress.yaml` from Git repository and push the changes
 
 ```bash
-git rm svc.yaml ingress.yaml
+git rm service.yaml ingress.yaml
 git add --all && git commit -m 'Removes service and ingress' && git push
 
 ```
