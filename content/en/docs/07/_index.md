@@ -54,7 +54,7 @@ FATA[0000] rpc error: code = InvalidArgument desc = application spec is invalid:
 The cause for this error is the missing setting for the allowed destination clusters and namespaces on the project. We will fix that by setting the allowed destination cluster to `https://kubernetes.default.svc` and using the wildcard expression `student*` as allowed namespace names.
 
 ```bash
-argocd proj add-destination project-$LAB_USER https://kubernetes.default.svc "student*"
+argocd proj add-destination project-$LAB_USER https://kubernetes.default.svc "user*"
 ```
 
 The same issue would happen because of the missing source repository expression. We will use the wildcard "*" to allow all source repositories.
