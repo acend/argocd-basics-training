@@ -68,5 +68,6 @@ Expected output: `application 'argo-aoa-<username>' created`
 Explore the Argo parent application in the web UI.
 
 As you can see our newly created parent app consits of another three apps.
+
 ![App of apps](appofapps.png)
 
