@@ -130,3 +130,13 @@ argocd proj allow-namespace-resource project-$LAB_USER "" Service
 ```bash
 argocd app sync project-app-$LAB_USER
 ```
+
+
+## Task {{% param sectionnumber %}}.4: Cleanup
+
+Delete the resources created in this chapter by running the following commands:
+
+```bash
+argocd app delete project-app-$LAB_USER
+argocd proj delete project-user2
+```
