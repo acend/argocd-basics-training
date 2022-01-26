@@ -28,10 +28,10 @@ As we can see the diroctory consists of three ArgoCD applications. Each of them 
 
 ## Task {{% param sectionnumber %}}.1: Specify the Application Resources
 
-To deploy the app of apps into our `student` namespace we need to edit the three application custom Resources (`app-of-apps/apps/*`):
+To deploy the app of apps into our namespace we need to edit the three application custom Resources (`app-of-apps/apps/*`):
 
 * Replace all occurrences `<username>` in the three yaml files.
-* Set the correct `<repourl>` eg. (`https://{{% param giteaUrl %}}/studentxx/argocd-training-examples.git`)
+* Set the correct `<repourl>` eg. (`https://{{% param giteaUrl %}}/userxy/argocd-training-examples.git`)
 
 <!-- markdownlint-disable -->
 {{< highlight YAML "hl_lines=4 10 15" >}}
@@ -53,6 +53,16 @@ spec:
     targetRevision: HEAD
 {{< / highlight >}}
 <!-- markdownlint-restore -->
+
+Make sure to also commit and push your changes to the git repository.
+
+{{% details title="Hint" %}}
+```bash
+git add .
+git commit -m "Update URLs for App of App"
+git push
+```
+{{% /details %}}
 
 
 ## Task {{% param sectionnumber %}}.2: Create Argo CD Application
