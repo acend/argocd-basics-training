@@ -22,13 +22,13 @@ First find the current version used of ArgoCD server to align the server version
 ```bash
 $ argocd version | grep server
 
-argocd-server: v1.8.7+eb3d1fb
+argocd-server: v2.2.2+03b17e0
 ```
 
 Export the version (without the postfix +eb3d1fb) to environment:
 
 ```bash
-export VERSION=v1.8.7
+export VERSION=v2.2.2
 ```
 
 
