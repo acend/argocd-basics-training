@@ -33,14 +33,14 @@ You should find in the output your newly created project:
 NAME                 DESCRIPTION  DESTINATIONS  SOURCES  CLUSTER-RESOURCE-WHITELIST  NAMESPACE-RESOURCE-BLACKLIST  SIGNATURE-KEYS  ORPHANED-RESOURCES
 ...
 default                           *,*           *        */*                         <none>                        <none>          disabled
-project-student15               <none>        <none>   <none>                      <none>                        <none>          disabled
+project-<username>               <none>        <none>   <none>                      <none>                        <none>          disabled
 ...
 ```
 
 
 ## Task {{% param sectionnumber %}}.2: Define permitted sources and destinations
 
-The next step is to deploy a new application and assign it to the created project `project-studentXX` by using the flag `--project`
+The next step is to deploy a new application and assign it to the created project `project-<username>` by using the flag `--project`
 
 ```bash
 argocd app create project-app-$LAB_USER --repo https://github.com/acend/argocd-training-examples.git --path 'example-app' --dest-server https://kubernetes.default.svc --dest-namespace $LAB_USER --project project-$LAB_USER
@@ -48,10 +48,10 @@ argocd app create project-app-$LAB_USER --repo https://github.com/acend/argocd-t
 
 You will receive an error when trying to create the new application
 ```
-FATA[0000] rpc error: code = InvalidArgument desc = application spec is invalid: InvalidSpecError: application repo https://github.com/acend/argocd-training-examples.git is not permitted in project 'project-student15';InvalidSpecError: application destination {https://kubernetes.default.svc student15} is not permitted in project 'project-student15'
+FATA[0000] rpc error: code = InvalidArgument desc = application spec is invalid: InvalidSpecError: application repo https://github.com/acend/argocd-training-examples.git is not permitted in project 'project-<username>';InvalidSpecError: application destination {https://kubernetes.default.svc <username>} is not permitted in project 'project-<username>'
 ```
 
-The cause for this error is the missing setting for the allowed destination clusters and namespaces on the project. We will fix that by setting the allowed destination cluster to `https://kubernetes.default.svc` and using the wildcard expression `student*` as allowed namespace names.
+The cause for this error is the missing setting for the allowed destination clusters and namespaces on the project. We will fix that by setting the allowed destination cluster to `https://kubernetes.default.svc` and using the wildcard expression `user*` as allowed namespace names.
 
 ```bash
 argocd proj add-destination project-$LAB_USER https://kubernetes.default.svc "user*"
@@ -73,7 +73,7 @@ argocd proj get project-$LAB_USER
 
 ```
 ...
-Destinations:                https://kubernetes.default.svc,student*
+Destinations:                https://kubernetes.default.svc,user*
 Repositories:                *
 ...
 ```
@@ -115,8 +115,8 @@ The sync operation will fail with the following error
 ```
 ...
 GROUP  KIND        NAMESPACE    NAME            STATUS   HEALTH   HOOK  MESSAGE
-       Service     student15  simple-example  Unknown  Missing        Resource :Service is not permitted in project project-student15.
-apps   Deployment  student15  simple-example  Synced   Healthy
+       Service     <username>   simple-example  Unknown  Missing        Resource :Service is not permitted in project project-<username>.
+apps   Deployment  <username>   simple-example  Synced   Healthy
 FATA[0001] Operation has completed with phase: Failed
 ```
 

@@ -7,7 +7,7 @@ sectionnumber: 5.2
 This lab explains how to use [kustomize](https://kustomize.io/)  as manifest format together with Argo CD.
 
 
-## Kustomize
+## Kustomize Introduction
 
 [Kustomize](https://kustomize.io/) introduces a template-free way to customize application configuration that simplifies the use of off-the-shelf applications. It is built into `kubectl` and `oc` with the command `kubectl apply -k` or `oc apply -k`.
 

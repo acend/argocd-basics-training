@@ -6,8 +6,6 @@ sectionnumber: 4
 
 In this Lab you are going to learn about [Sync Phases and Waves](https://argoproj.github.io/argo-cd/user-guide/sync-waves/).
 
-{{< youtube zIHe3EVp528 >}}
-
 
 ## Sync Phases and Waves
 

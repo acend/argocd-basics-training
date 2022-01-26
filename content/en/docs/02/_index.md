@@ -405,7 +405,7 @@ metadata:
   name: simple-example
 spec:
   rules:
-    - host: simple-example-<username>.<appdomain>
+    - host: simple-example-<username>.{{% param appDomain %}}
       http:
         paths:
           - path: /
@@ -438,10 +438,6 @@ spec:
 ```
 {{% /onlyWhen  %}}
 
-{{% alert title="Note" color="primary" %}}
-Make sure to replace the host value with the actual value. Ask your teacher for the `appdomain`.
-{{% /alert %}}
-
 
 Commit and Push the changes again, like you did before:
 
@@ -452,12 +448,12 @@ git commit -m "Expose application"
 git push
 ```
 
-After ArgoCD syncs the changes, you can access the example applications url: `http://simple-example-<username>.<appdomain>`
+After ArgoCD syncs the changes, you can access the example applications url: `http://simple-example-<username>.{{% param appDomain %}}`
 
 Verify using the following command:
 
 ```bash
-curl http://simple-example-<username>.<appdomain>
+curl http://simple-example-<username>.{{% param appDomain %}}
 ```
 
 The result should look similar to this:
@@ -491,11 +487,11 @@ You will see that even with auto-sync and self-healing enabled the status is sti
 
 ```
 GROUP              KIND        NAMESPACE  NAME            STATUS  HEALTH   HOOK  MESSAGE
-networking.k8s.io  Ingress     studentxx  simple-example  Synced  Healthy        ingress.networking.k8s.io/simple-example created
-                   Service     studentxx  simple-example  Synced  Healthy        
-apps               Deployment  studentxx  simple-example  Synced  Healthy
+networking.k8s.io  Ingress     <username> simple-example  Synced  Healthy        ingress.networking.k8s.io/simple-example created
+                   Service     <username> simple-example  Synced  Healthy        
+apps               Deployment  <username> simple-example  Synced  Healthy
 ```
-
+ää$$$dddfff
 Now enable the auto pruning explicitly:
 
 ```bash
@@ -510,9 +506,9 @@ argocd app get argo-$LAB_USER --refresh
 
 ```
 GROUP       KIND        NAMESPACE  NAME            STATUS     HEALTH   HOOK  MESSAGE
-extensions  Ingress     studentxx   simple-example  Succeeded  Pruned         pruned
-            Service     studentxx   simple-example  Succeeded  Pruned         pruned
-apps        Deployment  studentxx   simple-example  Synced     Healthy        deployment.apps/simple-example unchanged
+extensions  Ingress     <username> simple-example  Succeeded  Pruned         pruned
+            Service     <username> simple-example  Succeeded  Pruned         pruned
+apps        Deployment  <username> simple-example  Synced     Healthy        deployment.apps/simple-example unchanged
 ```
 
 The Service was successfully deleted by Argo CD because the manifest was removed from git. See the HEALTH and MESSAGE of the previous console output.
@@ -580,7 +576,7 @@ Now the sync should work. Argo CD use the configured credentials to authenticate
 argocd app sync argo-$LAB_USER
 ```
 
-You can define [credential templates](https://argoproj.github.io/argo-cd/user-guide/private-repositories/#credential-templates) when using the same credential for multiple Git repositories. The configured credentials are used for each Git repository beginning with the configured URL. The following command will create a credential which matches all git repositories for your username (e.g. https://student15@{{% param giteaUrl %}}/student15)
+You can define [credential templates](https://argoproj.github.io/argo-cd/user-guide/private-repositories/#credential-templates) when using the same credential for multiple Git repositories. The configured credentials are used for each Git repository beginning with the configured URL. The following command will create a credential which matches all git repositories for your username (e.g. https://\<username>@{{% param giteaUrl %}}/\<username>)
 ```bash
 argocd repocreds add https://{{% param giteaUrl %}}/$LAB_USER --username $LAB_USER
 ```

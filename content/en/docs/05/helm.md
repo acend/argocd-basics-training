@@ -7,7 +7,7 @@ sectionnumber: 5.1
 This lab explains how to use [Helm](https://helm.sh/) as manifest format together with Argo CD.
 
 
-## Helm
+## Helm Introduction
 
 [Helm](https://github.com/helm/helm) is a [Cloud Native Foundation](https://www.cncf.io/) project to define, install and manage applications in Kubernetes.
 
@@ -132,16 +132,12 @@ ingress:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: helm-<namespace>.<appdomain>
+    - host: helm-<namespace>.{{% param appDomain %}}
       paths:
       - path: /
   tls: []
 ...
 ```
-
-{{% alert title="Note" color="primary" %}}
-The `<appdomain>` is the default domain under which your applications will be accessible and is provided by your trainer.
-{{% /alert %}}
 
 Commit and push the changes to your repository.
 
