@@ -22,20 +22,20 @@ First find the current version used of ArgoCD server to align the server version
 ```bash
 $ argocd version | grep server
 
-argocd-server: v1.8.7+eb3d1fb
+argocd-server: v2.2.2+03b17e0
 ```
 
 Export the version (without the postfix +eb3d1fb) to environment:
 
 ```bash
-export VERSION=v1.8.7
+export VERSION=v2.2.2
 ```
 
 
 ### Backup
 
 ```bash
-docker run -v ~/.kube:/home/argocd/.kube --rm argoproj/argocd:$VERSION argocd-util export --namespace={{% param argoInfraNamespace %}} > argocd-backup.yaml
+docker run -v ~/.kube:/home/argocd/.kube --rm argoproj/argocd:$VERSION argocd admin export > backup.yaml
 ```
 
 {{% alert title="Note" color="primary" %}}
@@ -57,7 +57,7 @@ chmod o-r ~/.kube/config
 The same utility can be used to restore a previously made backup:
 
 ```bash
-docker run -i -v ~/.kube:/home/argocd/.kube --rm argoproj/argocd:$VERSION argocd-util import --namespace=<destination-namespace> - < argocd-backup.yaml
+docker run -i -v ~/.kube:/home/argocd/.kube --rm argoproj/argocd:$VERSION argocd admin import - < backup.yaml
 ```
 
 Reference: [Disaster recovery](https://argoproj.github.io/argo-cd/operator-manual/disaster_recovery/)
