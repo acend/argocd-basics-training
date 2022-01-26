@@ -138,5 +138,5 @@ Delete the resources created in this chapter by running the following commands:
 
 ```bash
 argocd app delete project-app-$LAB_USER
-argocd proj delete project-user2
+argocd proj delete project-$LAB_USER
 ```
