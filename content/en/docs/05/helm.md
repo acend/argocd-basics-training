@@ -7,7 +7,7 @@ sectionnumber: 5.1
 This lab explains how to use [Helm](https://helm.sh/) as manifest format together with Argo CD.
 
 
-## Helm
+## Helm Introduction
 
 [Helm](https://github.com/helm/helm) is a [Cloud Native Foundation](https://www.cncf.io/) project to define, install and manage applications in Kubernetes.
 
