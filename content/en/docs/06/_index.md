@@ -53,7 +53,7 @@ spec:
     targetRevision: HEAD
 {{< / highlight >}}
 <!-- markdownlint-restore -->
- 
+
 Make sure to also commit and push your changes to the git repository.
 
 {{% details title="Hint" %}}
