@@ -132,16 +132,12 @@ ingress:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: helm-<namespace>.<appdomain>
+    - host: helm-<namespace>.{{% param appDomain %}}
       paths:
       - path: /
   tls: []
 ...
 ```
-
-{{% alert title="Note" color="primary" %}}
-The `<appdomain>` is the default domain under which your applications will be accessible and is provided by your trainer.
-{{% /alert %}}
 
 Commit and push the changes to your repository.
 

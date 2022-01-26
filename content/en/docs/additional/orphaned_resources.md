@@ -19,7 +19,7 @@ Create new Argo CD project without restrictions for Git source repository (--src
 argocd proj create --src "*" --dest "*,*" apps-$LAB_USER
 ```
 
-Enable visualization and monitoring of Orphaned Resources for the newly created project `apps-studentXX`
+Enable visualization and monitoring of Orphaned Resources for the newly created project `apps-<username>`
 ```bash
 argocd proj set apps-$LAB_USER --orphaned-resources --orphaned-resources-warn
 ```
@@ -37,7 +37,7 @@ Assign application to newly created project
 argocd app set argo-$LAB_USER --project apps-$LAB_USER
 ```
 
-Ensure that the application is now assigned to the new project `apps-studentXX`
+Ensure that the application is now assigned to the new project `apps-<username>`
 ```bash
 argocd app get argo-$LAB_USER
 ```
@@ -78,9 +78,9 @@ argocd app resources argo-$LAB_USER
 You see in the output that the manually created service `black-hole` is marked as orphaned:
 ```
 GROUP  KIND        NAMESPACE    NAME            ORPHANED
-       Service     studentXX  simple-example  No
-apps   Deployment  studentXX  simple-example  No
-       Service     studentXX  black-hole      Yes
+       Service     <username>   simple-example  No
+apps   Deployment  <username>   simple-example  No
+       Service     <username>   black-hole      Yes
 ```
 
 When viewing the details of the application you will see the warning about the orphaned resource
