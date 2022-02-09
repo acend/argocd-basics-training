@@ -17,7 +17,7 @@
   "homepage": "https://github.com/acend/argocd-basics-training#readme",
   "devDependencies": {
     "husky": "7.0.4",
-    "markdownlint-cli": "0.31.0"
+    "markdownlint-cli": "0.31.1"
   },
   "dependencies": {
     "mdlint": "0.1.0"
