@@ -118,7 +118,8 @@ jobs:
         name: Redeploy Deployments
         env:
           TRAINING_HELM_RELEASE: 'latest'
+          TRAINING_HELM_NAME: 'acend-argocd-basics'
           TRAINING_NAMESPACE: 'acend-argocd-basics-training-prod'
         run: |
-          kubectl rollout restart deployment/$TRAINING_HELM_RELEASE-acend-argocd-basics-acend --kubeconfig $HOME/.kube/config --namespace $TRAINING_NAMESPACE
-          kubectl rollout restart deployment/$TRAINING_HELM_RELEASE-acend-argocd-basics-puzzle --kubeconfig $HOME/.kube/config --namespace $TRAINING_NAMESPACE
+          kubectl rollout restart deployment/${TRAINING_HELM_RELEASE}-${TRAINING_HELM_NAME}-acend --kubeconfig $HOME/.kube/config --namespace $TRAINING_NAMESPACE
+          kubectl rollout restart deployment/${TRAINING_HELM_RELEASE}-${TRAINING_HELM_NAME}-puzzle --kubeconfig $HOME/.kube/config --namespace $TRAINING_NAMESPACE
