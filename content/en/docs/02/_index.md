@@ -491,7 +491,7 @@ networking.k8s.io  Ingress     <username> simple-example  Synced  Healthy       
                    Service     <username> simple-example  Synced  Healthy        
 apps               Deployment  <username> simple-example  Synced  Healthy
 ```
-ää$$$dddfff
+
 Now enable the auto pruning explicitly:
 
 ```bash
