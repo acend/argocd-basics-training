@@ -87,7 +87,7 @@ When using the Web IDE: Configure the Git Client and verify the output
 
 ```bash
 git config user.name "$LAB_USER"
-git config user.email "<username>@{{% param giteaUrl %}}"
+git config user.email "$LAB_USER@{{% param giteaUrl %}}"
 ```
 
 And we also want git to store our Password for the whole day so that we don't need to login every single time we push something.
