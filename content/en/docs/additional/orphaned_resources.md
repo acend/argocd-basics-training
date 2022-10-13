@@ -1,7 +1,7 @@
 ---
 title: "9.1 Orphaned Resources"
 weight: 901
-sectionnumber: 90.1
+sectionnumber: 9.1
 ---
 
 This lab contains demonstrates how to find orphaned top-level resources with Argo CD. Orphaned resources are not managed by Argo CD and could be potentially removed from cluster.
