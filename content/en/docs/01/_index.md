@@ -9,7 +9,7 @@ sectionnumber: 1
 
 The first thing we're going to do is to explore our lab environment and get in touch with the different components.
 
-The namespace with the name corresponding to your username is going to be used for all the hands-on labs. And you will be using the `{{% param cliToolName %}} tool` or the ArgoCD webconsole, to verify what resourcen and objects Argo CD created for you.
+The namespace with the name corresponding to your username is going to be used for all the hands-on labs. And you will be using the `argocd tool` or the ArgoCD webconsole, to verify what resources and objects Argo CD created for you.
 
 {{% alert title="Note" color="primary" %}}You can also use your local installation of the cli tools. Make sure you completed [the setup](../../setup/) before you continue with this lab.{{% /alert %}}
 
@@ -50,7 +50,7 @@ mkdir argocd-training && cd argocd-training
 
 ### Task {{% param sectionnumber %}}.1.2: Login on ArgoCD using argocd CLI
 
-You can access Argo CD via Web UI (URL and Credentials are provided by your teacher) or using the CLI. The Argo CD CLI Tool is already installed on the web IDE.
+You can access Argo CD via Web UI (Credentials are provided by your teacher) or using the CLI. The Argo CD CLI Tool is already installed on the web IDE.
 
 ```bash
 argocd login {{% param argoCdUrl %}} --grpc-web --username <username>
