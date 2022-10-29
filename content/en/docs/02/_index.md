@@ -543,7 +543,7 @@ You even can edit the `Application` resource by using:
 {{% param cliToolName %}} edit applications argo-$LAB_USER --namespace={{% param argoInfraNamespace %}}
 ```
 
-This allows us to manage the ArgoCD application definitions in a declarative way as well. It is a common pattern to have one ArgoCD application which references n child Applications which allows us a fast bootstrapping of a whole environment or a new cluster. This pattern is well known as the [App of apps](https://argoproj.github.io/argo-cd/operator-manual/cluster-bootstrapping/#app-of-apps-pattern) pattern.
+This allows us to manage the ArgoCD application definitions in a declarative way as well. It is a common pattern to have one ArgoCD application which references n child Applications which allows us a fast bootstrapping of a whole environment or a new cluster. This pattern is well known as the [App of apps]({{< ref  "06" >}}) pattern.
 
 
 ## Task {{% param sectionnumber %}}.8: Accessing a private Git repository
