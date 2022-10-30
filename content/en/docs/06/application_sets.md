@@ -1,17 +1,12 @@
 ---
-title: "9.3 Application Sets"
-weight: 903
-sectionnumber: 9.3
+title: "6.2 Application Sets"
+weight: 602
+sectionnumber: 6.2
 ---
-
-{{% alert title="Note" color="primary" %}}
-ArgoCD ApplicationSet ressources are in an early alpha stage!
-If you want to try the application set by yourself, make sure that the [ApplicationSet Controller is installed](https://argocd-applicationset.readthedocs.io/en/stable/Getting-Started/#a-install-applicationset-into-an-existing-argo-cd-install) alongside the ArgoCD controller.
-{{% /alert %}}
 
 With the ApplicationSet ArgoCD adds support for managing ArgoCD Application across a large number of clusters and environments. Plus it adds the capability of managing multitenant Kubernetes clusters.
 
-ApplicationSets are defined through Custom Resource Definition and are processed by the Application set controller.
+ApplicationSets are defined through Custom Resource Definition and are processed by the ApplicationSet controller.
 
 The ApplicationSet provides following features
 
