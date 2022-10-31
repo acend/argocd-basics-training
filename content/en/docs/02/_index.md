@@ -453,7 +453,7 @@ After ArgoCD syncs the changes, you can access the example applications url: `ht
 Verify using the following command:
 
 ```bash
-curl http://simple-example-<username>.{{% param appDomain %}}
+curl http://simple-example-$LAB_USER.{{% param appDomain %}}
 ```
 
 The result should look similar to this:
