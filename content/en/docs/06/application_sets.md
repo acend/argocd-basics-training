@@ -15,45 +15,76 @@ The ApplicationSet provides following features
 * Improved support for monorepos: in the context of Argo CD, a monorepo is multiple Argo CD Application resources defined within a single Git repository
 * Within multitenant clusters, improves the ability of individual cluster tenants to deploy applications using Argo CD (without needing to involve privileged cluster administrators in enabling the destination clusters/namespaces)
 
-Here is a graphical overview how ArgoCD process an ApplicationSet.
-![How ApplicationSet are processed](../applicationSet-overview.png)
+A list of parameters, which come from so called [generators](https://argocd-applicationset.readthedocs.io/en/stable/Generators/), render the ArgoCD Application Template to create a list of Applications.
 
-Here is an example of a ApplicationSet resource with a list generator and a sample guestbook application:
+The ApplicationSet resources work in a similar way as Helm templates do. You can define a set of placeholders `{{placeholder}}` which then are replaced with the actual value during the processing of the ApplicationSet.
+
+
+## Task {{% param sectionnumber %}}.1: Create an ApplicationSet
+
+For better understanding we create our first ApplicationSet. Create a yaml file with the following content under `~/argocd-training-examples/application-set/application-set.yaml`
+And replace the `<username>` placeholder with your actual username.
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: guestbook
+  name: application-set-<username>
 spec:
   generators:
   - list:
       elements:
-      - cluster: engineering-dev
-        url: https://1.2.3.4
-      - cluster: engineering-prod
-        url: https://2.4.6.8
-      - cluster: finance-preprod
-        url: https://9.8.7.6
+        - cluster: dev-cluster
+          url: https://kubernetes.default.svc
+          env: dev
+          traininguser: <username>
+        - cluster: prod-cluster
+          url: https://kubernetes.default.svc
+          env: prod
+          traininguser: <username>
   template:
     metadata:
-      name: '{{cluster}}-guestbook'
+      name: '{{cluster}}-{{traininguser}}-simpleexample'
     spec:
+      project: default
       source:
-        repoURL: https://github.com/infra-team/cluster-deployments.git
+        repoURL: 'https://{{% param giteaUrl %}}/{{traininguser}}/argocd-training-examples.git'
         targetRevision: HEAD
-        path: guestbook/{{cluster}}
+        path: example-app
       destination:
         server: '{{url}}'
-        namespace: guestbook
+        namespace: '{{traininguser}}'
+
 ```
-The ApplicationSet resources working in a similar way as Helm templates do. You can define a set of placeholders `{{placeholder}}` which where replaced during the processing of the ApplicationSet. In the example above the playholder cluster and url are replaced with the values defined in the generator-list elements.
+
+Now let's make sure to apply this to the cluster. But wait, we can either directly apply the yaml or we can create an ArgoCD Application just containing the ApplicationSet. 
+Let's go the GitOps path:
+
+```bash
+git add .
+git commit -m "Add ApplicationSet"
+git push origin main
+```
+
+And now create the ArgoCD Application, which references the ApplicationSet definition:
+
+```bash
+argocd app create argo-appset-$STUDENT --repo https://{{% param giteaUrl %}}/$STUDENT/argocd-training-examples.git --path 'application-set' --dest-server https://kubernetes.default.svc --sync-policy auto --dest-namespace argocd
+```
+
+{{% alert title="Note" color="primary" %}}Please notice the `dest-namespace`, ApplicationSets needs to be deployed within the `argocd` namespace{{% /alert %}}
+
+You should now be able to see three ArgoCD Applications prefixed with your `username`:
+
+* `argo-appset-<username>` The application containing your ApplicationSet.
+* `dev-cluster-<username>-as-example` ArgoCD Application for the fist set of key value pairs: `dev`
+* `prod-cluster-<username>-as-example` ArgoCD Application for the second set of key value pairs: `prod`
 
 
 ## Generators
 
-There are several generators supported by the ApplicationSet controller
-You can find more information about individual generators in de the [official documentation](https://argocd-applicationset.readthedocs.io/en/stable/Generators/)
+The generators (`generators` spec in the ApplicationSet yaml) are the building block on how to specify the list of parameters that will be used to generate the Applications.
+There are several built in generators. Check out the [official documentation](https://argocd-applicationset.readthedocs.io/en/stable/Generators/) for more information.
 
 
 ### List generator
@@ -179,7 +210,7 @@ The combined output is as follow
 ```
 
 
-## Task {{% param sectionnumber %}}.1: Create an ApplicationSet
+## Task {{% param sectionnumber %}}.2: Create an ApplicationSet
 
 In this lab section we're going to create an ApplicationSet for an multi-environment.
 First create a ApplicationSet definition in `<workspace>/appSet.yaml` with following properties:
