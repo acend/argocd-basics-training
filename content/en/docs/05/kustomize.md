@@ -34,7 +34,7 @@ The following configuration options are available for Kustomize:
 Use the following command to set those parameters:
 
 ```bash
-argocd app set argo-kustomize-$LAB_USER --nameprefix=<namePrefix>
+argocd app set argo-kustomize-$STUDENT --nameprefix=<namePrefix>
 ```
 
 
@@ -50,7 +50,7 @@ Let's deploy the simple-example from lab 1 using [kustomize](https://github.com/
 First you'll have to create a new Argo CD application.
 
 ```bash
-argocd app create argo-kustomize-$LAB_USER --repo https://{{% param giteaUrl %}}/$LAB_USER/argocd-training-examples.git --path 'kustomize/simple-example' --dest-server https://kubernetes.default.svc --dest-namespace $LAB_USER
+argocd app create argo-kustomize-$STUDENT --repo https://{{% param giteaUrl %}}/$STUDENT/argocd-training-examples.git --path 'kustomize/simple-example' --dest-server https://kubernetes.default.svc --dest-namespace $STUDENT
 ```
 
 Sync the application
@@ -60,23 +60,23 @@ Sync the application
 To sync (deploy) the resources you can simply click sync in the web UI or execute the following command:
 
 ```bash
-argocd app sync argo-kustomize-$LAB_USER
+argocd app sync argo-kustomize-$STUDENT
 ```
 {{% /details %}}
 
 And verify the deployment:
 
 ```bash
-{{% param cliToolName %}} get pod --namespace $LAB_USER --watch
+{{% param cliToolName %}} get pod --namespace $STUDENT --watch
 ```
 
 Tell the application to sync automatically, to enable self-healing and auto-prune
 
 {{% details title="Hint" %}}
 ```bash
-argocd app set argo-kustomize-$LAB_USER --sync-policy automated
-argocd app set argo-kustomize-$LAB_USER --self-heal
-argocd app set argo-kustomize-$LAB_USER --auto-prune
+argocd app set argo-kustomize-$STUDENT --sync-policy automated
+argocd app set argo-kustomize-$STUDENT --self-heal
+argocd app set argo-kustomize-$STUDENT --auto-prune
 ```
 {{% /details %}}
 
@@ -86,7 +86,7 @@ argocd app set argo-kustomize-$LAB_USER --auto-prune
 We can set the `kustomize` configuration parameter with the following command:
 
 ```bash
-argocd app set argo-kustomize-$LAB_USER --nameprefix=acend
+argocd app set argo-kustomize-$STUDENT --nameprefix=acend
 ```
 
 And take a look at the application in the web UI or using the command line tool
@@ -94,7 +94,7 @@ And take a look at the application in the web UI or using the command line tool
 {{% details title="Hint" %}}
 
 ```bash
-argocd app get argo-kustomize-$LAB_USER
+argocd app get argo-kustomize-$STUDENT
 ```
 {{% /details %}}
 
@@ -109,15 +109,15 @@ Let's now also deploy an application for the production stage.
 
 This does mean we deploy an overlay which specifically configures the production stage.
 
-Let's create the production stage Argo CD application (path: ``) with the name `argo-kustomize-prod-$LAB_USER` and enable automated sync, self-healing and pruning.
+Let's create the production stage Argo CD application (path: ``) with the name `argo-kustomize-prod-$STUDENT` and enable automated sync, self-healing and pruning.
 
 {{% details title="Hint" %}}
 
 ```bash
-argocd app create argo-kustomize-prod-$LAB_USER --repo https://{{% param giteaUrl %}}/$LAB_USER/argocd-training-examples.git --path 'kustomize/overlays-example/overlays/production' --dest-server https://kubernetes.default.svc --dest-namespace $LAB_USER
-argocd app set argo-kustomize-prod-$LAB_USER --sync-policy automated
-argocd app set argo-kustomize-prod-$LAB_USER --self-heal
-argocd app set argo-kustomize-prod-$LAB_USER --auto-prune
+argocd app create argo-kustomize-prod-$STUDENT --repo https://{{% param giteaUrl %}}/$STUDENT/argocd-training-examples.git --path 'kustomize/overlays-example/overlays/production' --dest-server https://kubernetes.default.svc --dest-namespace $STUDENT
+argocd app set argo-kustomize-prod-$STUDENT --sync-policy automated
+argocd app set argo-kustomize-prod-$STUDENT --self-heal
+argocd app set argo-kustomize-prod-$STUDENT --auto-prune
 ```
 
 {{% /details %}}
@@ -125,7 +125,7 @@ argocd app set argo-kustomize-prod-$LAB_USER --auto-prune
 And verify the deployment:
 
 ```bash
-{{% param cliToolName %}} get pod --namespace $LAB_USER --watch
+{{% param cliToolName %}} get pod --namespace $STUDENT --watch
 ```
 
 
@@ -135,7 +135,7 @@ Delete the applications after you've explored the Argo CD Resources and the mana
 
 {{% details title="Hint" %}}
 ```bash
-argocd app delete argo-kustomize-$LAB_USER
-argocd app delete argo-kustomize-prod-$LAB_USER
+argocd app delete argo-kustomize-$STUDENT
+argocd app delete argo-kustomize-prod-$STUDENT
 ```
 {{% /details %}}

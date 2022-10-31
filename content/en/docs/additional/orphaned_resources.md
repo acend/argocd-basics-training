@@ -10,18 +10,18 @@ This lab contains demonstrates how to find orphaned top-level resources with Arg
 ## Task {{% param sectionnumber %}}.1: Create application and project
 
 ```bash
-argocd app create argo-$LAB_USER --repo https://github.com/acend/argocd-training-examples.git --path 'example-app' --dest-server https://kubernetes.default.svc --dest-namespace $LAB_USER
-argocd app sync argo-$LAB_USER
+argocd app create argo-$STUDENT --repo https://github.com/acend/argocd-training-examples.git --path 'example-app' --dest-server https://kubernetes.default.svc --dest-namespace $STUDENT
+argocd app sync argo-$STUDENT
 ```
 
 Create new Argo CD project without restrictions for Git source repository (--src) nor destination cluster/namespace (--dest)
 ```bash
-argocd proj create --src "*" --dest "*,*" apps-$LAB_USER
+argocd proj create --src "*" --dest "*,*" apps-$STUDENT
 ```
 
 Enable visualization and monitoring of Orphaned Resources for the newly created project `apps-<username>`
 ```bash
-argocd proj set apps-$LAB_USER --orphaned-resources --orphaned-resources-warn
+argocd proj set apps-$STUDENT --orphaned-resources --orphaned-resources-warn
 ```
 
 {{% alert title="Note" color="primary" %}}
@@ -34,17 +34,17 @@ With the flag `--orphaned-resources-warn` enabled, for each Argo CD application 
 
 Assign application to newly created project
 ```bash
-argocd app set argo-$LAB_USER --project apps-$LAB_USER
+argocd app set argo-$STUDENT --project apps-$STUDENT
 ```
 
 Ensure that the application is now assigned to the new project `apps-<username>`
 ```bash
-argocd app get argo-$LAB_USER
+argocd app get argo-$STUDENT
 ```
 
 Refresh the application
 ```bash
-argocd app get --refresh argo-$LAB_USER
+argocd app get --refresh argo-$STUDENT
 ```
 
 
@@ -72,7 +72,7 @@ This service will be detected as orphaned resource because it is not managed by 
 
 Print all resources
 ```bash
-argocd app resources argo-$LAB_USER
+argocd app resources argo-$STUDENT
 ```
 
 You see in the output that the manually created service `black-hole` is marked as orphaned:
@@ -85,7 +85,7 @@ apps   Deployment  <username>   simple-example  No
 
 When viewing the details of the application you will see the warning about the orphaned resource
 ```bash
-argocd app get --refresh argo-$LAB_USER
+argocd app get --refresh argo-$STUDENT
 ```
 
 ```
@@ -101,8 +101,8 @@ OrphanedResourceWarning  Application has 1 orphaned resources  2021-09-02 16:20:
 Clean up the resources created in this lab
 
 ```bash
-argocd app delete argo-$LAB_USER -y
-argocd proj delete apps-$LAB_USER
+argocd app delete argo-$STUDENT -y
+argocd proj delete apps-$STUDENT
 ```
 
 Find more detailed information about [Orphaned Resources in the docs](https://argoproj.github.io/argo-cd/user-guide/orphaned-resources/).

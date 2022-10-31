@@ -190,7 +190,7 @@ First create a ApplicationSet definition in `<workspace>/appSet.yaml` with follo
   * List generator with two clusters, named `prod` and `dev`, both with the default Kubernetes API url `https://kubernetes.default.svc`
 * As name template use: `as-{{path.basename}}-{{cluster}}`
 * Source repository: `https://github.com/schlapzz/argocd-applicationset.git` with revision to `HEAD` and path `{{path}}`
-* For the namespace use `<LAB_USER>-{{cluster}}`
+* For the namespace use `<STUDENT>-{{cluster}}`
 
 In the end the matrix generator should produce in total 4 Applications with following properties:
 
@@ -198,21 +198,21 @@ In the end the matrix generator should produce in total 4 Applications with foll
 - name: as-producer-dev
   path: applications/producer/
   path.basename: producer
-  namespace: <LAB_USER>-dev
+  namespace: <STUDENT>-dev
 
 - name: as-consumer-prod
   path: applications/consumer/
   path.basename: consumer
-  namespace: <LAB_USER>-prod
+  namespace: <STUDENT>-prod
 
 - name: as-producer-dev
   path: applications/producer/
-  namespace: <LAB_USER>-dev
+  namespace: <STUDENT>-dev
 
 - name: as-consumer-prod
   path: applications/consumer/
   path.basename: consumer
-  namespace: <LAB_USER>-prod
+  namespace: <STUDENT>-prod
 ```
 
 ```yaml
@@ -246,7 +246,7 @@ spec:
         path: '{{path}}'
       destination:
         server: https://kubernetes.default.svc
-        namespace: '<LAB_USER>-{{cluster}}'
+        namespace: '<STUDENT>-{{cluster}}'
 ```
 
 Next check the ArgoCD web ui, you should see the 4 generator and deployed ArgoCD applications.

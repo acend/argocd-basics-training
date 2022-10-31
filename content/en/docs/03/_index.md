@@ -67,7 +67,7 @@ metadata:
 
 In this task we're going to deploy an [example](https://github.com/acend/argocd-training-examples/tree/master/pre-post-sync-hook) which has `pre` and `post` hooks.
 
-Create the new application `argo-hook-$LAB_USER` with the following command. It will create a service, a deployment and two hooks as soon as the application is synced.
+Create the new application `argo-hook-$STUDENT` with the following command. It will create a service, a deployment and two hooks as soon as the application is synced.
 
 * PreSync: before Job
 * Sync: Deployment with name `pre-post-sync-hook`
@@ -75,21 +75,21 @@ Create the new application `argo-hook-$LAB_USER` with the following command. It 
 
 
 ```bash
-argocd app create argo-hook-$LAB_USER --repo https://{{% param giteaUrl %}}/$LAB_USER/argocd-training-examples.git --path 'pre-post-sync-hook' --dest-server https://kubernetes.default.svc --dest-namespace $LAB_USER
+argocd app create argo-hook-$STUDENT --repo https://{{% param giteaUrl %}}/$STUDENT/argocd-training-examples.git --path 'pre-post-sync-hook' --dest-server https://kubernetes.default.svc --dest-namespace $STUDENT
 ```
 
 Sync the application
 
 {{% details title="Hint" %}}
 ```bash
-argocd app sync argo-hook-$LAB_USER
+argocd app sync argo-hook-$STUDENT
 ```
 {{% /details %}}
 
 And verify the deployment:
 
 ```bash
-{{% param cliToolName %}} get pod --namespace $LAB_USER --watch
+{{% param cliToolName %}} get pod --namespace $STUDENT --watch
 ```
 
 Or in the web UI.
@@ -128,6 +128,6 @@ Delete the application after you've explored the Argo CD Resources and the manag
 
 {{% details title="Hint" %}}
 ```bash
-argocd app delete argo-hook-$LAB_USER
+argocd app delete argo-hook-$STUDENT
 ```
 {{% /details %}}

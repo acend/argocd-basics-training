@@ -67,7 +67,7 @@ git push
 Now let us create the parent Application which deploys our child applications as Custom Resources.
 
 ```bash
-argocd app create argo-aoa-$LAB_USER --repo https://{{% param giteaUrl %}}/$LAB_USER/argocd-training-examples.git --path 'app-of-apps' --dest-server https://kubernetes.default.svc --dest-namespace $LAB_USER
+argocd app create argo-aoa-$STUDENT --repo https://{{% param giteaUrl %}}/$STUDENT/argocd-training-examples.git --path 'app-of-apps' --dest-server https://kubernetes.default.svc --dest-namespace $STUDENT
 ```
 
 Expected output: `application 'argo-aoa-<username>' created`
@@ -85,7 +85,7 @@ Delete the application after you've explored the Argo CD Resources and the manag
 
 {{% details title="Hint" %}}
 ```bash
-argocd app delete argo-aoa-$LAB_USER
+argocd app delete argo-aoa-$STUDENT
 ```
 {{% /details %}}
 
