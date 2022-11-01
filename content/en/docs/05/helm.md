@@ -18,7 +18,7 @@ Helm Charts are configured using `values.yaml` files. (e.g. images, image tags, 
 When using `helm` charts together with Argo CD we can specify the `values.yaml` like this:
 
 ```bash
-argocd app set argo-helm-$LAB_USER --values values-production.yaml
+argocd app set argo-helm-$STUDENT --values values-production.yaml
 ```
 The `--values` flag can be repeated to support multiple values files.
 
@@ -32,7 +32,7 @@ Values files must be in the same git repository as the Helm chart. The files can
 Similar to when using `helm` directly (`helm install <release> --set replicaCount=2 ./mychart --namespace <namespace>`), you are able to overwrite values from the values.yaml, by setting parameters.
 
 ```bash
-argocd app set argo-helm-$LAB_USER --parameter replicaCount=2
+argocd app set argo-helm-$STUDENT --parameter replicaCount=2
 ```
 
 {{% alert title="Warning" color="secondary" %}}
@@ -47,7 +47,7 @@ Many consider this feature as anti-pattern to GitOps. So only use this feature w
 By default, the Helm release name is equal to the Application name to which it belongs. Sometimes, especially on a centralised ArgoCD, you may want to override that name, and it is possible with the `release-name` flag on the cli:
 
 ```bash
-argocd app set argo-helm-$LAB_USER --release-name <release>
+argocd app set argo-helm-$STUDENT --release-name <release>
 ```
 
 {{% alert title="Warning" color="secondary" %}}
@@ -72,7 +72,7 @@ Let's deploy the simple-example from lab 1 using a [helm chart](https://github.c
 First you'll have to create a new Argo CD application.
 
 ```bash
-argocd app create argo-helm-$LAB_USER --repo https://{{% param giteaUrl %}}/$LAB_USER/argocd-training-examples.git --path 'helm/simple-example' --dest-server https://kubernetes.default.svc --dest-namespace $LAB_USER
+argocd app create argo-helm-$STUDENT --repo https://{{% param giteaUrl %}}/$STUDENT/argocd-training-examples.git --path 'helm/simple-example' --dest-server https://kubernetes.default.svc --dest-namespace $STUDENT
 ```
 
 Sync the application
@@ -82,23 +82,23 @@ Sync the application
 To sync (deploy) the resources you can simply click sync in the web UI or execute the following command:
 
 ```bash
-argocd app sync argo-helm-$LAB_USER
+argocd app sync argo-helm-$STUDENT
 ```
 {{% /details %}}
 
 And verify the deployment:
 
 ```bash
-{{% param cliToolName %}} get pod --namespace $LAB_USER --watch
+{{% param cliToolName %}} get pod --namespace $STUDENT --watch
 ```
 
 Tell the application to sync automatically, to enable self-healing and auto-prune
 
 {{% details title="Hint" %}}
 ```bash
-argocd app set argo-helm-$LAB_USER --sync-policy automated
-argocd app set argo-helm-$LAB_USER --self-heal
-argocd app set argo-helm-$LAB_USER --auto-prune
+argocd app set argo-helm-$STUDENT --sync-policy automated
+argocd app set argo-helm-$STUDENT --self-heal
+argocd app set argo-helm-$STUDENT --auto-prune
 ```
 {{% /details %}}
 
@@ -108,7 +108,7 @@ argocd app set argo-helm-$LAB_USER --auto-prune
 We can set the `helm` parameter with the following command:
 
 ```bash
-argocd app set argo-helm-$LAB_USER --parameter replicaCount=2
+argocd app set argo-helm-$STUDENT --parameter replicaCount=2
 ```
 
 {{% alert title="Warning" color="secondary" %}}
@@ -170,15 +170,15 @@ git push
 {{% /details %}}
 
 
-Let's create the production stage Argo CD application with the name `argo-helm-prod-$LAB_USER` and enable automated sync, self-healing and pruning.
+Let's create the production stage Argo CD application with the name `argo-helm-prod-$STUDENT` and enable automated sync, self-healing and pruning.
 
 {{% details title="Hint" %}}
 
 ```bash
-argocd app create argo-helm-prod-$LAB_USER --repo https://{{% param giteaUrl %}}/$LAB_USER/argocd-training-examples.git --path 'helm/simple-example' --dest-server https://kubernetes.default.svc --dest-namespace $LAB_USER
-argocd app set argo-helm-prod-$LAB_USER --sync-policy automated
-argocd app set argo-helm-prod-$LAB_USER --self-heal
-argocd app set argo-helm-prod-$LAB_USER --auto-prune
+argocd app create argo-helm-prod-$STUDENT --repo https://{{% param giteaUrl %}}/$STUDENT/argocd-training-examples.git --path 'helm/simple-example' --dest-server https://kubernetes.default.svc --dest-namespace $STUDENT
+argocd app set argo-helm-prod-$STUDENT --sync-policy automated
+argocd app set argo-helm-prod-$STUDENT --self-heal
+argocd app set argo-helm-prod-$STUDENT --auto-prune
 ```
 
 {{% /details %}}
@@ -186,14 +186,14 @@ argocd app set argo-helm-prod-$LAB_USER --auto-prune
 And verify the deployment:
 
 ```bash
-{{% param cliToolName %}} get pod --namespace $LAB_USER --watch
+{{% param cliToolName %}} get pod --namespace $STUDENT --watch
 ```
 
 Tell the Argo CD app to use the `values-production.yaml` values file
 
 {{% details title="Hint" %}}
 ```bash
-argocd app set argo-helm-prod-$LAB_USER --values values-production.yaml
+argocd app set argo-helm-prod-$STUDENT --values values-production.yaml
 ```
 {{% /details %}}
 
@@ -206,7 +206,7 @@ Delete the applications after you've explored the Argo CD Resources and the mana
 
 {{% details title="Hint" %}}
 ```bash
-argocd app delete argo-helm-$LAB_USER
-argocd app delete argo-helm-prod-$LAB_USER
+argocd app delete argo-helm-$STUDENT
+argocd app delete argo-helm-prod-$STUDENT
 ```
 {{% /details %}}
