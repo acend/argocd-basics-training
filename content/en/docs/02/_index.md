@@ -377,7 +377,7 @@ Let's scale our `simple-example` Deployment and observe whats happening:
 {{% param cliToolName %}} scale deployment simple-example --replicas=3 --namespace=$STUDENT
 ```
 
-Argo CD will immediately scale back the `simple-example` Deployment to `1` replicas. You will see the desired replicas count in the watched Deployment.
+Argo CD will immediately scale back the `simple-example` Deployment to `2` replicas. You will see the desired replicas count in the watched Deployment.
 
 ```
 NAME             READY   UP-TO-DATE   AVAILABLE   AGE
