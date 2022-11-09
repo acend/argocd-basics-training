@@ -76,8 +76,6 @@ Explore the Argo parent application in the web UI.
 
 As you can see our newly created parent app consits of another three apps.
 
-![App of apps](appofapps.png)
-
 
 ## Task {{% param sectionnumber %}}.3: Delete the Application
 
