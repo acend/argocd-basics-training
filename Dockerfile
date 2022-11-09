@@ -27,6 +27,7 @@ RUN wkhtmltopdf --enable-internal-links --enable-local-file-access \
     --enable-internal-links --enable-local-file-access \
     --header-html /pdf/header/index.html --footer-html /pdf/footer/index.html \
     --outline-depth 2 \
+    --dpi 600 \
     /pdf/index.html /pdf.pdf
 
 FROM nginxinc/nginx-unprivileged:1.23-alpine
