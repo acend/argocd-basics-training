@@ -187,7 +187,7 @@ Change the replica param in your `params.libsonnet` to 2
   containerPort: 5000,
   image: "quay.io/acend/example-web-go",
   name: "argo-jsonnet-example-<username>",
-  replicas: 1,
+  replicas: 2,
   servicePort: 5000,
   type: "ClusterIP",
 }
