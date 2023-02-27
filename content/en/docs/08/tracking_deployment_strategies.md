@@ -56,13 +56,13 @@ git push origin --tags
 
 Re-create the simple application example:
 ```bash
-argocd app create argo-example-$STUDENT --repo https://gitea.labapp.acend.ch/$STUDENT/argocd-training-examples.git --path 'example-app' --dest-server https://kubernetes.default.svc --dest-namespace $STUDENT
+argocd app create argo-example-$USER --repo https://gitea.labapp.acend.ch/$USER/argocd-training-examples.git --path 'example-app' --dest-server https://kubernetes.default.svc --dest-namespace $USER
 ```
 
 To pin the v1.0.0 version tag on our application execute the following command:
 
 ```bash
-argocd app set argo-example-$STUDENT --revision v1.0.0
+argocd app set argo-example-$USER --revision v1.0.0
 ```
 {{% /details %}}
 
@@ -89,7 +89,7 @@ git add . && git commit -m "scale deployment replicas to 2" && git push origin
 Now you can try to sync your applicaion with following command:
 
 ```bash
-argocd app sync argo-example-$STUDENT
+argocd app sync argo-example-$USER
 ```
 
 Check the number of configured replicas on the app deployment.
@@ -124,7 +124,7 @@ git tag v1.0.1 && git push origin --tags
 Execute the following command to set the revision to our new Git tag `v.1.0.1`.
 
 ```bash
-argocd app set argo-example-$STUDENT --revision v1.0.1
+argocd app set argo-example-$USER --revision v1.0.1
 ```
 
 {{% /details %}}
@@ -133,13 +133,13 @@ With the new created tag, ArgoCD is goingt to pick up and apply the latest chang
 First let us sync the changes and check if the ArgoCD App is in Sync.
 
 ```bash
-argocd app sync argo-example-$STUDENT
+argocd app sync argo-example-$USER
 ```
 
 Then diplay the status with following command:
 
 ```bash
-argocd app get argo-example-$STUDENT
+argocd app get argo-example-$USER
 ```
 
 If the app is in sync, you can check the number of replicas of the deployment.
@@ -163,5 +163,5 @@ simple-example   2/2     2            2           7m43s
 You can cascading delete the ArgoCD Application with the following command:
 
 ```bash
-argocd app delete argo-example-$STUDENT
+argocd app delete argo-example-$USER
 ```

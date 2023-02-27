@@ -23,7 +23,7 @@ In summary, a project defines who can deploy what to which destination. This is 
 Now we want to create a new empty Argo CD project.
 
 ```bash
-argocd proj create project-$STUDENT
+argocd proj create project-$USER
 argocd proj list
 ```
 
@@ -43,7 +43,7 @@ project-<username>               <none>        <none>   <none>                  
 The next step is to deploy a new application and assign it to the created project `project-<username>` by using the flag `--project`
 
 ```bash
-argocd app create project-app-$STUDENT --repo https://github.com/acend/argocd-training-examples.git --path 'example-app' --dest-server https://kubernetes.default.svc --dest-namespace $STUDENT --project project-$STUDENT
+argocd app create project-app-$USER --repo https://github.com/acend/argocd-training-examples.git --path 'example-app' --dest-server https://kubernetes.default.svc --dest-namespace $USER --project project-$USER
 ```
 
 You will receive an error when trying to create the new application
@@ -54,19 +54,19 @@ FATA[0000] rpc error: code = InvalidArgument desc = application spec is invalid:
 The cause for this error is the missing setting for the allowed destination clusters and namespaces on the project. We will fix that by setting the allowed destination cluster to `https://kubernetes.default.svc` and using the wildcard expression `user*` as allowed namespace names.
 
 ```bash
-argocd proj add-destination project-$STUDENT https://kubernetes.default.svc "user*"
+argocd proj add-destination project-$USER https://kubernetes.default.svc "user*"
 ```
 
 The same issue would happen because of the missing source repository expression. We will use the wildcard "*" to allow all source repositories.
 
 ```bash
-argocd proj add-source project-$STUDENT "*"
+argocd proj add-source project-$USER "*"
 ```
 
 Now print out the details of the project again
 
 ```bash
-argocd proj get project-$STUDENT
+argocd proj get project-$USER
 ```
 
 ... and you will see the permitted source repository and destination cluster/namespace:
@@ -81,13 +81,13 @@ Repositories:                *
 Now you should be able to create a new application linked with the project
 
 ```bash
-argocd app create project-app-$STUDENT --repo https://github.com/acend/argocd-training-examples.git --path 'example-app' --dest-server https://kubernetes.default.svc --dest-namespace $STUDENT --project project-$STUDENT
+argocd app create project-app-$USER --repo https://github.com/acend/argocd-training-examples.git --path 'example-app' --dest-server https://kubernetes.default.svc --dest-namespace $USER --project project-$USER
 ```
 
 Now sync the application manifest
 
 ```bash
-argocd app sync project-app-$STUDENT
+argocd app sync project-app-$USER
 ```
 
 {{% alert title="Note" color="primary" %}}
@@ -102,12 +102,12 @@ On a project there is the possibility to restrict the kind of resources that can
 Let's extend our existing project and deny the synchronization of `Services`.
 
 ```bash
-argocd proj deny-namespace-resource project-$STUDENT "" Service
+argocd proj deny-namespace-resource project-$USER "" Service
 ```
 
 Now sync the application
 ```bash
-argocd app sync project-app-$STUDENT
+argocd app sync project-app-$USER
 ```
 
 The sync operation will fail with the following error
@@ -123,12 +123,12 @@ FATA[0001] Operation has completed with phase: Failed
 Remove the kind `Service` from the deny list by using `allow-namespace-resource`
 
 ```bash
-argocd proj allow-namespace-resource project-$STUDENT "" Service
+argocd proj allow-namespace-resource project-$USER "" Service
 ```
 
 ... and sync the app again
 ```bash
-argocd app sync project-app-$STUDENT
+argocd app sync project-app-$USER
 ```
 
 
@@ -137,6 +137,6 @@ argocd app sync project-app-$STUDENT
 Delete the resources created in this chapter by running the following commands:
 
 ```bash
-argocd app delete project-app-$STUDENT
-argocd proj delete project-$STUDENT
+argocd app delete project-app-$USER
+argocd proj delete project-$USER
 ```
