@@ -38,7 +38,7 @@ You can specify the wave in the sync phase by setting an annotation `argocd.argo
 
 Let's now get our hands on a sync wave example.
 
-Create the new application `argo-wave-$STUDENT` with the following command. The Application consist of the following resources, phases and waves:
+Create the new application `argo-wave-$USER` with the following command. The Application consist of the following resources, phases and waves:
 
 * PreSync
   * Job: upgrade-sql-schema
@@ -55,21 +55,21 @@ Create the new application `argo-wave-$STUDENT` with the following command. The 
 
 
 ```bash
-argocd app create argo-wave-$STUDENT --repo https://{{% param giteaUrl %}}/$STUDENT/argocd-training-examples.git --path 'sync-wave' --dest-server https://kubernetes.default.svc --dest-namespace $STUDENT
+argocd app create argo-wave-$USER --repo https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git --path 'sync-wave' --dest-server https://kubernetes.default.svc --dest-namespace $USER
 ```
 
 Sync the application:
 
 {{% details title="Hint" %}}
 ```bash
-argocd app sync argo-wave-$STUDENT
+argocd app sync argo-wave-$USER
 ```
 {{% /details %}}
 
 And verify the deployment:
 
 ```bash
-{{% param cliToolName %}} get pod --namespace $STUDENT --watch
+{{% param cliToolName %}} get pod --namespace $USER --watch
 ```
 
 
@@ -79,6 +79,6 @@ Delete the application after you've explored the Argo CD Resources and the manag
 
 {{% details title="Hint" %}}
 ```bash
-argocd app delete argo-wave-$STUDENT
+argocd app delete argo-wave-$USER
 ```
 {{% /details %}}

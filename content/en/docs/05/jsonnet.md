@@ -149,7 +149,7 @@ git push
 Create the new Argo CD application.
 
 ```bash
-argocd app create argo-jsonnet-$STUDENT --repo https://{{% param giteaUrl %}}/$STUDENT/argocd-training-examples.git --path 'jsonnet' --dest-server https://kubernetes.default.svc --dest-namespace $STUDENT
+argocd app create argo-jsonnet-$USER --repo https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git --path 'jsonnet' --dest-server https://kubernetes.default.svc --dest-namespace $USER
 ```
 
 Sync the application
@@ -159,7 +159,7 @@ Sync the application
 To sync (deploy) the resources you can simply click sync in the web UI or execute the following command:
 
 ```bash
-argocd app sync argo-jsonnet-$STUDENT
+argocd app sync argo-jsonnet-$USER
 ```
 {{% /details %}}
 
@@ -172,9 +172,9 @@ Tell the application to sync automatically, to enable self-healing and auto-prun
 
 {{% details title="Hint" %}}
 ```bash
-argocd app set argo-jsonnet-$STUDENT --sync-policy automated
-argocd app set argo-jsonnet-$STUDENT --self-heal
-argocd app set argo-jsonnet-$STUDENT --auto-prune
+argocd app set argo-jsonnet-$USER --sync-policy automated
+argocd app set argo-jsonnet-$USER --self-heal
+argocd app set argo-jsonnet-$USER --auto-prune
 ```
 {{% /details %}}
 
@@ -206,7 +206,7 @@ git push
 And verify the result in the ArgoCD Ui or by using the following command, this might take a little while to happen, depending on how many trainees are currently working on the labs. Hint: hit refresh to speed up the process.
 
 ```bash
-{{% param cliToolName %}} get pod --namespace $STUDENT --watch
+{{% param cliToolName %}} get pod --namespace $USER --watch
 ```
 
 
@@ -216,6 +216,6 @@ Delete the applications after you've explored the Argo CD Resources and the mana
 
 {{% details title="Hint" %}}
 ```bash
-argocd app delete argo-jsonnet-$STUDENT
+argocd app delete argo-jsonnet-$USER
 ```
 {{% /details %}}

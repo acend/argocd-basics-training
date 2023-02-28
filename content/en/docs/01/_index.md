@@ -53,7 +53,7 @@ mkdir argocd-training && cd argocd-training
 You can access Argo CD via Web UI (Credentials are provided by your teacher) or using the CLI. The Argo CD CLI Tool is already installed on the web IDE.
 
 ```bash
-argocd login {{% param argoCdUrl %}} --grpc-web --username <username>
+argocd login {{% param argoCdUrl %}} --grpc-web --username $USER
 ```
 {{% onlyWhen openshift %}}
 

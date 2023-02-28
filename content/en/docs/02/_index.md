@@ -62,22 +62,22 @@ By clicking on the repository link in the repository list you get to the detail 
 
 The **URL** of the Git repository, we'll be working with, will look like `https://{{% param giteaUrl %}}/<username>/argocd-training-examples.git`.
 
-Within the Web IDE we set the `STUDENT` environment variable to your personal `<username>`.
+Within the Web IDE we set the `USER` environment variable to your personal `<username>`.
 
 Verify that with the following command:
 ```bash
-echo $STUDENT
+echo $USER
 ```
 
-The `STUDENT` variable will be used as part of the commands to make the lab experience more comfortable for you.
+The `USER` variable will be used as part of the commands to make the lab experience more comfortable for you.
 
-{{% alert title="Note" color="primary" %}}If you're **not** using our lab webshell to execute the labs, make sure to set the `STUDENT` environment variable accordingly with the following command `export STUDENT=<username>`{{% /alert %}}
+{{% alert title="Note" color="primary" %}}If you're **not** using our lab webshell to execute the labs, make sure to set the `USER` environment variable accordingly with the following command `export USER=<username>`{{% /alert %}}
 
 
 Clone the forked repository to your local workspace:
 
 ```bash
-git clone https://$STUDENT@{{% param giteaUrl %}}/$STUDENT/argocd-training-examples.git
+git clone https://$USER@{{% param giteaUrl %}}/$USER/argocd-training-examples.git
 ```
 
 ... or the corresponding URL if you have choosen to use your own Git Server.
@@ -91,8 +91,8 @@ cd argocd-training-examples/example-app
 When using the Web IDE: Configure the Git Client and verify the output
 
 ```bash
-git config user.name "$STUDENT"
-git config user.email "$STUDENT@{{% param giteaUrl %}}"
+git config user.name "$USER"
+git config user.email "$USER@{{% param giteaUrl %}}"
 ```
 
 And we also want git to store our Password for the whole day so that we don't need to login every single time we push something.
@@ -115,7 +115,7 @@ Now we want to deploy the resource manifests contained in the cloned repository 
 To deploy the resources using the Argo CD CLI use the following command:
 
 ```bash
-argocd app create argo-$STUDENT --repo https://{{% param giteaUrl %}}/$STUDENT/argocd-training-examples.git --path 'example-app' --dest-server https://kubernetes.default.svc --dest-namespace $STUDENT
+argocd app create argo-$USER --repo https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git --path 'example-app' --dest-server https://kubernetes.default.svc --dest-namespace $USER
 ```
 
 Expected output: `application 'argo-<username>' created`
@@ -127,7 +127,7 @@ Expected output: `application 'argo-<username>' created`
 Once the application is created, you can view its status:
 
 ```bash
-argocd app get argo-$STUDENT
+argocd app get argo-$USER
 ```
 
 ```
@@ -152,7 +152,7 @@ apps   Deployment  <username>  simple-example  OutOfSync  Missing
 The application status is initially in OutOfSync state. To sync (deploy) the resource manifests, run:
 
 ```bash
-argocd app sync argo-$STUDENT
+argocd app sync argo-$USER
 ```
 
 This command retrieves the manifests from the git repository and performs a `{{% param cliToolName %}} apply` on them. Because all our manifests has been deployed manually before, no new rollout of them will be triggered on Kubernetes. But form now on, all resources are managed by Argo CD. Congrats, the first step in direction GitOps! :)
@@ -262,7 +262,7 @@ To https://{{% param giteaUrl %}}/<username>/argocd-training-examples.git
 Check the state of the resources by cli:
 
 ```bash
-argocd app get argo-$STUDENT --refresh
+argocd app get argo-$USER --refresh
 ```
 
 The parameter `--refresh` triggers an update against the Git repository. Out of the box Git will be polled by Argo CD in a predefined interval (defaults to 3 minutes). To use a synchronous workflow you can use webhooks in Git. These will trigger a synchronization in Argo CD on every push to the repository.
@@ -291,7 +291,7 @@ apps   Deployment  <username>   simple-example  OutOfSync  Healthy        deploy
 When an application is OutOfSync then your deployed 'live state' is no longer the same as the 'target state' which is represented by the resource manifests in the Git repository. You can inspect the differences between live and target state by cli:
 
 ```bash
-argocd app diff argo-$STUDENT
+argocd app diff argo-$USER
 ```
 
 which should give you an output similar to:
@@ -318,7 +318,7 @@ Now click `Sync` on the top left and let the magic happens ;) The application wi
 Double-check the status by cli
 
 ```bash
-argocd app get argo-$STUDENT
+argocd app get argo-$USER
 ```
 
 ```
@@ -345,7 +345,7 @@ Argo CD can automatically sync an application when it detects differences betwee
 To configure automatic sync run (or use the UI):
 
 ```bash
-argocd app set argo-$STUDENT --sync-policy automated
+argocd app set argo-$USER --sync-policy automated
 ```
 
 From now on Argo CD will automatically apply all resources to Kubernetes every time you commit to the Git repository.
@@ -353,7 +353,7 @@ From now on Argo CD will automatically apply all resources to Kubernetes every t
 Decrease the replicas count to 1 and push the updated manifest to remote. Wait for a few moments and see check that ArgoCD will scale the deployment of the example app down to 1 replica. The default polling interval is 3 minutes. If you don't want to wait you can force a refresh by clicking `Refresh` in the UI or by cli:
 
 ```bash
-argocd app get argo-$STUDENT --refresh
+argocd app get argo-$USER --refresh
 ```
 
 
@@ -362,19 +362,19 @@ argocd app get argo-$STUDENT --refresh
 By default, changes made to the live cluster will not trigger automatic sync. To enable automatic sync when the live cluster's state deviates from the state defined in Git, run:
 
 ```bash
-argocd app set argo-$STUDENT --self-heal
+argocd app set argo-$USER --self-heal
 ```
 
 Watch the deployment `simple-example` in a separate terminal
 
 ```bash
-{{% param cliToolName %}} get deployment simple-example --watch --namespace=$STUDENT
+{{% param cliToolName %}} get deployment simple-example --watch --namespace=$USER
 ```
 
 Let's scale our `simple-example` Deployment and observe whats happening:
 
 ```bash
-{{% param cliToolName %}} scale deployment simple-example --replicas=3 --namespace=$STUDENT
+{{% param cliToolName %}} scale deployment simple-example --replicas=3 --namespace=$USER
 ```
 
 Argo CD will immediately scale back the `simple-example` Deployment to `1` replicas. You will see the desired replicas count in the watched Deployment.
@@ -458,7 +458,7 @@ After ArgoCD syncs the changes, you can access the example applications url: `ht
 Verify using the following command:
 
 ```bash
-curl http://simple-example-$STUDENT.{{% param appDomain %}}
+curl http://simple-example-$USER.{{% param appDomain %}}
 ```
 
 The result should look similar to this:
@@ -485,7 +485,7 @@ git add --all && git commit -m 'Removes service and ingress' && git push
 Check the status of the application with
 
 ```bash
-argocd app get argo-$STUDENT --refresh
+argocd app get argo-$USER --refresh
 ```
 
 You will see that even with auto-sync and self-healing enabled the status is still OutOfSync
@@ -500,13 +500,13 @@ apps               Deployment  <username> simple-example  Synced  Healthy
 Now enable the auto pruning explicitly:
 
 ```bash
-argocd app set argo-$STUDENT --auto-prune
+argocd app set argo-$USER --auto-prune
 ```
 
 Recheck the status again
 
 ```bash
-argocd app get argo-$STUDENT --refresh
+argocd app get argo-$USER --refresh
 ```
 
 ```
@@ -539,13 +539,13 @@ argo-<username>    Synced        Healthy
 You will see the application which we created some chapters ago by cli command `argocd app create...`. To see the complete configuration of the `Application` as _yaml_ use:
 
 ```bash
-{{% param cliToolName %}} get applications argo-$STUDENT -oyaml --namespace={{% param argoInfraNamespace %}}
+{{% param cliToolName %}} get applications argo-$USER -oyaml --namespace={{% param argoInfraNamespace %}}
 ```
 
 You even can edit the `Application` resource by using:
 
 ```bash
-{{% param cliToolName %}} edit applications argo-$STUDENT --namespace={{% param argoInfraNamespace %}}
+{{% param cliToolName %}} edit applications argo-$USER --namespace={{% param argoInfraNamespace %}}
 ```
 
 This allows us to manage the ArgoCD application definitions in a declarative way as well. It is a common pattern to have one ArgoCD application which references n child Applications which allows us a fast bootstrapping of a whole environment or a new cluster. This pattern is well known as the [App of apps]({{< ref  "06" >}}) pattern.
@@ -558,7 +558,7 @@ The Git repository we have imported to Gitea is public available for the whole w
 First make the Git repository in Gitea private by checking the option `Visibility: Make Repository Private` under `Settings -> Repository`. Now sync the app again.
 
 ```bash
-argocd app sync argo-$STUDENT
+argocd app sync argo-$USER
 ```
 
 You will see the following error
@@ -568,7 +568,7 @@ FATA[0000] rpc error: code = FailedPrecondition desc = authentication required
 Argo CD can't any longer access the protected repository without providing credentials for authentication. Next assign credentials to used Git repository. You have to provide the Gitea password interactively.
 
 ```bash
-argocd repo add https://{{% param giteaUrl %}}/$STUDENT/argocd-training-examples.git --username $STUDENT
+argocd repo add https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git --username $USER
 ```
 
 {{% alert title="Note" color="primary" %}}
@@ -578,12 +578,12 @@ You can provide the password through the cli by using the flag `--password`.
 Now the sync should work. Argo CD use the configured credentials to authenticate against your repository in Gitea.
 
 ```bash
-argocd app sync argo-$STUDENT
+argocd app sync argo-$USER
 ```
 
 You can define [credential templates](https://argoproj.github.io/argo-cd/user-guide/private-repositories/#credential-templates) when using the same credential for multiple Git repositories. The configured credentials are used for each Git repository beginning with the configured URL. The following command will create a credential which matches all git repositories for your username (e.g. https://\<username>@{{% param giteaUrl %}}/\<username>)
 ```bash
-argocd repocreds add https://{{% param giteaUrl %}}/$STUDENT --username $STUDENT
+argocd repocreds add https://{{% param giteaUrl %}}/$USER --username $USER
 ```
 
 Finally make your personal Git repository public again for the following labs. Uncheck the option `Visibility: Make Repository Private` under `Settings -> Repository` in the Gitea UI.
@@ -600,7 +600,7 @@ Have a look in the [documentation](https://argoproj.github.io/argo-cd/user-guide
 You can cascading delete the ArgoCD Application with the following command:
 
 ```bash
-argocd app delete argo-$STUDENT
+argocd app delete argo-$USER
 ```
 
 Hit `y` to confirm the deletion and this will delete the `Application` manifests of ArgoCD and all created resources by this application. In our case the `Application`, `Deployment` and `Service` will be deleted.  With the flag `--cascade=false` only the ArgoCD `Application` will be deleted and the created resources `Deployment` and `Service` remain untouched.
