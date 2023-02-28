@@ -22,6 +22,8 @@ The ApplicationSet resources work in a similar way as Helm templates do. You can
 
 ## Task {{% param sectionnumber %}}.1: Create an ApplicationSet
 
+First delete the Ingress resource under `~/argocd-training-examples/example-app/ingress.yaml`
+
 For better understanding we create our first ApplicationSet. Create a yaml file with the following content under `~/argocd-training-examples/application-set/simple-example/application-set.yaml`
 and replace the `<username>` placeholder with your actual username.
 
@@ -171,7 +173,7 @@ spec:
         path: '{{path}}'
       destination:
         server: https://kubernetes.default.svc
-        namespace: '<username>'
+        namespace: '<username>-{{cluster}}'
 ```
 
 Make sure to replace all `<username>` occurrences with your username.
