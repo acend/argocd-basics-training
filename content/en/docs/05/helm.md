@@ -120,7 +120,7 @@ Since the `sync-policy` is set to `automated` the second pod will be deployed im
 
 ## Task {{% param sectionnumber %}}.3: Ingress
 
-The prober and production ready way of overwriting values is by doing it in git.
+The proper and production ready way of overwriting values is by doing it in git.
 
 Change the `helm/simple-example/values.yaml` file in your git repository
 
