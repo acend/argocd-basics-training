@@ -53,7 +53,7 @@ spec:
         path: example-app
       destination:
         server: '{{url}}'
-        namespace: '{{traininguser}}'
+        namespace: '{{traininguser}}-{{env}}'
 
 ```
 
