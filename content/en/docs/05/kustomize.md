@@ -109,7 +109,7 @@ Let's now also deploy an application for the production stage.
 
 This does mean we deploy an overlay which specifically configures the production stage.
 
-Let's create the production stage Argo CD application (path: `kustomize/overlays-example/overlays/production`) with the name `argo-kustomize-prod-$STUDENT` and enable automated sync, self-healing and pruning.
+Let's create the production stage Argo CD application (path: `kustomize/overlays-example/overlays/production`) with the name `argo-kustomize-prod-$USER` and enable automated sync, self-healing and pruning.
 
 
 {{% details title="Hint" %}}
