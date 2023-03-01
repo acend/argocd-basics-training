@@ -67,15 +67,15 @@ argocd app set argo-example-$USER --revision v1.0.0
 {{% /details %}}
 
 
-Increase the number of replicas in your file `<workspace>/example-app/values.yaml` to 2.
+Increase the number of replicas in your file `<workspace>/example-app/deployment.yaml` to 2.
 After that commit and push your changes to the Git repository.
 
 {{% details title="Hint" %}}
 
 {{< highlight YAML "hl_lines=2" >}}
-
-replicaCount: 2
-
+...
+replicas: 2
+...
 {{< / highlight >}}
 
 For commiting and pushing your changes to your Git repository, execute follwing command:
