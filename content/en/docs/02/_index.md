@@ -23,7 +23,7 @@ For this Training we've installed a Git Server under [https://{{% param giteaUrl
 Open your Webbrowser and navigate to [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/).
 Login with the training credentials provided by the trainer (Login Button is in the upper right corner).
 
-{{% alert title="Note" color="primary" %}}Users which have a personal Github account can just fork the Repository [argocd-training-examples](https://github.com/acend/argocd-training-examples) to their personal account. To fork the repository click on the top right of the Github on _Fork_.{{% /alert %}}
+{{% alert title="Note" color="info" %}}Users which have a personal Github account can just fork the Repository [argocd-training-examples](https://github.com/acend/argocd-training-examples) to their personal account. To fork the repository click on the top right of the Github on _Fork_.{{% /alert %}}
 
 {{% /onlyWhenNot  %}}
 
@@ -39,7 +39,7 @@ Users which have a personal Github account can just fork the Repository [argocd-
 
 All other users can use the provided Gitea installation of the personal lab environment. Visit [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/) with your browser and register a new account with your personal username and a password that you can remember ;)
 
-{{% alert title="Note" color="primary" %}}All the cli commands in this chapter must be executed in the terminal of the provided Web IDE.{{% /alert %}}
+{{% alert title="Note" color="info" %}}All the cli commands in this chapter must be executed in the terminal of the provided Web IDE.{{% /alert %}}
 
 ![Register new User in Gitea](gitea-register.png)
 
@@ -71,7 +71,7 @@ echo $USER
 
 The `USER` variable will be used as part of the commands to make the lab experience more comfortable for you.
 
-{{% alert title="Note" color="primary" %}}If you're **not** using our lab webshell to execute the labs, make sure to set the `USER` environment variable accordingly with the following command `export USER=<username>`{{% /alert %}}
+{{% alert title="Note" color="info" %}}If you're **not** using our lab webshell to execute the labs, make sure to set the `USER` environment variable accordingly with the following command `export USER=<username>`{{% /alert %}}
 
 
 Clone the forked repository to your local workspace:
@@ -120,9 +120,9 @@ argocd app create argo-$USER --repo https://{{% param giteaUrl %}}/$USER/argocd-
 
 Expected output: `application 'argo-<username>' created`
 
-{{% alert title="Note" color="primary" %}}We don't need to provide Git credentials because the repository is readable for non-authenticated users as well{{% /alert %}}
+{{% alert title="Note" color="info" %}}We don't need to provide Git credentials because the repository is readable for non-authenticated users as well{{% /alert %}}
 
-{{% alert title="Note" color="primary" %}}If you want to deploy it in a different namespace, make sure the namespaces exists before synching the app{{% /alert %}}
+{{% alert title="Note" color="info" %}}If you want to deploy it in a different namespace, make sure the namespaces exists before synching the app{{% /alert %}}
 
 Once the application is created, you can view its status:
 
@@ -467,7 +467,7 @@ The result should look similar to this:
 <h1 style=color:#e81198>Hello golang</h1><h2>ID: e81198</h2>
 ```
 
-{{% alert title="Note" color="primary" %}}Please note, that we didn't expose the application on `https` this might cause some errors, when you open the URL in certain browsers.{{% /alert %}}
+{{% alert title="Note" color="info" %}}Please note, that we didn't expose the application on `https` this might cause some errors, when you open the URL in certain browsers.{{% /alert %}}
 
 
 ## Task {{% param sectionnumber %}}.6: Pruning
@@ -571,7 +571,7 @@ Argo CD can't any longer access the protected repository without providing crede
 argocd repo add https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git --username $USER
 ```
 
-{{% alert title="Note" color="primary" %}}
+{{% alert title="Note" color="info" %}}
 You can provide the password through the cli by using the flag `--password`.
 {{% /alert %}}
 
@@ -588,7 +588,7 @@ argocd repocreds add https://{{% param giteaUrl %}}/$USER --username $USER
 
 Finally make your personal Git repository public again for the following labs. Uncheck the option `Visibility: Make Repository Private` under `Settings -> Repository` in the Gitea UI.
 
-{{% alert title="Note" color="primary" %}}
+{{% alert title="Note" color="info" %}}
 TLS certificates and SSH private keys are supported alternative authentication methods by Argo CD. Proxy support can be configured as well in the repository settings.
 {{% /alert %}}
 
