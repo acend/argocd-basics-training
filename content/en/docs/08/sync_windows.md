@@ -55,7 +55,7 @@ ID  STATUS  KIND  SCHEDULE   DURATION  APPLICATIONS  NAMESPACES  CLUSTERS  MANUA
 ```
 The window starts at 08:00 in the morning an lasts for 12 hours and denies all sync operation for all applications.
 
-{{% alert title="Note" color="primary" %}}
+{{% alert title="Note" color="info" %}}
 Paste the cron expression on [Crontab Guru](https://crontab.guru/#0_8_*_*_*) to get an explanation of it.
 {{% /alert %}}
 
@@ -70,7 +70,7 @@ This manual sync request will be blocked due to the active sync window with the 
 FATA[0000] rpc error: code = PermissionDenied desc = Cannot sync: Blocked by sync window
 ```
 
-{{% alert title="Note" color="primary" %}}
+{{% alert title="Note" color="info" %}}
 If there is an active matching allow window and an active matching deny window then syncs will be denied as deny windows override allow windows.
 {{% /alert %}}
 
