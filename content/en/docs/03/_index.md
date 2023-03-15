@@ -67,7 +67,7 @@ metadata:
 
 In this task we're going to deploy an [example](https://github.com/acend/argocd-training-examples/tree/master/pre-post-sync-hook) which has `pre` and `post` hooks.
 
-Create the new application `argo-hook-$STUDENT` with the following command. It will create a service, a deployment and two hooks as soon as the application is synced.
+Create the new application `argo-hook-$USER` with the following command. It will create a service, a deployment and two hooks as soon as the application is synced.
 
 * PreSync: before Job
 * Sync: Deployment with name `pre-post-sync-hook`
@@ -75,21 +75,21 @@ Create the new application `argo-hook-$STUDENT` with the following command. It w
 
 
 ```bash
-argocd app create argo-hook-$STUDENT --repo https://{{% param giteaUrl %}}/$STUDENT/argocd-training-examples.git --path 'pre-post-sync-hook' --dest-server https://kubernetes.default.svc --dest-namespace $STUDENT
+argocd app create argo-hook-$USER --repo https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git --path 'pre-post-sync-hook' --dest-server https://kubernetes.default.svc --dest-namespace $USER
 ```
 
 Sync the application
 
 {{% details title="Hint" %}}
 ```bash
-argocd app sync argo-hook-$STUDENT
+argocd app sync argo-hook-$USER
 ```
 {{% /details %}}
 
 And verify the deployment:
 
 ```bash
-{{% param cliToolName %}} get pod --namespace $STUDENT --watch
+{{% param cliToolName %}} get pod --namespace $USER --watch
 ```
 
 Or in the web UI.
@@ -100,7 +100,7 @@ Or in the web UI.
 Alter the post sync hook command from `sleep` to `curl https://acend.ch` (Could be used to send a notification to a Chat channel)
 The curl command is not available in the minimal `quay.io/acend/example-web-go` image. You can use `quay.io/acend/example-web-python` or different image.
 
-Edit the hook under `argocd-training-examples/pre-post-sync-hook/post-sync-job.yaml` accordingly, commit and push the changes and trigger the sync operation.
+Edit the hook under `pre-post-sync-hook/post-sync-job.yaml` accordingly, commit and push the changes and trigger the sync operation.
 
 ```yaml
 apiVersion: batch/v1
@@ -128,6 +128,6 @@ Delete the application after you've explored the Argo CD Resources and the manag
 
 {{% details title="Hint" %}}
 ```bash
-argocd app delete argo-hook-$STUDENT
+argocd app delete argo-hook-$USER
 ```
 {{% /details %}}

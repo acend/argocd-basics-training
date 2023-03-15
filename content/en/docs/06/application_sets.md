@@ -22,6 +22,8 @@ The ApplicationSet resources work in a similar way as Helm templates do. You can
 
 ## Task {{% param sectionnumber %}}.1: Create an ApplicationSet
 
+First delete the Ingress resource under `~/argocd-training-examples/example-app/ingress.yaml`
+
 For better understanding we create our first ApplicationSet. Create a yaml file with the following content under `~/argocd-training-examples/application-set/simple-example/application-set.yaml`
 and replace the `<username>` placeholder with your actual username.
 
@@ -53,7 +55,7 @@ spec:
         path: example-app
       destination:
         server: '{{url}}'
-        namespace: '{{traininguser}}'
+        namespace: '{{traininguser}}-{{env}}'
 
 ```
 
@@ -69,10 +71,10 @@ git push origin main
 And now create the ArgoCD Application, which references the ApplicationSet definition:
 
 ```bash
-argocd app create argo-appset-$STUDENT --repo https://{{% param giteaUrl %}}/$STUDENT/argocd-training-examples.git --path 'application-set/simple-example' --dest-server https://kubernetes.default.svc --sync-policy auto --dest-namespace argocd
+argocd app create argo-appset-$USER --repo https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git --path 'application-set/simple-example' --dest-server https://kubernetes.default.svc --sync-policy auto --dest-namespace argocd
 ```
 
-{{% alert title="Note" color="primary" %}}Please notice the `dest-namespace`, ApplicationSets needs to be deployed within the `argocd` namespace{{% /alert %}}
+{{% alert title="Note" color="info" %}}Please notice the `dest-namespace`, ApplicationSets needs to be deployed within the `argocd` namespace{{% /alert %}}
 
 You should now be able to see three ArgoCD Applications postfixed with your `<username>`:
 
@@ -171,7 +173,7 @@ spec:
         path: '{{path}}'
       destination:
         server: https://kubernetes.default.svc
-        namespace: '<username>'
+        namespace: '<username>-{{cluster}}'
 ```
 
 Make sure to replace all `<username>` occurrences with your username.
@@ -187,7 +189,7 @@ git push origin main
 And let's create an ArgoCD Application containing the Matrix ApplicationSet with the following command:
 
 ```bash
-argocd app create argo-appset-matrix-$STUDENT --repo https://{{% param giteaUrl %}}/$STUDENT/argocd-training-examples.git --path 'application-set/matrix-example' --dest-server https://kubernetes.default.svc --sync-policy auto --dest-namespace argocd
+argocd app create argo-appset-matrix-$USER --repo https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git --path 'application-set/matrix-example' --dest-server https://kubernetes.default.svc --sync-policy auto --dest-namespace argocd
 ```
 
 Next check the ArgoCD web ui, you should see the 4 generated ArgoCD applications together with the ArgoCD Application, which contains the ApplicationSet itself.
@@ -195,11 +197,11 @@ Next check the ArgoCD web ui, you should see the 4 generated ArgoCD applications
 
 ## Task {{% param sectionnumber %}}.3: Delete the Application
 
-Delete the two applications (`argo-appset-$STUDENT` and `argo-appset-matrix-$STUDENT`) after you've explored the Argo CD Resources and the managed Kubernetes resources.
+Delete the two applications (`argo-appset-$USER` and `argo-appset-matrix-$USER`) after you've explored the Argo CD Resources and the managed Kubernetes resources.
 
 {{% details title="Hint" %}}
 ```bash
-argocd app delete argo-appset-$STUDENT
-argocd app delete argo-appset-matrix-$STUDENT
+argocd app delete argo-appset-$USER
+argocd app delete argo-appset-matrix-$USER
 ```
 {{% /details %}}
