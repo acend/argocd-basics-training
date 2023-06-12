@@ -159,6 +159,23 @@ Let's now also deploy an application for the production stage.
 Create a new values.yaml file for the production stage: `helm/simple-example/values-production.yaml`
 And copy the content from the default `helm/simple-example/values.yaml` file.
 
+Change the host in the `helm/simple-example/values-production.yaml` to the production url
+
+```yaml
+...
+ingress:
+  enabled: true
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: helm-<namespace>-prod.{{% param appDomain %}}
+      paths:
+      - path: /
+  tls: []
+...
+```
+
 Commit and push the changes to your repository.
 
 {{% details title="Hint" %}}

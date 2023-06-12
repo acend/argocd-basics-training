@@ -56,7 +56,7 @@ git push origin --tags
 
 Re-create the simple application example:
 ```bash
-argocd app create argo-example-$USER --repo https://gitea.labapp.acend.ch/$USER/argocd-training-examples.git --path 'example-app' --dest-server https://kubernetes.default.svc --dest-namespace $USER
+argocd app create argo-example-$USER --repo https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git --path 'example-app' --dest-server https://kubernetes.default.svc --dest-namespace $USER
 ```
 
 To pin the v1.0.0 version tag on our application execute the following command:

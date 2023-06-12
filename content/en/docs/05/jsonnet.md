@@ -8,7 +8,7 @@ This lab explains how to use [jsonnet](https://jsonnet.org/)  as manifest format
 
 
 ## Jsonnet
-
+   
 [Jsonnet](https://jsonnet.org/) is a templating language which adds the possibility to programmatically work with the underlying data. It basically is a simple extension of [JSON](https://json.org).
 
 Let's have a look at an example first. The following jsonnet file
@@ -139,7 +139,7 @@ Commit and push the changes to your repository.
 
 {{% details title="Hint" %}}
 ```bash
-git add helm/simple-example/values.yaml
+git add jsonnet/params.libsonnet
 git commit -m "Change Username"
 git push
 ```
@@ -197,7 +197,7 @@ Commit and push the changes to your repository.
 
 {{% details title="Hint" %}}
 ```bash
-git add helm/simple-example/values.yaml
+git add jsonnet/params.libsonnet
 git commit -m "Scale Jsonnet to two"
 git push
 ```
