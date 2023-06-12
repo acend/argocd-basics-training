@@ -65,6 +65,7 @@ git push
 
 Now let us create the parent Application which deploys our child applications as Custom Resources.
 Note the three paramters
+
 * `--sync-policy automated` Set the sync policy to automated. This ensures that our child applications will be created and synced per default
 * `--self-heal` Enable self heal and ensure that the parent application reconcile the child application
 * `--auto-prune` Ensure that if the parent application gets deleted, it also delete the their child applications

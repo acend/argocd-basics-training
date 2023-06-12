@@ -8,7 +8,7 @@ This lab explains how to use [jsonnet](https://jsonnet.org/)  as manifest format
 
 
 ## Jsonnet
-   
+
 [Jsonnet](https://jsonnet.org/) is a templating language which adds the possibility to programmatically work with the underlying data. It basically is a simple extension of [JSON](https://json.org).
 
 Let's have a look at an example first. The following jsonnet file
