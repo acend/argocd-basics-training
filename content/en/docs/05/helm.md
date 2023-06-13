@@ -72,7 +72,7 @@ Let's deploy the simple-example from lab 1 using a [helm chart](https://github.c
 First you'll have to create a new Argo CD application.
 
 ```bash
-argocd app create argo-helm-$USER --repo https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git --path 'helm/simple-example' --dest-server https://kubernetes.default.svc --dest-namespace $USER
+argocd app create argo-helm-$USER --repo https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git --path 'helm/simple-example' --dest-server https://kubernetes.default.svc --dest-namespace $USER --values values.yaml
 ```
 
 Sync the application
@@ -158,6 +158,23 @@ Let's now also deploy an application for the production stage.
 
 Create a new values.yaml file for the production stage: `helm/simple-example/values-production.yaml`
 And copy the content from the default `helm/simple-example/values.yaml` file.
+
+Change the host in the `helm/simple-example/values-production.yaml` to the production url
+
+```yaml
+...
+ingress:
+  enabled: true
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: helm-<namespace>-prod.{{% param appDomain %}}
+      paths:
+      - path: /
+  tls: []
+...
+```
 
 Commit and push the changes to your repository.
 

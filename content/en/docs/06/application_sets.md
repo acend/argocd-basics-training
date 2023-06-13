@@ -56,6 +56,10 @@ spec:
       destination:
         server: '{{url}}'
         namespace: '{{traininguser}}-{{env}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true  
 
 ```
 

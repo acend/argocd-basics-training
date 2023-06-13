@@ -28,6 +28,7 @@ To deploy the app of apps into our namespace we need to edit the three applicati
 * Replace all occurrences `<username>` in the **three** yaml files.
 * Set the correct `<repourl>` eg. (`https://{{% param giteaUrl %}}/<username>/argocd-training-examples.git`)
 
+
 <!-- markdownlint-disable -->
 {{< highlight YAML "hl_lines=4 10 15" >}}
 apiVersion: argoproj.io/v1alpha1
@@ -35,8 +36,6 @@ kind: Application
 metadata:
   name: <username>-app-of-apps-1
   namespace: argocd
-  finalizers:
-  - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
     namespace: <username>
@@ -65,9 +64,14 @@ git push
 ## Task {{% param sectionnumber %}}.2: Create Argo CD Application
 
 Now let us create the parent Application which deploys our child applications as Custom Resources.
+Note the three paramters
+
+* `--sync-policy automated` Set the sync policy to automated. This ensures that our child applications will be created and synced per default
+* `--self-heal` Enable self heal and ensure that the parent application reconcile the child application
+* `--auto-prune` Ensure that if the parent application gets deleted, it also delete the their child applications
 
 ```bash
-argocd app create argo-aoa-$USER --repo https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git --path 'app-of-apps' --dest-server https://kubernetes.default.svc --dest-namespace $USER
+argocd app create argo-aoa-$USER --repo https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git --path 'app-of-apps' --dest-server https://kubernetes.default.svc --dest-namespace $USER --sync-policy automated --self-heal --auto-prune
 ```
 
 Expected output: `application 'argo-aoa-<username>' created`
