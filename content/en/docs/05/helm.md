@@ -72,7 +72,7 @@ Let's deploy the simple-example from lab 1 using a [helm chart](https://github.c
 First you'll have to create a new Argo CD application.
 
 ```bash
-argocd app create argo-helm-$USER --repo https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git --path 'helm/simple-example' --dest-server https://kubernetes.default.svc --dest-namespace $USER
+argocd app create argo-helm-$USER --repo https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git --path 'helm/simple-example' --dest-server https://kubernetes.default.svc --dest-namespace $USER --values values.yaml
 ```
 
 Sync the application
