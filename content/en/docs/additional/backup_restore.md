@@ -4,7 +4,7 @@ weight: 902
 sectionnumber: 9.2
 ---
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="secondary" %}}
 This Lab only works on your local machine.
 {{% /alert %}}
 
@@ -22,13 +22,13 @@ First find the current version used of ArgoCD server to align the server version
 ```bash
 $ argocd version | grep server
 
-argocd-server: v2.2.2+03b17e0
+argocd-server: v2.6.3+e05298b
 ```
 
 Export the version (without the postfix +eb3d1fb) to environment:
 
 ```bash
-export VERSION=v2.2.2
+export VERSION=v2.6.3
 ```
 
 
