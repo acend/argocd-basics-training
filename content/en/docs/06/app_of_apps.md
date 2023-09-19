@@ -30,7 +30,7 @@ To deploy the app of apps into our namespace we need to edit the three applicati
 
 
 <!-- markdownlint-disable -->
-{{< highlight YAML "hl_lines=4 10 15" >}}
+{{< highlight YAML "hl_lines=4 8 13" >}}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -50,7 +50,9 @@ spec:
 
 Make sure to also commit and push your changes to the git repository.
 
-{{% alert title="Note" color="info" %}}Please make sure, to update all three application files{{% /alert %}}
+{{% alert title="Note" color="primary" %}}
+Please make sure, to update all three application files
+{{% /alert %}}
 
 {{% details title="Hint" %}}
 ```bash
