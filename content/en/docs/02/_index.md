@@ -381,15 +381,15 @@ Argo CD will immediately scale back the `simple-example` Deployment to `1` repli
 
 ```
 NAME             READY   UP-TO-DATE   AVAILABLE   AGE
-simple-example   1/1     1            1           114m
-simple-example   1/3     1            1           114m
-simple-example   1/3     1            1           114m
-simple-example   1/3     1            1           114m
-simple-example   1/3     3            1           114m
-simple-example   1/1     3            1           114m
-simple-example   1/1     3            1           114m
-simple-example   1/1     3            1           114m
-simple-example   1/1     1            1           114m
+simple-example   1/1     2            2           114m
+simple-example   1/3     2            2           114m
+simple-example   1/3     2            2           114m
+simple-example   1/3     2            2           114m
+simple-example   1/3     3            2           114m
+simple-example   1/1     3            2           114m
+simple-example   1/1     3            2           114m
+simple-example   1/1     3            2           114m
+simple-example   1/1     2            2           114m
 ```
 
 This is a great way to enforce a strict GitOps principle. Changes which are manually made on deployed resource manifests are reverted immediately back to the desired state by the ArgoCD controller.
@@ -467,8 +467,6 @@ The result should look similar to this:
 <h1 style=color:#e81198>Hello golang</h1><h2>ID: e81198</h2>
 ```
 
-{{% alert title="Note" color="primary" %}}Please note, that we didn't expose the application on `https` this might cause some errors, when you open the URL in certain browsers.{{% /alert %}}
-
 
 ## Task {{% param sectionnumber %}}.6: Pruning
 
@@ -491,10 +489,10 @@ argocd app get argo-$USER --refresh
 You will see that even with auto-sync and self-healing enabled the status is still OutOfSync
 
 ```
-GROUP              KIND        NAMESPACE  NAME            STATUS  HEALTH   HOOK  MESSAGE
-networking.k8s.io  Ingress     <username> simple-example  Synced  Healthy        ingress.networking.k8s.io/simple-example created
-                   Service     <username> simple-example  Synced  Healthy        
-apps               Deployment  <username> simple-example  Synced  Healthy
+GROUP              KIND        NAMESPACE  NAME            STATUS     HEALTH   HOOK  MESSAGE
+networking.k8s.io  Ingress     <username> simple-example  OutOfSync  Healthy        ingress.networking.k8s.io/simple-example created
+                   Service     <username> simple-example  OutOfSync  Healthy        
+apps               Deployment  <username> simple-example  Synced     Healthy
 ```
 
 Now enable the auto pruning explicitly:
