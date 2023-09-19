@@ -82,6 +82,8 @@ Explore the Argo parent application in the web UI.
 
 As you can see our newly created parent app consits of another three apps.
 
+Note that the child applications resources are not synced automatically. This is because an ArgoCD application only synces their direct child resources. To sync the child apps, either click on sync in the ArgoCD UI or set the sync policy to automed.  
+
 
 ## Task {{% param sectionnumber %}}.3: Delete the Application
 
