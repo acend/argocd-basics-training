@@ -1,4 +1,4 @@
-FROM klakegg/hugo:0.107.0-ext-ubuntu AS builder
+FROM klakegg/hugo:0.111.3-ext-ubuntu AS builder
 
 ARG TRAINING_HUGO_ENV=default
 
@@ -6,8 +6,7 @@ COPY . /src
 
 RUN hugo --environment ${TRAINING_HUGO_ENV} --minify
 
-RUN apt-get update \
-    && apt-get install -y imagemagick
+RUN apt-get update && apt install -y imagemagick
 
 RUN find /src/public/docs/ -regex '.*\(jpg\|jpeg\|png\|gif\)' -exec mogrify -path /src/public/pdf -resize 800\> -unsharp 0.25x0.25+8+0.065 "{}" \;
 
@@ -30,7 +29,7 @@ RUN wkhtmltopdf --enable-internal-links --enable-local-file-access \
     --dpi 600 \
     /pdf/index.html /pdf.pdf
 
-FROM nginxinc/nginx-unprivileged:1.23-alpine
+FROM nginxinc/nginx-unprivileged:1.25-alpine
 
 LABEL maintainer acend.ch
 LABEL org.opencontainers.image.title "acend.ch's ArgoCD Basics Training"

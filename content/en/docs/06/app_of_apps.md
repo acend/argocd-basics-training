@@ -28,15 +28,14 @@ To deploy the app of apps into our namespace we need to edit the three applicati
 * Replace all occurrences `<username>` in the **three** yaml files.
 * Set the correct `<repourl>` eg. (`https://{{% param giteaUrl %}}/<username>/argocd-training-examples.git`)
 
+
 <!-- markdownlint-disable -->
-{{< highlight YAML "hl_lines=4 10 15" >}}
+{{< highlight YAML "hl_lines=4 8 13" >}}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: <username>-app-of-apps-1
   namespace: argocd
-  finalizers:
-  - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
     namespace: <username>
@@ -51,7 +50,9 @@ spec:
 
 Make sure to also commit and push your changes to the git repository.
 
-{{% alert title="Note" color="info" %}}Please make sure, to update all three application files{{% /alert %}}
+{{% alert title="Note" color="primary" %}}
+Please make sure, to update all three application files
+{{% /alert %}}
 
 {{% details title="Hint" %}}
 ```bash
@@ -65,9 +66,14 @@ git push
 ## Task {{% param sectionnumber %}}.2: Create Argo CD Application
 
 Now let us create the parent Application which deploys our child applications as Custom Resources.
+Note the three paramters
+
+* `--sync-policy automated` Set the sync policy to automated. This ensures that our child applications will be created and synced per default
+* `--self-heal` Enable self heal and ensure that the parent application reconcile the child application
+* `--auto-prune` Ensure that if the parent application gets deleted, it also delete the their child applications
 
 ```bash
-argocd app create argo-aoa-$USER --repo https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git --path 'app-of-apps' --dest-server https://kubernetes.default.svc --dest-namespace $USER
+argocd app create argo-aoa-$USER --repo https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git --path 'app-of-apps' --dest-server https://kubernetes.default.svc --dest-namespace $USER --sync-policy automated --self-heal --auto-prune
 ```
 
 Expected output: `application 'argo-aoa-<username>' created`
@@ -75,6 +81,8 @@ Expected output: `application 'argo-aoa-<username>' created`
 Explore the Argo parent application in the web UI.
 
 As you can see our newly created parent app consits of another three apps.
+
+Note that the child applications resources are not synced automatically. This is because an ArgoCD application only synces their direct child resources. To sync the child apps, either click on sync in the ArgoCD UI or set the sync policy to automed.  
 
 
 ## Task {{% param sectionnumber %}}.3: Delete the Application

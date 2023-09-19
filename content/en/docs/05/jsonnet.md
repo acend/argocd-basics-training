@@ -139,7 +139,7 @@ Commit and push the changes to your repository.
 
 {{% details title="Hint" %}}
 ```bash
-git add helm/simple-example/values.yaml
+git add jsonnet/params.libsonnet
 git commit -m "Change Username"
 git push
 ```
@@ -197,7 +197,7 @@ Commit and push the changes to your repository.
 
 {{% details title="Hint" %}}
 ```bash
-git add helm/simple-example/values.yaml
+git add jsonnet/params.libsonnet
 git commit -m "Scale Jsonnet to two"
 git push
 ```
