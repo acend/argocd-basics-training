@@ -24,7 +24,7 @@ Enable visualization and monitoring of Orphaned Resources for the newly created 
 argocd proj set apps-$USER --orphaned-resources --orphaned-resources-warn
 ```
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="primary" %}}
 The flag `--orphaned-resources` enables the determinability of orphaned resources in Argo CD. After a refresh you will see them in the user interface on the project when selecting the checkbox _Orphaned Resources_.
 With the flag `--orphaned-resources-warn` enabled, for each Argo CD application with orphaned resources in the destination namespace a warning will be shown in the user interface.
 {{% /alert %}}
@@ -65,7 +65,7 @@ spec:
 EOF
 ```
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="primary" %}}
 This service will be detected as orphaned resource because it is not managed by Argo CD. All resources which are managed by Argo CD are marked with the label `app.kubernetes.io/instance` per default. The key of the label can be changed with the setting `application.instanceLabelKey`. See [documentation](https://argoproj.github.io/argo-cd/faq/#why-is-my-app-out-of-sync-even-after-syncing) for further details.
 {{% /alert %}}
 
