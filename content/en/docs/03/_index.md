@@ -9,7 +9,7 @@ In this Lab you are going to learn about [Resource Hooks](https://argoproj.githu
 
 ## Resource Hooks
 
-Hooks allow to run scripts before, during and after the Argo CD **sync** operation is running. They give you more control over the sync process. They can also run when the sync operation fails for example. The concept is very similar to the concept of [Helm Hooks](https://helm.sh/docs/topics/charts_hooks/#the-available-hooks).
+Hooks allow to run scripts before, during and after the Argo CD **sync** operation is running. They give you more control over the sync process. They can also run when the sync operation fails for example. The concept is very similar to the concept of [Helm Hooks](https://helm.sh/docs/topics/charts_hooks/#the-available-hooks). Argo CD supports many Helm hooks by mapping the Helm annotations onto Argo CD's own hook annotations. You can see the full mapping of the Helm hooks [in the ArgoCD documentation](https://argo-cd.readthedocs.io/en/stable/user-guide/helm/#helm-hooks)
 
 Some examples when hooks can be useful:
 
