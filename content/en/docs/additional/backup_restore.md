@@ -4,7 +4,7 @@ weight: 902
 sectionnumber: 9.2
 ---
 
-{{% alert title="Note" color="secondary" %}}
+{{% alert title="Warning" color="secondary" %}}
 This Lab only works on your local machine.
 {{% /alert %}}
 
@@ -38,7 +38,7 @@ export VERSION=v2.6.3
 docker run -v ~/.kube:/home/argocd/.kube --rm argoproj/argocd:$VERSION argocd admin export > backup.yaml
 ```
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="primary" %}}
 If you should encounter permission errors like `error loading config file \"/home/argocd/.kube/config\": open /home/argocd/.kube/config: permission denied` you should change temporarily the permission of the kube config:
 
 ```bash
