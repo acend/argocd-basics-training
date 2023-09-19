@@ -381,15 +381,15 @@ Argo CD will immediately scale back the `simple-example` Deployment to `1` repli
 
 ```
 NAME             READY   UP-TO-DATE   AVAILABLE   AGE
-simple-example   1/1     1            1           114m
-simple-example   1/3     1            1           114m
-simple-example   1/3     1            1           114m
-simple-example   1/3     1            1           114m
-simple-example   1/3     3            1           114m
-simple-example   1/1     3            1           114m
-simple-example   1/1     3            1           114m
-simple-example   1/1     3            1           114m
-simple-example   1/1     1            1           114m
+simple-example   1/1     2            2           114m
+simple-example   1/3     2            2           114m
+simple-example   1/3     2            2           114m
+simple-example   1/3     2            2           114m
+simple-example   1/3     3            2           114m
+simple-example   1/1     3            2           114m
+simple-example   1/1     3            2           114m
+simple-example   1/1     3            2           114m
+simple-example   1/1     2            2           114m
 ```
 
 This is a great way to enforce a strict GitOps principle. Changes which are manually made on deployed resource manifests are reverted immediately back to the desired state by the ArgoCD controller.
