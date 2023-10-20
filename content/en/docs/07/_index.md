@@ -90,7 +90,7 @@ Now sync the application manifest
 argocd app sync project-app-$USER
 ```
 
-{{% alert title="Note" color="primary" %}}
+{{% alert title="Note" color="info" %}}
 The feature of limiting source repositories and destination clusters/namespaces is a powerful construct of Argo CD as roles and policies can be assigned to projects. With this tool you can enforce a fine grained permission model to control the access of the users to the different clusters and namespaces.
 {{% /alert %}}
 

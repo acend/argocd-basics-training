@@ -22,7 +22,7 @@ argocd app set argo-helm-$USER --values values-production.yaml
 ```
 The `--values` flag can be repeated to support multiple values files.
 
-{{% alert title="Info" color="primary" %}}
+{{% alert title="Info" color="info" %}}
 Values files must be in the same git repository as the Helm chart. The files can be in a different location in which case it can be accessed using a relative path relative to the root directory of the Helm chart.
 {{% /alert %}}
 
@@ -35,7 +35,7 @@ Similar to when using `helm` directly (`helm install <release> --set replicaCoun
 argocd app set argo-helm-$USER --parameter replicaCount=2
 ```
 
-{{% alert title="Warning" color="secondary" %}}
+{{% alert title="Warning" color="warning" %}}
 Argo CD provides a mechanism to override the parameters of Argo CD applications. [The Argo CD parameter overrides](https://argoproj.github.io/argo-cd/user-guide/parameters/) feature is provided mainly as a convenience to developers and is intended to be used in dev/test environments, vs. production environments.
 
 Many consider this feature as anti-pattern to GitOps. So only use this feature when no other option is available!
@@ -50,7 +50,7 @@ By default, the Helm release name is equal to the Application name to which it b
 argocd app set argo-helm-$USER --release-name <release>
 ```
 
-{{% alert title="Warning" color="secondary" %}}
+{{% alert title="Warning" color="warning" %}}
 Please note that overriding the Helm release name might cause problems when the chart you are deploying is using the app.kubernetes.io/instance label. ArgoCD injects this label with the value of the Application name for tracking purposes.
 {{% /alert %}}
 
@@ -111,7 +111,7 @@ We can set the `helm` parameter with the following command:
 argocd app set argo-helm-$USER --parameter replicaCount=2
 ```
 
-{{% alert title="Warning" color="secondary" %}}
+{{% alert title="Warning" color="warning" %}}
 Only use this way of setting params in dev and test stages. Not for Production!
 {{% /alert %}}
 

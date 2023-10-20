@@ -50,7 +50,7 @@ spec:
 
 Make sure to also commit and push your changes to the git repository.
 
-{{% alert title="Note" color="primary" %}}
+{{% alert title="Note" color="info" %}}
 Please make sure, to update all three application files
 {{% /alert %}}
 
