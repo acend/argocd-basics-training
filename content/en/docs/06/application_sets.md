@@ -78,7 +78,7 @@ And now create the ArgoCD Application, which references the ApplicationSet defin
 argocd app create argo-appset-$USER --repo https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git --path 'application-set/simple-example' --dest-server https://kubernetes.default.svc --sync-policy auto --dest-namespace argocd
 ```
 
-{{% alert title="Note" color="primary" %}}Please notice the `dest-namespace`, ApplicationSets needs to be deployed within the `argocd` namespace{{% /alert %}}
+{{% alert title="Note" color="info" %}}Please notice the `dest-namespace`, ApplicationSets needs to be deployed within the `argocd` namespace{{% /alert %}}
 
 You should now be able to see three ArgoCD Applications postfixed with your `<username>`:
 

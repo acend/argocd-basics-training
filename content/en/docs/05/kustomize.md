@@ -98,7 +98,7 @@ argocd app get argo-kustomize-$USER
 ```
 {{% /details %}}
 
-{{% alert title="Warning" color="secondary" %}}
+{{% alert title="Warning" color="warning" %}}
 Only use this way of setting params in dev and test stages. Not for Production!
 {{% /alert %}}
 
