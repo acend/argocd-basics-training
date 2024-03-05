@@ -55,7 +55,7 @@ jobs:
             quay.io/acend/argocd-basics-training:pr-${{ github.event.pull_request.number }}-puzzle
       - 
         name: 'Install Helm'
-        uses: azure/setup-helm@v3
+        uses: azure/setup-helm@v4
         with:
           version: v3.6.2
       -
