@@ -13,7 +13,7 @@ As the name suggests, Argo CD takes care of the continuous delivery aspect of CI
 
 Argo CD is deployed and operated on a Kubernetes-based container platform. It is possible to connect multiple Kubernetes and OpenShift clusters to one Argo CD instance.
 
-{{% alert  color="primary" %}}
+{{% alert  color="info" %}}
 [Argo CD](https://argoproj.github.io/argo-cd/) is a declarative, GitOps continuous delivery tool for Kubernetes.
 {{% /alert %}}
 
@@ -29,7 +29,7 @@ Managing Kubernetes resources using a GitOps approach brings the following benef
 
 Argo CD follows the GitOps pattern of using Git repositories as the source of truth for defining the desired application state.
 
-{{% alert title="Warning" color="secondary" %}}
+{{% alert title="Warning" color="warning" %}}
 Argo CD provides a mechanism to override the parameters of Argo CD applications. [The Argo CD parameter overrides](https://argoproj.github.io/argo-cd/user-guide/parameters/) feature is provided mainly as a convenience to developers and is intended to be used in dev/test environments, vs. production environments.
 
 Many consider this feature as anti-pattern to GitOps. So only use this feature when no other option is available!

@@ -34,11 +34,11 @@ metadata:
 
 It's basically a [Kubernetes Job](https://kubernetes.io/docs/concepts/workloads/controllers/job/) which starts a Pod that executes some sort of code.
 
-{{% alert  color="primary" title="Note" %}}
+{{% alert  color="info" title="Note" %}}
 Named hooks (i.e. ones with `/metadata/name`) will only be created once. If you want a hook to be re-created each time either use BeforeHookCreation policy or `/metadata/generateName`.
 {{% /alert %}}
 
-{{% alert  color="primary" title="Note" %}}
+{{% alert  color="info" title="Note" %}}
 Hooks are not run during a [selective sync](https://argoproj.github.io/argo-cd/user-guide/selective_sync/)
 {{% /alert %}}
 
