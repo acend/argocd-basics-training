@@ -43,6 +43,17 @@ jobs:
           tags: |
             quay.io/acend/argocd-basics-training:pr-${{ github.event.pull_request.number }}
       -
+        name: Build Techlab Version
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          build-args: |
+            TRAINING_HUGO_ENV=techlab
+          push: true
+          tags: |
+            quay.io/acend/argocd-basics-training:pr-${{ github.event.pull_request.number }}-techlab
+      -
         name: Build Puzzle Version
         uses: docker/build-push-action@v6
         with:
@@ -86,6 +97,7 @@ jobs:
           TRAINING_NAMESPACE: 'acend-argocd-basics-training-test'
         run: |
           kubectl rollout restart deployment/${TRAINING_HELM_RELEASE}-${TRAINING_HELM_NAME}-acend --kubeconfig $HOME/.kube/config --namespace $TRAINING_NAMESPACE
+          kubectl rollout restart deployment/${TRAINING_HELM_RELEASE}-${TRAINING_HELM_NAME}-techlab --kubeconfig $HOME/.kube/config --namespace $TRAINING_NAMESPACE
           kubectl rollout restart deployment/${TRAINING_HELM_RELEASE}-${TRAINING_HELM_NAME}-puzzle --kubeconfig $HOME/.kube/config --namespace $TRAINING_NAMESPACE
       -
         name: Comment PR Environments in PR
@@ -95,4 +107,5 @@ jobs:
           message: |
            PR Environments: 
            * acend version <https://argocd-basics-pr-${{ github.event.pull_request.number }}.training.acend.ch>
+           * techlab version <https://argocd-techlab-pr-${{ github.event.pull_request.number }}.training.acend.ch>
            * puzzle version <https://argocd-basics-pr-${{ github.event.pull_request.number }}.training.puzzle.ch>

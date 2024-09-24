@@ -2,6 +2,7 @@
 title: "6. Multiple Applications"
 weight: 6
 sectionnumber: 6
+onlyWhenNot: techlab
 ---
 
 When it comes to managing a larger amount of application or bootstrapping whole environments, it's not very practical to manage the ArgoCD application manually using the CLI Tool `argocd app create`.

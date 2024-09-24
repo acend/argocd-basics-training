@@ -2,6 +2,7 @@
 title: "7. Projects"
 weight: 7
 sectionnumber: 7
+onlyWhenNot: techlab
 ---
 
 Argo CD applications can be linked to a project which provides a logical grouping of applications. The following configurations can be made on a project:

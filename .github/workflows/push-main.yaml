@@ -45,6 +45,17 @@ jobs:
           tags: |
             quay.io/acend/argocd-basics-training:latest
       -
+        name: Build Techlab Version
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          build-args: |
+            TRAINING_HUGO_ENV=techlab
+          push: true
+          tags: |
+            quay.io/acend/argocd-basics-training:latest-techlab
+      -
         name: Build Puzzle Version
         uses: docker/build-push-action@v6
         with:
@@ -88,4 +99,5 @@ jobs:
           TRAINING_NAMESPACE: 'acend-argocd-basics-training-prod'
         run: |
           kubectl rollout restart deployment/${TRAINING_HELM_RELEASE}-${TRAINING_HELM_NAME}-acend --kubeconfig $HOME/.kube/config --namespace $TRAINING_NAMESPACE
+          kubectl rollout restart deployment/${TRAINING_HELM_RELEASE}-${TRAINING_HELM_NAME}-techlab --kubeconfig $HOME/.kube/config --namespace $TRAINING_NAMESPACE
           kubectl rollout restart deployment/${TRAINING_HELM_RELEASE}-${TRAINING_HELM_NAME}-puzzle --kubeconfig $HOME/.kube/config --namespace $TRAINING_NAMESPACE

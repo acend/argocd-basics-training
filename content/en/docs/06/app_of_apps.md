@@ -2,6 +2,7 @@
 title: "6.1 App of Apps"
 weight: 601
 sectionnumber: 6.1
+onlyWhenNot: techlab
 ---
 The [App of apps](https://argoproj.github.io/argo-cd/operator-manual/cluster-bootstrapping/#app-of-apps-pattern) pattern is a declarative specification of one ArgoCD app that consists only of **other ArgoCD applications**.
 This way we have the possibility to deploy multiple apps within just one single App definition.
