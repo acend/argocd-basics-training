@@ -2,6 +2,7 @@
 title: "8.1 Tracking and Deployment Strategies"
 weight: 81
 sectionnumber: 8.1
+onlyWhenNot: techlab
 ---
 
 If you are using ArgoCD with Git or Helm tools, ArgoCD gives you the availability to configure different tracking and deployment strategies.

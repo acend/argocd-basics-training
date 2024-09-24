@@ -2,6 +2,7 @@
 title: "8.2 Sync Windows"
 weight: 82
 sectionnumber: 8.2
+onlyWhenNot: techlab
 ---
 
 With Sync windows the user can define at which time applications can be synchronized automatically and manually by Argo CD. Allowed and forbidden time windows can be defined. Sync windows can be restricted to a subset of applications, clusters and namespaces and thus offer great flexibility.

@@ -15,6 +15,18 @@ acendTraining:
         appname: argocd-basics
         domain: training.acend.ch
     - 
+      name: techlab
+      replicaCount: 2
+      image:
+        repository: quay.io/acend/argocd-basics-training
+        pullPolicy: Always
+        tag: ""
+        tagsuffix: "-techlab"
+      ingress:
+        secretOverride: acend-wildcard
+        appname: argocd-techlab
+        domain: training.acend.ch
+    - 
       name: puzzle
       replicaCount: 2
       image:
@@ -26,7 +38,6 @@ acendTraining:
         secretOverride: acend-wildcard
         appname: argocd-basics
         domain: training.puzzle.ch
-
 
 
 nameOverride: "acend-argocd-basics"

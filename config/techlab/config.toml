@@ -1,0 +1,12 @@
+
+[Languages]
+[Languages.en]
+title = "ArgoCD Techlab"
+languageName = "English"
+weight = 1
+
+
+[params]
+enabledModule = "base techlab"
+github_repo = ""
+github_branch = ""
