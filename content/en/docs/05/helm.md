@@ -128,14 +128,14 @@ Change the `helm/simple-example/values.yaml` file in your git repository
 ...
 ingress:
   enabled: true
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: helm-<namespace>.{{% param appDomain %}}
+    - host: helm-<username>.{{% param appDomain %}}
       paths:
       - path: /
-  tls: []
+  tls: 
+    - hosts:
+        - helm-<username>.{{% param appDomain %}}
+      secretName: acend-wildcard
 ...
 ```
 
@@ -165,14 +165,14 @@ Change the host in the `helm/simple-example/values-production.yaml` to the produ
 ...
 ingress:
   enabled: true
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: helm-<namespace>-prod.{{% param appDomain %}}
+    - host: helm-<username>-prod.{{% param appDomain %}}
       paths:
       - path: /
-  tls: []
+  tls: 
+    - hosts:
+        - helm-<username>-prod.{{% param appDomain %}}
+      secretName: acend-wildcard
 ...
 ```
 
