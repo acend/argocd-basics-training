@@ -136,7 +136,6 @@ ingress:
     - hosts:
         - helm-<username>.{{% param appDomain %}}
       secretName: acend-wildcard
-...
 ```
 
 Commit and push the changes to your repository.
@@ -173,7 +172,6 @@ ingress:
     - hosts:
         - helm-<username>-prod.{{% param appDomain %}}
       secretName: acend-wildcard
-...
 ```
 
 Commit and push the changes to your repository.
