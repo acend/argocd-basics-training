@@ -420,6 +420,9 @@ spec:
                 name: simple-example
                 port: 
                   number: 5000
+  tls:
+  - hosts:
+    - simple-example-<username>.{{% param appDomain %}}
 ```
 
 {{% /onlyWhenNot  %}}
