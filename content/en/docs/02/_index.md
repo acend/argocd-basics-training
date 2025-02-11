@@ -456,12 +456,12 @@ git commit -m "Expose application"
 git push
 ```
 
-After ArgoCD syncs the changes, you can access the example applications url: `http://simple-example-<username>.{{% param appDomain %}}`
+After ArgoCD syncs the changes, you can access the example applications url: `https://simple-example-<username>.{{% param appDomain %}}`
 
 Verify using the following command:
 
 ```bash
-curl http://simple-example-$USER.{{% param appDomain %}}
+curl https://simple-example-$USER.{{% param appDomain %}}
 ```
 
 The result should look similar to this:
