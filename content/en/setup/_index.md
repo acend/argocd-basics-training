@@ -16,19 +16,25 @@ In this Training its required to have the following tools locally installed on y
 
 * git
 * git bash on Windows
-* Argo CD CLI
-* oc Tool (OpenShift Client) *Only when on OpenShift*
+{{% onlyWhenNot noArgoCDCLI %}}* Argo CD CLI {{% /onlyWhenNot  %}}
+{{% onlyWhen openshift %}}* oc Tool (OpenShift Client) *Only when on OpenShift* {{% /onlyWhen  %}}
 * kubectl
+
+{{% onlyWhenNot noArgoCDCLI %}}
 
 
 ## Argo CD Command line tool
 
 Follow the instructions on [this](https://argoproj.github.io/argo-cd/cli_installation/) page to install the ArgoCD tool on your local computer.
+{{% /onlyWhenNot  %}}
+
+{{% onlyWhen openshift %}}
 
 
 ## oc tool
 
 Follow the instructions on [this](https://openshift-basics.training.acend.ch/setup/) page to install the oc tool on your local computer.
+{{% /onlyWhen  %}}
 
 
 ## kubectl

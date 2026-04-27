@@ -1,8 +1,8 @@
 ---
-title: "6.2 Application Sets"
-weight: 602
-sectionnumber: 6.2
-onlyWhenNot: techlab centris
+title: "6.1 Application Sets"
+weight: 601
+sectionnumber: 6.1
+onlyWhen: centris
 ---
 
 With the ApplicationSet ArgoCD adds support for managing ArgoCD Application across a large number of clusters and environments. Plus it adds the capability of managing multitenant Kubernetes clusters.

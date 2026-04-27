@@ -1,0 +1,64 @@
+{{/* Copied and adapted from themes/docsy/layouts/partials/section-index.html */}}
+{{- $sectionnumbers := partialCached "sectionnumber.html" . .File.Path -}}
+<div class="section-index">
+    {{ $parent := .Page -}}
+    {{ $pages := (where .Site.Pages "Section" .Section).ByWeight -}}
+    {{ $pages = (where $pages "Type" "!=" "search") }}
+    {{ $pages = (where $pages ".Params.hide_summary" "!=" true) -}}
+    {{ $pages = (where $pages ".Parent" "!=" nil) -}}
+    {{ if and .Parent .Parent.File -}}
+        {{ $pages = (where $pages "Parent.File.UniqueID" "==" $parent.File.UniqueID) }}
+    {{ end -}}
+
+    {{/* Get all pages where onlyWhen is set */}}
+    {{ $pagesOnlyWhen := where $pages ".Params.onlyWhen" "in" site.Params.enabledModule }}
+    {{/* Get all pages where onlyWhen is nil and combine them with the above */}}
+    {{ $pages = union $pagesOnlyWhen (where $pages ".Params.onlyWhen" "==" nil) }}
+
+    {{/* Get all pages where any space-separated value in onlyWhenNot matches enabledModule */}}
+    {{ $pagesToExclude := slice }}
+    {{ range $pages }}
+        {{ $page := . }}
+        {{ range (split (default "" .Params.onlyWhenNot) " ") }}
+            {{ if and . (in site.Params.enabledModule .) }}
+                {{ $pagesToExclude = $pagesToExclude | append $page }}
+            {{ end }}
+        {{ end }}
+    {{ end }}
+    {{ $pages = complement $pagesToExclude $pages }}
+
+    {{/* Sort the pages again */}}
+    {{ $pages = $pages.ByWeight }}
+
+    {{ if or $parent.Params.no_list (eq (len $pages) 0) }}
+    {{/* If no_list is true or we don't have subpages we don't show a list of subpages */}}
+    {{ else if $parent.Params.simple_list -}}
+    {{/* If simple_list is true we show a bulleted list of subpages */}}
+        <ul>
+            {{ range $pages -}}
+                {{ $manualLink := cond (isset .Params "manuallink") .Params.manualLink ( cond (isset .Params "manuallinkrelref") (relref . .Params.manualLinkRelref) .RelPermalink) }}
+                {{- $title := .Title -}}
+                {{- if site.Params.automaticSectionNumbers -}}
+                    {{- $title = printf "%s %s" ($sectionnumbers.Get .File.Path) .Title -}}
+                {{- end -}}
+                <li><a href="{{ $manualLink }}"{{ with .Params.manualLinkTitle }} title="{{ . }}"{{ end }}{{ with .Params.manualLinkTarget }} target="{{ . }}"{{ if eq . "_blank" }} rel="noopener"{{ end }}{{ end }}>{{- $title -}}</a></li>
+            {{ end -}}
+        </ul>
+    {{ else -}}
+    {{/* Otherwise we show a nice formatted list of subpages with page descriptions */}}
+    <hr class="panel-line">
+        {{ range $pages -}}
+            {{ $manualLink := cond (isset .Params "manuallink") .Params.manualLink ( cond (isset .Params "manuallinkrelref") (relref . .Params.manualLinkRelref) .RelPermalink) }}
+            <div class="entry">
+                <h5>
+                    {{- $title := .Title -}}
+                    {{- if site.Params.automaticSectionNumbers -}}
+                        {{- $title = printf "%s %s" ($sectionnumbers.Get .File.Path) .Title -}}
+                    {{- end -}}
+                    <a href="{{ $manualLink }}"{{ with .Params.manualLinkTitle }} title="{{ . }}"{{ end }}{{ with .Params.manualLinkTarget }} target="{{ . }}"{{ if eq . "_blank" }} rel="noopener"{{ end }}{{ end }}>{{- $title -}}</a>
+                </h5>
+                <p>{{ .Description | markdownify -}}</p>
+            </div>
+        {{ end -}}
+    {{ end -}}
+</div>
