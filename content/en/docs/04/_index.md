@@ -1,7 +1,7 @@
 ---
-title: "4. Sync Phases and Waves"
+title: "Sync Phases and Waves"
 weight: 4
-sectionnumber: 4
+onlyWhen: sync-phases-and-waves
 ---
 
 In this Lab you are going to learn about [Sync Phases and Waves](https://argoproj.github.io/argo-cd/user-guide/sync-waves/).
@@ -34,7 +34,7 @@ Pre-sync and post-sync can only contain hooks defined on annotations `argocd.arg
 You can specify the wave in the sync phase by setting an annotation `argocd.argoproj.io/sync-wave`. Hooks and resources are assigned to wave zero by default. The wave can be negative, so you can create a wave that runs before all other resources.
 
 
-## Task {{% param sectionnumber %}}.1: Sync Wave Example
+## {{% task %}} Sync Wave Example
 
 Let's now get our hands on a sync wave example.
 
@@ -73,7 +73,7 @@ And verify the deployment:
 ```
 
 
-## Task {{% param sectionnumber %}}.2: Delete the Application
+## {{% task %}} Delete the Application
 
 Delete the application after you've explored the Argo CD Resources and the managed Kubernetes resources.
 

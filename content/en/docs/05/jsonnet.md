@@ -1,8 +1,7 @@
 ---
-title: "5.3 Jsonnet (Optional)"
+title: "Jsonnet (Optional)"
 weight: 53
-sectionnumber: 5.3
-onlyWhenNot: centris
+onlyWhen: jsonnet
 ---
 
 This lab explains how to use [jsonnet](https://jsonnet.org/)  as manifest format together with Argo CD.
@@ -50,7 +49,7 @@ Among many other features, Jsonnet can help to reduce duplications.
 Read more about the jsonnet integration in the [official documentation](https://argoproj.github.io/argo-cd/user-guide/jsonnet/)
 
 
-## Task {{% param sectionnumber %}}.1: Deploy the simple-example with jsonnet
+## {{% task %}} Deploy the simple-example with jsonnet
 
 Let's first explore the files in your local repository under `jsonnet`.
 
@@ -167,7 +166,7 @@ argocd app sync argo-jsonnet-$USER
 And verify whether your jsonnet Application definition has be successfully synced.
 
 
-## Task {{% param sectionnumber %}}.2: Autosync and scale up
+## {{% task %}} Autosync and scale up
 
 Tell the application to sync automatically, to enable self-healing and auto-prune
 
@@ -211,7 +210,7 @@ And verify the result in the ArgoCD Ui or by using the following command, this m
 ```
 
 
-## Task {{% param sectionnumber %}}.4: Delete the Applications
+## {{% task %}} Delete the Applications
 
 Delete the applications after you've explored the Argo CD Resources and the managed Kubernetes resources.
 

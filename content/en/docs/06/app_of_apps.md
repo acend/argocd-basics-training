@@ -1,8 +1,7 @@
 ---
-title: "6.1 App of Apps"
-weight: 601
-sectionnumber: 6.1
-onlyWhenNot: techlab centris
+title: "App of Apps"
+weight: 61
+onlyWhen: app-of-apps
 ---
 The [App of apps](https://argoproj.github.io/argo-cd/operator-manual/cluster-bootstrapping/#app-of-apps-pattern) pattern is a declarative specification of one ArgoCD app that consists only of **other ArgoCD applications**.
 This way we have the possibility to deploy multiple apps within just one single App definition.
@@ -22,7 +21,7 @@ First let us examine our ArgoCD example repository with the child applications.
 As we can see the directory consists of three ArgoCD applications. Each of them has its own source repository pointing to the corresponding repository containing a kubernetes deployment yaml file.
 
 
-## Task {{% param sectionnumber %}}.1: Specify the Application Resources
+## {{% task %}} Specify the Application Resources
 
 To deploy the app of apps into our namespace we need to edit the three application custom Resources (`app-of-apps/apps/*`):
 
@@ -64,7 +63,7 @@ git push
 {{% /details %}}
 
 
-## Task {{% param sectionnumber %}}.2: Create Argo CD Application
+## {{% task %}} Create Argo CD Application
 
 Now let us create the parent Application which deploys our child applications as Custom Resources.
 Note the three paramters
@@ -86,7 +85,7 @@ As you can see our newly created parent app consits of another three apps.
 Note that the child applications resources are not synced automatically. This is because an ArgoCD application only synces their direct child resources. To sync the child apps, either click on sync in the ArgoCD UI or set the sync policy to automed.  
 
 
-## Task {{% param sectionnumber %}}.3: Delete the Application
+## {{% task %}} Delete the Application
 
 Delete the application after you've explored the Argo CD Resources and the managed Kubernetes resources.
 

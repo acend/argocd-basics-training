@@ -1,7 +1,7 @@
 ---
-title: "5.1 Helm"
+title: "Helm"
 weight: 51
-sectionnumber: 5.1
+onlyWhen: helm
 ---
 
 This lab explains how to use [Helm](https://helm.sh/) as manifest format together with Argo CD.
@@ -65,7 +65,7 @@ Please note that overriding the Helm release name might cause problems when the 
 Read more about the helm integration in the [official documentation](https://argoproj.github.io/argo-cd/user-guide/helm/)
 
 
-## Task {{% param sectionnumber %}}.1: Deploy the simple-example as Helm Chart
+## {{% task %}} Deploy the simple-example as Helm Chart
 
 Let's deploy the simple-example from lab 1 using a [helm chart](https://github.com/acend/argocd-training-examples/tree/master/helm/simple-example).
 
@@ -103,7 +103,7 @@ argocd app set argo-helm-$USER --auto-prune
 {{% /details %}}
 
 
-## Task {{% param sectionnumber %}}.2: Scale the deployment to 2 replicas
+## {{% task %}} Scale the deployment to 2 replicas
 
 We can set the `helm` parameter with the following command:
 
@@ -118,7 +118,7 @@ Only use this way of setting params in dev and test stages. Not for Production!
 Since the `sync-policy` is set to `automated` the second pod will be deployed immediately.
 
 
-## Task {{% param sectionnumber %}}.3: Ingress
+## {{% task %}} Ingress
 
 The proper and production ready way of overwriting values is by doing it in git.
 
@@ -152,7 +152,7 @@ git push
 Open your Browser and verify whether you can access the application.
 
 
-## Task {{% param sectionnumber %}}.4: Create a second application representing the production stage
+## {{% task %}} Create a second application representing the production stage
 
 Let's now also deploy an application for the production stage.
 
@@ -217,7 +217,7 @@ argocd app set argo-helm-prod-$USER --values values-production.yaml
 Change for example the ingress hostname to something different in the `values-production.yaml` and verify whether you can access the new hostname.
 
 
-## Task {{% param sectionnumber %}}.4: Delete the Applications
+## {{% task %}} Delete the Applications
 
 Delete the applications after you've explored the Argo CD Resources and the managed Kubernetes resources.
 

@@ -16,7 +16,7 @@ In this Training its required to have the following tools locally installed on y
 
 * git
 * git bash on Windows
-{{% onlyWhenNot noArgoCDCLI %}}
+{{% onlyWhenNot no-argocd-cli %}}
 * Argo CD CLI
 {{% /onlyWhenNot %}}
 {{% onlyWhen openshift %}}
@@ -24,7 +24,7 @@ In this Training its required to have the following tools locally installed on y
 {{% /onlyWhen %}}
 * kubectl
 
-{{% onlyWhenNot noArgoCDCLI %}}
+{{% onlyWhenNot no-argocd-cli %}}
 
 
 ## Argo CD Command line tool

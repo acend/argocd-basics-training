@@ -1,8 +1,7 @@
 ---
-title: "8.1 Tracking and Deployment Strategies"
+title: "Tracking and Deployment Strategies"
 weight: 81
-sectionnumber: 8.1
-onlyWhenNot: techlab
+onlyWhen: tracking-and-deployment-strategies
 ---
 
 If you are using ArgoCD with Git or Helm tools, ArgoCD gives you the availability to configure different tracking and deployment strategies.
@@ -40,7 +39,7 @@ This method is often used in development environment where you want to apply the
 The state at the specified Git tag or commit will be applied to the cluster. Pinning can achieved in two ways. Eiteher you can specifiy the full semver Git tag (v1.2.0) or a commit SHA. Usually the Git tag offers more flexibility while the commit SHA offers more immutuability. Commit pinning is generally the first choice for production environments.
 
 
-## Task {{% param sectionnumber %}}.1: Git version pinning
+## {{% task %}} Git version pinning
 
 In this task we're going to configure a version pinning with a Git tag. The goal of this task to show you how to pin a version from a Git tag and therefore freeze the deployment to specific commits.
 
@@ -158,7 +157,7 @@ simple-example   2/2     2            2           7m43s
 ```
 
 
-## Task {{% param sectionnumber %}}.2: Delete the Application
+## {{% task %}} Delete the Application
 
 
 You can cascading delete the ArgoCD Application with the following command:

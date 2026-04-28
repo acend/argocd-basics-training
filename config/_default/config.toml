@@ -67,12 +67,13 @@ url = "https://www.acend.ch"
   guessSyntax = "true"
 
 [params]
+automaticSectionNumbers = true
 copyright = "acend gmbh"
 github_repo = "https://github.com/acend/argocd-basics-training"
 github_branch = "main"
 
 
-enabledModule = "base"
+enabledModule = "base getting-started simple-example resource-hooks sync-phases-and-waves tools helm kustomize jsonnet multiple-applications app-of-apps application-sets projects controlling-deployment-workflows sync-windows tracking-and-deployment-strategies additional-concepts backup-and-restore orphaned-resources"
 argoCdUrl = "argocd.training.cluster.acend.ch"
 giteaUrl = "gitea.training.cluster.acend.ch"
 appDomain= "training.cluster.acend.ch"

@@ -1,7 +1,7 @@
 ---
-title: "3. Resource Hooks"
+title: "Resource Hooks"
 weight: 3
-sectionnumber: 3
+onlyWhen: resource-hooks
 ---
 
 In this Lab you are going to learn about [Resource Hooks](https://argoproj.github.io/argo-cd/user-guide/resource_hooks/).
@@ -63,7 +63,7 @@ metadata:
 * `BeforeHookCreation`: Any hook resource will be deleted before the new one is created.
 
 
-## Task {{% param sectionnumber %}}.1: Hook Example
+## {{% task %}} Hook Example
 
 In this task we're going to deploy an [example](https://github.com/acend/argocd-training-examples/tree/master/pre-post-sync-hook) which has `pre` and `post` hooks.
 
@@ -95,7 +95,7 @@ And verify the deployment:
 Or in the web UI.
 
 
-## Task {{% param sectionnumber %}}.2: Post-hook Curl (Optional)
+## {{% task %}} Post-hook Curl (Optional)
 
 Alter the post sync hook command from `sleep` to `curl https://acend.ch` (Could be used to send a notification to a Chat channel)
 The curl command is not available in the minimal `quay.io/acend/example-web-go` image. You can use `quay.io/acend/example-web-python` or different image.
@@ -122,7 +122,7 @@ spec:
 ```
 
 
-## Task {{% param sectionnumber %}}.3: Delete the Application
+## {{% task %}} Delete the Application
 
 Delete the application after you've explored the Argo CD Resources and the managed Kubernetes resources.
 

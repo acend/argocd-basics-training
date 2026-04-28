@@ -1,7 +1,7 @@
 ---
-title: "5. Tools"
+title: "Tools"
 weight: 5
-sectionnumber: 5
+onlyWhen: tools
 ---
 
 In this Lab you are going to learn about different [application source tools](https://argoproj.github.io/argo-cd/user-guide/application_sources/).

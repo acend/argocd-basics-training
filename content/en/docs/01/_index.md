@@ -1,11 +1,11 @@
 ---
-title: "1. Getting started"
+title: "Getting started"
 weight: 1
-sectionnumber: 1
+onlyWhen: getting-started
 ---
 
 
-## Task {{% param sectionnumber %}}.1: Web IDE
+## {{% task %}} Web IDE
 
 The first thing we're going to do is to explore our lab environment and get in touch with the different components.
 
@@ -37,7 +37,7 @@ The Web IDE Pod consists of the following tools:
 The files in the home directory under `/home/project` are stored in a persistence volume, so please make sure to store all your persistence data in this directory.
 
 
-### Task {{% param sectionnumber %}}.1.1: Local Workspace Directory
+### Task 1.1.1: Local Workspace Directory
 
 During the lab, you’ll be using local files (eg. YAML resources) which will be applied in your lab project.
 
@@ -48,7 +48,7 @@ mkdir argocd-training && cd argocd-training
 ```
 
 
-### Task {{% param sectionnumber %}}.1.2: Login on ArgoCD using argocd CLI
+### Task 1.1.2: Login on ArgoCD using argocd CLI
 
 You can access Argo CD via Web UI (Credentials are provided by your teacher) or using the CLI. The Argo CD CLI Tool is already installed on the web IDE.
 
@@ -58,7 +58,7 @@ argocd login {{% param argoCdUrl %}} --grpc-web --username $USER
 {{% onlyWhen openshift %}}
 
 
-### Task {{% param sectionnumber %}}.1.3: Lab Setup
+### Task 1.1.3: Lab Setup
 
 
 Most of the labs will be done inside the {{% param distroName %}} project with your username. Verify that your oc tool is configured to point to the right project:
@@ -77,12 +77,12 @@ The returned project name should correspond to your username.
 {{% /onlyWhen  %}}
 
 
-## Task {{% param sectionnumber %}}.2: Argo CD CLI
+## {{% task %}} Argo CD CLI
 
 The [Argo CD CLI](https://argoproj.github.io/argo-cd/cli_installation/) is a powerful tool to manage Argo CD and different applications. It's a self contained binary written in Go and available for Linux, Mac OS and Windows. Thanks to the fact that the CLI is implemented in Go, it can be easily integrated into scripts and build servers for automation purposes.
 
 
-### Task {{% param sectionnumber %}}.2: Getting familiar with the CLI
+### Task 1.2.1: Getting familiar with the CLI
 
 Print out the help of the CLI by typing
 
@@ -147,7 +147,7 @@ argocd app create --help
 ```
 
 
-### Task {{% param sectionnumber %}}.2: Autocompletion
+### Task 1.2.2: Autocompletion
 
 {{% alert title="Note" color="info" %}}This step is only needed, when you're not working with the Web IDE we've provided. The autocompletion is already installed in the Web IDE{{% /alert %}}
 

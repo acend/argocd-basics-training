@@ -1,8 +1,7 @@
 ---
-title: "7. Projects"
+title: "Projects"
 weight: 7
-sectionnumber: 7
-onlyWhenNot: techlab
+onlyWhen: projects
 ---
 
 Argo CD applications can be linked to a project which provides a logical grouping of applications. The following configurations can be made on a project:
@@ -19,7 +18,7 @@ Argo CD applications can be linked to a project which provides a logical groupin
 In summary, a project defines who can deploy what to which destination. This is very useful to keep the isolation between different user groups working on the same Argo CD instance and enables the capability of multi tenancy.
 
 
-## Task {{% param sectionnumber %}}.1: Create a new empty project
+## {{% task %}} Create a new empty project
 
 Now we want to create a new empty Argo CD project.
 
@@ -39,7 +38,7 @@ project-<username>               <none>        <none>   <none>                  
 ```
 
 
-## Task {{% param sectionnumber %}}.2: Define permitted sources and destinations
+## {{% task %}} Define permitted sources and destinations
 
 The next step is to deploy a new application and assign it to the created project `project-<username>` by using the flag `--project`
 
@@ -96,7 +95,7 @@ The feature of limiting source repositories and destination clusters/namespaces 
 {{% /alert %}}
 
 
-## Task {{% param sectionnumber %}}.3: Deny resources by kind
+## {{% task %}} Deny resources by kind
 
 On a project there is the possibility to restrict the kind of resources that can be synchronized. The restrictions are defined by whitelisting for cluster scoped resources and blacklisted for namespace scoped resources.
 
@@ -133,7 +132,7 @@ argocd app sync project-app-$USER
 ```
 
 
-## Task {{% param sectionnumber %}}.4: Cleanup
+## {{% task %}} Cleanup
 
 Delete the resources created in this chapter by running the following commands:
 

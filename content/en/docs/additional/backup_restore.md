@@ -1,8 +1,7 @@
 ---
-title: "9.2 Backup and Restore"
-weight: 902
-sectionnumber: 9.2
-onlyWhenNot: techlab
+title: "Backup and Restore"
+weight: 92
+onlyWhen: backup-and-restore
 ---
 
 {{% alert title="Warning" color="warning" %}}

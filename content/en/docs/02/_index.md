@@ -1,7 +1,7 @@
 ---
-title: "2. Simple Example"
+title: "Simple Example"
 weight: 2
-sectionnumber: 2
+onlyWhen: simple-example
 ---
 
 In this lab you will learn how to deploy a simple application using Argo CD.
@@ -13,10 +13,9 @@ Our lab setup consists of the following components:
 * Kubernetes Cluster
 
 
-{{% onlyWhenNot manualFork %}}
+## {{% task %}} {{% onlyWhenNot manual-fork %}}Login to the Gitea and Clone the Repo{{% /onlyWhenNot %}}{{% onlyWhen manual-fork %}}Fork the Git repository{{% /onlyWhen %}}
 
-
-## Task {{% param sectionnumber %}}.1: Login to the Gitea and Clone the Repo
+{{% onlyWhenNot manual-fork %}}
 
 For this Training we've installed a Git Server under [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/). We also forked the Argo CD Example Repo for your `<username>`.
 
@@ -28,10 +27,7 @@ Login with the training credentials provided by the trainer (Login Button is in 
 {{% /onlyWhenNot  %}}
 
 
-{{% onlyWhen manualFork %}}
-
-
-## Task {{% param sectionnumber %}}.1: Fork the Git repository
+{{% onlyWhen manual-fork %}}
 
 As we are proceeding according to the GitOps principle we need some example resource manifests in a Git repository which we can edit.
 
@@ -108,7 +104,7 @@ git config --local --list
 ```
 
 
-## Task {{% param sectionnumber %}}.2: Deploying the resources with Argo CD
+## {{% task %}} Deploying the resources with Argo CD
 
 Now we want to deploy the resource manifests contained in the cloned repository with Argo CD to demonstrate the basic features of Argo CD.
 
@@ -205,7 +201,7 @@ Detailed view of a application in unsynced and synced state
 ![Application Tree (synced state)](app-tree-sycned.png)
 
 
-## Task {{% param sectionnumber %}}.3: Automated Sync Policy and Diff
+## {{% task %}} Automated Sync Policy and Diff
 
 When there is a new commit in your Git repository, the Argo CD application becomes OutOfSync. Let's assume we want to scale up our `Deployment` of the example application from 1 to 2 replicas. We will change this in the Deployment manifest.
 
@@ -357,7 +353,7 @@ argocd app get argo-$USER --refresh
 ```
 
 
-## Task {{% param sectionnumber %}}.4: Automatic Self-Healing
+## {{% task %}} Automatic Self-Healing
 
 By default, changes made to the live cluster will not trigger automatic sync. To enable automatic sync when the live cluster's state deviates from the state defined in Git, run:
 
@@ -395,7 +391,7 @@ simple-example   1/1     2            2           114m
 This is a great way to enforce a strict GitOps principle. Changes which are manually made on deployed resource manifests are reverted immediately back to the desired state by the ArgoCD controller.
 
 
-## Task {{% param sectionnumber %}}.5: Expose Application
+## {{% task %}} Expose Application
 
 This is an optional task.
 
@@ -471,7 +467,7 @@ The result should look similar to this:
 ```
 
 
-## Task {{% param sectionnumber %}}.6: Pruning
+## {{% task %}} Pruning
 
 You probably asked yourself how can I delete deployed resources on the container platform? Argo CD can be configured to delete resources that no longer exist in the Git repository.
 
@@ -520,7 +516,7 @@ apps        Deployment  <username> simple-example  Synced     Healthy        dep
 The Service was successfully deleted by Argo CD because the manifest was removed from git. See the HEALTH and MESSAGE of the previous console output.
 
 
-## Task {{% param sectionnumber %}}.7: State of ArgoCD
+## {{% task %}} State of ArgoCD
 
 Argo CD is largely built stateless. The configuration is persisted as native Kubernetes objects. And those are stored in Kubernetes _etcd_. There is no additional storage layer needed to run ArgoCD. The Redis storage under the hood acts just as a throw-away cache and can be evicted anytime without any data loss.
 
@@ -552,7 +548,7 @@ You even can edit the `Application` resource by using:
 This allows us to manage the ArgoCD application definitions in a declarative way as well. It is a common pattern to have one ArgoCD application which references n child Applications which allows us a fast bootstrapping of a whole environment or a new cluster. This pattern is well known as the [App of apps]({{< ref  "06" >}}) pattern.
 
 
-## Task {{% param sectionnumber %}}.8: Accessing a private Git repository
+## {{% task %}} Accessing a private Git repository
 
 The Git repository we have imported to Gitea is public available for the whole world. When accessing a private repository we have to provide credentials in form of a username/password pair or a ssh private key. In this task you will learn how to access a protected repo from Argo CD.
 
@@ -596,7 +592,7 @@ TLS certificates and SSH private keys are supported alternative authentication m
 Have a look in the [documentation](https://argoproj.github.io/argo-cd/user-guide/private-repositories/) for detailed information about accessing private repositories.
 
 
-## Task {{% param sectionnumber %}}.9: Delete the Application
+## {{% task %}} Delete the Application
 
 You can cascading delete the ArgoCD Application with the following command:
 
