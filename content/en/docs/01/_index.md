@@ -50,11 +50,17 @@ mkdir argocd-training && cd argocd-training
 
 ### Task 1.1.2: Login on ArgoCD using argocd CLI
 
+{{% onlyWhenNot no-argocd-cli %}}
 You can access Argo CD via Web UI (Credentials are provided by your teacher) or using the CLI. The Argo CD CLI Tool is already installed on the web IDE.
 
 ```bash
 argocd login {{% param argoCdUrl %}} --grpc-web --username $USER
 ```
+{{% /onlyWhenNot %}}
+
+{{% onlyWhen no-argocd-cli %}}
+You can access Argo CD via the Web UI. Open your browser and navigate to [https://{{% param argoCdUrl %}}](https://{{% param argoCdUrl %}}) and login with the credentials provided by your trainer.
+{{% /onlyWhen %}}
 {{% onlyWhen openshift %}}
 
 
@@ -75,6 +81,9 @@ Using project "<username>" on server "https://<theClusterAPIURL>".
 
 The returned project name should correspond to your username.
 {{% /onlyWhen  %}}
+
+
+{{% onlyWhenNot no-argocd-cli %}}
 
 
 ## {{% task %}} Argo CD CLI
@@ -167,3 +176,5 @@ source ~/.bashrc
 ```
 
 Find further information in the [official documentation](https://argoproj.github.io/argo-cd/user-guide/commands/argocd_completion/)
+
+{{% /onlyWhenNot %}}

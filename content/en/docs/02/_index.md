@@ -108,6 +108,7 @@ git config --local --list
 
 Now we want to deploy the resource manifests contained in the cloned repository with Argo CD to demonstrate the basic features of Argo CD.
 
+{{% onlyWhenNot no-argocd-cli %}}
 To deploy the resources using the Argo CD CLI use the following command:
 
 ```bash
@@ -186,6 +187,35 @@ GROUP  KIND        NAMESPACE    NAME           STATUS  HEALTH       HOOK  MESSAG
        Service     <username>  simple-example  Synced  Healthy            service/simple-example created
 apps   Deployment  <username>  simple-example  Synced  Progressing        deployment.apps/simple-example created
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+Create a file `application.yaml` with the following content:
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argo-$USER
+  namespace: {{% param argoInfraNamespace %}}
+spec:
+  project: default
+  source:
+    repoURL: https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git
+    targetRevision: HEAD
+    path: example-app
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: $USER
+```
+
+Apply it to the cluster:
+
+```bash
+{{% param cliToolName %}} apply -f application.yaml
+```
+
+Argo CD will now detect the application. Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** to deploy the resources. Once synced the application status will show as **Healthy**.
+{{% /onlyWhen %}}
 
 Check the [Argo CD UI](https://{{% param argoCdUrl %}}) to browse the application and their components. The URL of the Argo CD webinterface will be provided by the teacher.
 
@@ -257,6 +287,7 @@ To https://{{% param giteaUrl %}}/<username>/argocd-training-examples.git
 
 Check the state of the resources by cli:
 
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app get argo-$USER --refresh
 ```
@@ -299,6 +330,12 @@ which should give you an output similar to:
 ---
 >   replicas: 2
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+Out of the box Git will be polled by Argo CD in a predefined interval (defaults to 3 minutes). To use a synchronous workflow you can use webhooks in Git. These will trigger a synchronization in Argo CD on every push to the repository.
+
+Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Refresh** on the `argo-$USER` application to trigger an immediate update.
+{{% /onlyWhen %}}
 
 Now open the web console of Argo CD and go to your application. The deployment `simple-example` is marked as 'OutOfSync':
 
@@ -311,6 +348,7 @@ With a click on Deployment > Diff you will see the differences:
 
 Now click `Sync` on the top left and let the magic happens ;) The application will be scaled up to 2 replicas and the resources are in Sync again.
 
+{{% onlyWhenNot no-argocd-cli %}}
 Double-check the status by cli
 
 ```bash
@@ -335,31 +373,60 @@ GROUP  KIND        NAMESPACE    NAME            STATUS  HEALTH   HOOK  MESSAGE
        Service     <username>   simple-example  Synced  Healthy        service/simple-example unchanged
 apps   Deployment  <username>   simple-example  Synced  Healthy        deployment.apps/simple-example configured
 ```
+{{% /onlyWhenNot %}}
 
 Argo CD can automatically sync an application when it detects differences between the desired manifests in Git, and the live state in the cluster. A benefit of automatic sync is that CI/CD pipelines no longer need direct access to the Argo CD API server to perform the deployment. Instead, the pipeline makes a commit and push to the Git repository with the changes to the manifests in the tracking Git repo.
 
-To configure automatic sync run (or use the UI):
+To configure automatic sync{{% onlyWhenNot no-argocd-cli %}} run (or use the UI):
 
 ```bash
 argocd app set argo-$USER --sync-policy automated
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}, edit `application.yaml` to add the sync policy and re-apply:
+
+```yaml
+  syncPolicy:
+    automated: {}
+```
+
+```bash
+{{% param cliToolName %}} apply -f application.yaml
+```
+{{% /onlyWhen %}}
 
 From now on Argo CD will automatically apply all resources to Kubernetes every time you commit to the Git repository.
 
-Decrease the replicas count to 1 and push the updated manifest to remote. Wait for a few moments and see check that ArgoCD will scale the deployment of the example app down to 1 replica. The default polling interval is 3 minutes. If you don't want to wait you can force a refresh by clicking `Refresh` in the UI or by cli:
+Decrease the replicas count to 1 and push the updated manifest to remote. Wait for a few moments and see check that ArgoCD will scale the deployment of the example app down to 1 replica. The default polling interval is 3 minutes. If you don't want to wait you can force a refresh by clicking `Refresh` in the UI{{% onlyWhenNot no-argocd-cli %}} or by cli:
 
 ```bash
 argocd app get argo-$USER --refresh
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}.
+{{% /onlyWhen %}}
 
 
 ## {{% task %}} Automatic Self-Healing
 
-By default, changes made to the live cluster will not trigger automatic sync. To enable automatic sync when the live cluster's state deviates from the state defined in Git, run:
+By default, changes made to the live cluster will not trigger automatic sync. To enable automatic sync when the live cluster's state deviates from the state defined in Git, {{% onlyWhenNot no-argocd-cli %}}run:
 
 ```bash
 argocd app set argo-$USER --self-heal
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}edit `application.yaml` to set `selfHeal: true` and re-apply:
+
+```yaml
+  syncPolicy:
+    automated:
+      selfHeal: true
+```
+
+```bash
+{{% param cliToolName %}} apply -f application.yaml
+```
+{{% /onlyWhen %}}
 
 Watch the deployment `simple-example` in a separate terminal
 
@@ -481,6 +548,7 @@ git add --all && git commit -m 'Removes service and ingress' && git push
 
 Check the status of the application with
 
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app get argo-$USER --refresh
 ```
@@ -512,6 +580,25 @@ extensions  Ingress     <username> simple-example  Succeeded  Pruned         pru
             Service     <username> simple-example  Succeeded  Pruned         pruned
 apps        Deployment  <username> simple-example  Synced     Healthy        deployment.apps/simple-example unchanged
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Refresh** on the application. You will see that even with auto-sync enabled the resources are still OutOfSync.
+
+To enable pruning, edit `application.yaml` and re-apply:
+
+```yaml
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+```
+
+```bash
+{{% param cliToolName %}} apply -f application.yaml
+```
+
+Click **Refresh** again in the UI. The Service and Ingress/Route will now be pruned (deleted) by Argo CD.
+{{% /onlyWhen %}}
 
 The Service was successfully deleted by Argo CD because the manifest was removed from git. See the HEALTH and MESSAGE of the previous console output.
 
@@ -533,7 +620,7 @@ NAME               SYNC STATUS   HEALTH STATUS
 argo-<username>    Synced        Healthy
 ```
 
-You will see the application which we created some chapters ago by cli command `argocd app create...`. To see the complete configuration of the `Application` as _yaml_ use:
+You will see the application which we created{{% onlyWhenNot no-argocd-cli %}} some chapters ago by cli command `argocd app create...`{{% /onlyWhenNot %}}. To see the complete configuration of the `Application` as _yaml_ use:
 
 ```bash
 {{% param cliToolName %}} get applications argo-$USER -oyaml --namespace={{% param argoInfraNamespace %}}
@@ -550,6 +637,7 @@ This allows us to manage the ArgoCD application definitions in a declarative way
 
 ## {{% task %}} Accessing a private Git repository
 
+{{% onlyWhenNot no-argocd-cli %}}
 The Git repository we have imported to Gitea is public available for the whole world. When accessing a private repository we have to provide credentials in form of a username/password pair or a ssh private key. In this task you will learn how to access a protected repo from Argo CD.
 
 First make the Git repository in Gitea private by checking the option `Visibility: Make Repository Private` under `Settings -> Repository`. Now sync the app again.
@@ -590,14 +678,27 @@ TLS certificates and SSH private keys are supported alternative authentication m
 {{% /alert %}}
 
 Have a look in the [documentation](https://argoproj.github.io/argo-cd/user-guide/private-repositories/) for detailed information about accessing private repositories.
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+Since the forked repository is public, no additional credential configuration is needed. Private repository access is managed via the Argo CD UI under **Settings → Repositories** if required.
+{{% /onlyWhen %}}
 
 
 ## {{% task %}} Delete the Application
 
 You can cascading delete the ArgoCD Application with the following command:
 
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app delete argo-$USER
 ```
 
 Hit `y` to confirm the deletion and this will delete the `Application` manifests of ArgoCD and all created resources by this application. In our case the `Application`, `Deployment` and `Service` will be deleted.  With the flag `--cascade=false` only the ArgoCD `Application` will be deleted and the created resources `Deployment` and `Service` remain untouched.
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+```bash
+{{% param cliToolName %}} delete application argo-$USER -n {{% param argoInfraNamespace %}}
+```
+
+This will delete the `Application` resource. Since automated pruning is enabled, Argo CD will also delete the managed `Deployment` and `Service` from the namespace.
+{{% /onlyWhen %}}

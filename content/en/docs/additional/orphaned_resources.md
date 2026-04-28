@@ -9,6 +9,7 @@ This lab contains demonstrates how to find orphaned top-level resources with Arg
 
 ## {{% task %}} Create application and project
 
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app create argo-$USER --repo https://github.com/acend/argocd-training-examples.git --path 'example-app' --dest-server https://kubernetes.default.svc --dest-namespace $USER
 argocd app sync argo-$USER
@@ -23,6 +24,52 @@ Enable visualization and monitoring of Orphaned Resources for the newly created 
 ```bash
 argocd proj set apps-$USER --orphaned-resources --orphaned-resources-warn
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+Create a file `application.yaml` with the following content and apply it:
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argo-$USER
+  namespace: {{% param argoInfraNamespace %}}
+spec:
+  project: apps-$USER
+  source:
+    repoURL: https://github.com/acend/argocd-training-examples.git
+    targetRevision: HEAD
+    path: example-app
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: $USER
+```
+
+Create a file `appproject.yaml` with the following content and apply it:
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: apps-$USER
+  namespace: {{% param argoInfraNamespace %}}
+spec:
+  sourceRepos:
+    - '*'
+  destinations:
+    - server: '*'
+      namespace: '*'
+  orphanedResources:
+    warn: true
+```
+
+```bash
+{{% param cliToolName %}} apply -f appproject.yaml
+{{% param cliToolName %}} apply -f application.yaml
+```
+
+Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** on the `argo-$USER` application.
+{{% /onlyWhen %}}
 
 {{% alert title="Note" color="info" %}}
 The flag `--orphaned-resources` enables the determinability of orphaned resources in Argo CD. After a refresh you will see them in the user interface on the project when selecting the checkbox _Orphaned Resources_.
@@ -33,6 +80,7 @@ With the flag `--orphaned-resources-warn` enabled, for each Argo CD application 
 ## {{% task %}} Assign application to project
 
 Assign application to newly created project
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app set argo-$USER --project apps-$USER
 ```
@@ -46,6 +94,10 @@ Refresh the application
 ```bash
 argocd app get --refresh argo-$USER
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+The application is already assigned to the project in the `application.yaml` from the previous task (`project: apps-$USER`). Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Refresh** on the `argo-$USER` application to verify the project assignment.
+{{% /onlyWhen %}}
 
 
 ## {{% task %}} Create orphaned resource
@@ -71,6 +123,7 @@ This service will be detected as orphaned resource because it is not managed by 
 
 
 Print all resources
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app resources argo-$USER
 ```
@@ -94,15 +147,27 @@ CONDITION                MESSAGE                               LAST TRANSITION
 OrphanedResourceWarning  Application has 1 orphaned resources  2021-09-02 16:20:36 +0200 CEST
 ...
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Refresh** on the `argo-$USER` application. Navigate to the application details — you will see the `black-hole` service listed as an orphaned resource with an `OrphanedResourceWarning`.
+{{% /onlyWhen %}}
 
 
 ## {{% task %}} Housekeeping
 
 Clean up the resources created in this lab
 
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app delete argo-$USER -y
 argocd proj delete apps-$USER
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+```bash
+{{% param cliToolName %}} delete application argo-$USER -n {{% param argoInfraNamespace %}}
+{{% param cliToolName %}} delete appproject apps-$USER -n {{% param argoInfraNamespace %}}
+```
+{{% /onlyWhen %}}
 
 Find more detailed information about [Orphaned Resources in the docs](https://argoproj.github.io/argo-cd/user-guide/orphaned-resources/).

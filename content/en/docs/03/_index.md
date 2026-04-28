@@ -73,17 +73,47 @@ Create the new application `argo-hook-$USER` with the following command. It will
 * Sync: Deployment with name `pre-post-sync-hook`
 * PostSync: after Job
 
-
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app create argo-hook-$USER --repo https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git --path 'pre-post-sync-hook' --dest-server https://kubernetes.default.svc --dest-namespace $USER
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+Create a file `application.yaml` with the following content and apply it:
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argo-hook-$USER
+  namespace: {{% param argoInfraNamespace %}}
+spec:
+  project: default
+  source:
+    repoURL: https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git
+    targetRevision: HEAD
+    path: pre-post-sync-hook
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: $USER
+```
+
+```bash
+{{% param cliToolName %}} apply -f application.yaml
+```
+{{% /onlyWhen %}}
 
 Sync the application
 
 {{% details title="Hint" %}}
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app sync argo-hook-$USER
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** on the `argo-hook-$USER` application.
+{{% /onlyWhen %}}
 {{% /details %}}
 
 And verify the deployment:
@@ -127,7 +157,14 @@ spec:
 Delete the application after you've explored the Argo CD Resources and the managed Kubernetes resources.
 
 {{% details title="Hint" %}}
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app delete argo-hook-$USER
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+```bash
+{{% param cliToolName %}} delete application argo-hook-$USER -n {{% param argoInfraNamespace %}}
+```
+{{% /onlyWhen %}}
 {{% /details %}}

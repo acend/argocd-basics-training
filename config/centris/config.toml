@@ -1,12 +1,13 @@
 
 [Languages]
 [Languages.en]
-title = "ArgoCD Techlab"
+title = "ArgoCD Training"
 languageName = "English"
 weight = 1
 
 
 [params]
 enabledModule = "base centris manual-fork no-argocd-cli openshift getting-started simple-example resource-hooks sync-phases-and-waves tools helm kustomize multiple-applications application-sets projects "
-github_repo = ""
-github_branch = ""
+cliToolName = "oc"
+distroName = "OpenShift"
+argoInfraNamespace = "openshift-gitops"

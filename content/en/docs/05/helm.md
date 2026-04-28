@@ -17,9 +17,18 @@ Helm Charts are configured using `values.yaml` files. (e.g. images, image tags, 
 
 When using `helm` charts together with Argo CD we can specify the `values.yaml` like this:
 
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app set argo-helm-$USER --values values-production.yaml
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+```yaml
+# In the Application spec.source.helm section:
+valueFiles:
+  - values-production.yaml
+```
+{{% /onlyWhen %}}
 The `--values` flag can be repeated to support multiple values files.
 
 {{% alert title="Info" color="info" %}}
@@ -31,9 +40,19 @@ Values files must be in the same git repository as the Helm chart. The files can
 
 Similar to when using `helm` directly (`helm install <release> --set replicaCount=2 ./mychart --namespace <namespace>`), you are able to overwrite values from the values.yaml, by setting parameters.
 
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app set argo-helm-$USER --parameter replicaCount=2
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+```yaml
+# In the Application spec.source.helm section:
+parameters:
+  - name: replicaCount
+    value: "2"
+```
+{{% /onlyWhen %}}
 
 {{% alert title="Warning" color="warning" %}}
 Argo CD provides a mechanism to override the parameters of Argo CD applications. [The Argo CD parameter overrides](https://argoproj.github.io/argo-cd/user-guide/parameters/) feature is provided mainly as a convenience to developers and is intended to be used in dev/test environments, vs. production environments.
@@ -46,9 +65,17 @@ Many consider this feature as anti-pattern to GitOps. So only use this feature w
 
 By default, the Helm release name is equal to the Application name to which it belongs. Sometimes, especially on a centralised ArgoCD, you may want to override that name, and it is possible with the `release-name` flag on the cli:
 
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app set argo-helm-$USER --release-name <release>
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+```yaml
+# In the Application spec.source.helm section:
+releaseName: <release>
+```
+{{% /onlyWhen %}}
 
 {{% alert title="Warning" color="warning" %}}
 Please note that overriding the Helm release name might cause problems when the chart you are deploying is using the app.kubernetes.io/instance label. ArgoCD injects this label with the value of the Application name for tracking purposes.
@@ -71,19 +98,51 @@ Let's deploy the simple-example from lab 1 using a [helm chart](https://github.c
 
 First you'll have to create a new Argo CD application.
 
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app create argo-helm-$USER --repo https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git --path 'helm/simple-example' --dest-server https://kubernetes.default.svc --dest-namespace $USER --values values.yaml
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+Create a file `application.yaml` with the following content and apply it:
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argo-helm-$USER
+  namespace: {{% param argoInfraNamespace %}}
+spec:
+  project: default
+  source:
+    repoURL: https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git
+    targetRevision: HEAD
+    path: helm/simple-example
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: $USER
+```
+
+```bash
+{{% param cliToolName %}} apply -f application.yaml
+```
+{{% /onlyWhen %}}
 
 Sync the application
 
 {{% details title="Hint" %}}
 
-To sync (deploy) the resources you can simply click sync in the web UI or execute the following command:
+To sync (deploy) the resources you can simply click sync in the web UI{{% onlyWhenNot no-argocd-cli %}} or execute the following command:
 
 ```bash
 argocd app sync argo-helm-$USER
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}.
+{{% /onlyWhen %}}
 {{% /details %}}
 
 And verify the deployment:
@@ -95,11 +154,27 @@ And verify the deployment:
 Tell the application to sync automatically, to enable self-healing and auto-prune
 
 {{% details title="Hint" %}}
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app set argo-helm-$USER --sync-policy automated
 argocd app set argo-helm-$USER --self-heal
 argocd app set argo-helm-$USER --auto-prune
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+Edit `application.yaml` to add automated sync policy, then re-apply:
+
+```yaml
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+```
+
+```bash
+{{% param cliToolName %}} apply -f application.yaml
+```
+{{% /onlyWhen %}}
 {{% /details %}}
 
 
@@ -107,9 +182,27 @@ argocd app set argo-helm-$USER --auto-prune
 
 We can set the `helm` parameter with the following command:
 
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app set argo-helm-$USER --parameter replicaCount=2
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+Edit `application.yaml` to add the parameter override in `spec.source.helm`, then re-apply:
+
+```yaml
+    helm:
+      valueFiles:
+        - values.yaml
+      parameters:
+        - name: replicaCount
+          value: "2"
+```
+
+```bash
+{{% param cliToolName %}} apply -f application.yaml
+```
+{{% /onlyWhen %}}
 
 {{% alert title="Warning" color="warning" %}}
 Only use this way of setting params in dev and test stages. Not for Production!
@@ -191,12 +284,45 @@ Let's create the production stage Argo CD application with the name `argo-helm-p
 
 {{% details title="Hint" %}}
 
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app create argo-helm-prod-$USER --repo https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git --path 'helm/simple-example' --dest-server https://kubernetes.default.svc --dest-namespace $USER
 argocd app set argo-helm-prod-$USER --sync-policy automated
 argocd app set argo-helm-prod-$USER --self-heal
 argocd app set argo-helm-prod-$USER --auto-prune
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+Create a file `application-prod.yaml` with the following content and apply it:
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argo-helm-prod-$USER
+  namespace: {{% param argoInfraNamespace %}}
+spec:
+  project: default
+  source:
+    repoURL: https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git
+    targetRevision: HEAD
+    path: helm/simple-example
+    helm:
+      valueFiles:
+        - values-production.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: $USER
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+```
+
+```bash
+{{% param cliToolName %}} apply -f application-prod.yaml
+```
+{{% /onlyWhen %}}
 
 {{% /details %}}
 
@@ -209,9 +335,14 @@ And verify the deployment:
 Tell the Argo CD app to use the `values-production.yaml` values file
 
 {{% details title="Hint" %}}
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app set argo-helm-prod-$USER --values values-production.yaml
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+The `values-production.yaml` is already configured in `application-prod.yaml` above.
+{{% /onlyWhen %}}
 {{% /details %}}
 
 Change for example the ingress hostname to something different in the `values-production.yaml` and verify whether you can access the new hostname.
@@ -222,8 +353,15 @@ Change for example the ingress hostname to something different in the `values-pr
 Delete the applications after you've explored the Argo CD Resources and the managed Kubernetes resources.
 
 {{% details title="Hint" %}}
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app delete argo-helm-$USER
 argocd app delete argo-helm-prod-$USER
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+```bash
+{{% param cliToolName %}} delete application argo-helm-$USER argo-helm-prod-$USER -n {{% param argoInfraNamespace %}}
+```
+{{% /onlyWhen %}}
 {{% /details %}}

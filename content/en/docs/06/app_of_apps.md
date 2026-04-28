@@ -72,11 +72,41 @@ Note the three paramters
 * `--self-heal` Enable self heal and ensure that the parent application reconcile the child application
 * `--auto-prune` Ensure that if the parent application gets deleted, it also delete the their child applications
 
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app create argo-aoa-$USER --repo https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git --path 'app-of-apps' --dest-server https://kubernetes.default.svc --dest-namespace $USER --sync-policy automated --self-heal --auto-prune
 ```
 
 Expected output: `application 'argo-aoa-<username>' created`
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+Create a file `application.yaml` with the following content and apply it:
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argo-aoa-$USER
+  namespace: {{% param argoInfraNamespace %}}
+spec:
+  project: default
+  source:
+    repoURL: https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git
+    targetRevision: HEAD
+    path: app-of-apps
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: $USER
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+```
+
+```bash
+{{% param cliToolName %}} apply -f application.yaml
+```
+{{% /onlyWhen %}}
 
 Explore the Argo parent application in the web UI.
 
@@ -90,8 +120,15 @@ Note that the child applications resources are not synced automatically. This is
 Delete the application after you've explored the Argo CD Resources and the managed Kubernetes resources.
 
 {{% details title="Hint" %}}
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app delete argo-aoa-$USER
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+```bash
+{{% param cliToolName %}} delete application argo-aoa-$USER -n {{% param argoInfraNamespace %}}
+```
+{{% /onlyWhen %}}
 {{% /details %}}
 

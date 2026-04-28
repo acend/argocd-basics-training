@@ -74,9 +74,39 @@ git push origin main
 
 And now create the ArgoCD Application, which references the ApplicationSet definition:
 
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app create argo-appset-$USER --repo https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git --path 'application-set/simple-example' --dest-server https://kubernetes.default.svc --sync-policy auto --dest-namespace argocd
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+Create the following `application.yaml` and apply it:
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argo-appset-$USER
+  namespace: {{% param argoInfraNamespace %}}
+spec:
+  project: default
+  source:
+    repoURL: https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git
+    targetRevision: HEAD
+    path: application-set/simple-example
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: {{% param argoInfraNamespace %}}
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+```
+
+```bash
+{{% param cliToolName %}} apply -f application.yaml
+```
+{{% /onlyWhen %}}
 
 {{% alert title="Note" color="info" %}}Please notice the `dest-namespace`, ApplicationSets needs to be deployed within the `argocd` namespace{{% /alert %}}
 
@@ -192,9 +222,39 @@ git push origin main
 
 And let's create an ArgoCD Application containing the Matrix ApplicationSet with the following command:
 
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app create argo-appset-matrix-$USER --repo https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git --path 'application-set/matrix-example' --dest-server https://kubernetes.default.svc --sync-policy auto --dest-namespace argocd
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+Create the following `application-matrix.yaml` and apply it:
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argo-appset-matrix-$USER
+  namespace: {{% param argoInfraNamespace %}}
+spec:
+  project: default
+  source:
+    repoURL: https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git
+    targetRevision: HEAD
+    path: application-set/matrix-example
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: {{% param argoInfraNamespace %}}
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+```
+
+```bash
+{{% param cliToolName %}} apply -f application-matrix.yaml
+```
+{{% /onlyWhen %}}
 
 Next check the ArgoCD web ui, you should see the 4 generated ArgoCD applications together with the ArgoCD Application, which contains the ApplicationSet itself.
 
@@ -204,8 +264,16 @@ Next check the ArgoCD web ui, you should see the 4 generated ArgoCD applications
 Delete the two applications (`argo-appset-$USER` and `argo-appset-matrix-$USER`) after you've explored the Argo CD Resources and the managed Kubernetes resources.
 
 {{% details title="Hint" %}}
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app delete argo-appset-$USER
 argocd app delete argo-appset-matrix-$USER
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+```bash
+{{% param cliToolName %}} delete application argo-appset-$USER -n {{% param argoInfraNamespace %}}
+{{% param cliToolName %}} delete application argo-appset-matrix-$USER -n {{% param argoInfraNamespace %}}
+```
+{{% /onlyWhen %}}
 {{% /details %}}

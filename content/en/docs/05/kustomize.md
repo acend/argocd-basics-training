@@ -33,9 +33,17 @@ The following configuration options are available for Kustomize:
 
 Use the following command to set those parameters:
 
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app set argo-kustomize-$USER --nameprefix=<namePrefix>
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+```yaml
+# In the Application spec.source.kustomize section:
+namePrefix: <namePrefix>
+```
+{{% /onlyWhen %}}
 
 
 ### Further Docs
@@ -49,19 +57,48 @@ Let's deploy the simple-example from lab 1 using [kustomize](https://github.com/
 
 First you'll have to create a new Argo CD application.
 
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app create argo-kustomize-$USER --repo https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git --path 'kustomize/simple-example' --dest-server https://kubernetes.default.svc --dest-namespace $USER
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+Create a file `application.yaml` with the following content and apply it:
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argo-kustomize-$USER
+  namespace: {{% param argoInfraNamespace %}}
+spec:
+  project: default
+  source:
+    repoURL: https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git
+    targetRevision: HEAD
+    path: kustomize/simple-example
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: $USER
+```
+
+```bash
+{{% param cliToolName %}} apply -f application.yaml
+```
+{{% /onlyWhen %}}
 
 Sync the application
 
 {{% details title="Hint" %}}
 
-To sync (deploy) the resources you can simply click sync in the web UI or execute the following command:
+To sync (deploy) the resources you can simply click sync in the web UI{{% onlyWhenNot no-argocd-cli %}} or execute the following command:
 
 ```bash
 argocd app sync argo-kustomize-$USER
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}.
+{{% /onlyWhen %}}
 {{% /details %}}
 
 And verify the deployment:
@@ -73,11 +110,27 @@ And verify the deployment:
 Tell the application to sync automatically, to enable self-healing and auto-prune
 
 {{% details title="Hint" %}}
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app set argo-kustomize-$USER --sync-policy automated
 argocd app set argo-kustomize-$USER --self-heal
 argocd app set argo-kustomize-$USER --auto-prune
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+Edit `application.yaml` to add automated sync policy, then re-apply:
+
+```yaml
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+```
+
+```bash
+{{% param cliToolName %}} apply -f application.yaml
+```
+{{% /onlyWhen %}}
 {{% /details %}}
 
 
@@ -85,11 +138,25 @@ argocd app set argo-kustomize-$USER --auto-prune
 
 We can set the `kustomize` configuration parameter with the following command:
 
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app set argo-kustomize-$USER --nameprefix=acend
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+Edit `application.yaml` to add the nameprefix in `spec.source.kustomize`, then re-apply:
 
-And take a look at the application in the web UI or using the command line tool
+```yaml
+    kustomize:
+      namePrefix: acend
+```
+
+```bash
+{{% param cliToolName %}} apply -f application.yaml
+```
+{{% /onlyWhen %}}
+
+And take a look at the application in the web UI{{% onlyWhenNot no-argocd-cli %}} or using the command line tool
 
 {{% details title="Hint" %}}
 
@@ -97,6 +164,9 @@ And take a look at the application in the web UI or using the command line tool
 argocd app get argo-kustomize-$USER
 ```
 {{% /details %}}
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}.
+{{% /onlyWhen %}}
 
 {{% alert title="Warning" color="warning" %}}
 Only use this way of setting params in dev and test stages. Not for Production!
@@ -114,12 +184,42 @@ Let's create the production stage Argo CD application (path: `kustomize/overlays
 
 {{% details title="Hint" %}}
 
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app create argo-kustomize-prod-$USER --repo https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git --path 'kustomize/overlays-example/overlays/production' --dest-server https://kubernetes.default.svc --dest-namespace $USER
 argocd app set argo-kustomize-prod-$USER --sync-policy automated
 argocd app set argo-kustomize-prod-$USER --self-heal
 argocd app set argo-kustomize-prod-$USER --auto-prune
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+Create a file `application-prod.yaml` with the following content and apply it:
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argo-kustomize-prod-$USER
+  namespace: {{% param argoInfraNamespace %}}
+spec:
+  project: default
+  source:
+    repoURL: https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git
+    targetRevision: HEAD
+    path: kustomize/overlays-example/overlays/production
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: $USER
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+```
+
+```bash
+{{% param cliToolName %}} apply -f application-prod.yaml
+```
+{{% /onlyWhen %}}
 
 {{% /details %}}
 
@@ -135,8 +235,15 @@ And verify the deployment:
 Delete the applications after you've explored the Argo CD Resources and the managed Kubernetes resources.
 
 {{% details title="Hint" %}}
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app delete argo-kustomize-$USER
 argocd app delete argo-kustomize-prod-$USER
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+```bash
+{{% param cliToolName %}} delete application argo-kustomize-$USER argo-kustomize-prod-$USER -n {{% param argoInfraNamespace %}}
+```
+{{% /onlyWhen %}}
 {{% /details %}}
