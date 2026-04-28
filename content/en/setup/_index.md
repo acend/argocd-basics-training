@@ -16,8 +16,12 @@ In this Training its required to have the following tools locally installed on y
 
 * git
 * git bash on Windows
-{{% onlyWhenNot noArgoCDCLI %}}* Argo CD CLI {{% /onlyWhenNot  %}}
-{{% onlyWhen openshift %}}* oc Tool (OpenShift Client) *Only when on OpenShift* {{% /onlyWhen  %}}
+{{% onlyWhenNot noArgoCDCLI %}}
+* Argo CD CLI
+{{% /onlyWhenNot %}}
+{{% onlyWhen openshift %}}
+* oc Tool (OpenShift Client) *Only when on OpenShift*
+{{% /onlyWhen %}}
 * kubectl
 
 {{% onlyWhenNot noArgoCDCLI %}}
