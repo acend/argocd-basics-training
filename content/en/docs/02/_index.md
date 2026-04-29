@@ -10,16 +10,16 @@ Our lab setup consists of the following components:
 
 * Git Server ([Gitea](https://gitea.io)): [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/)
 * Argo CD Server: [https://{{% param argoCdUrl %}}](https://{{% param argoCdUrl %}})
-* Kubernetes Cluster
+* {{% onlyWhenNot openshift %}}Kubernetes Cluster{{% /onlyWhenNot %}}{{% onlyWhen openshift %}}OpenShift Cluster{{% /onlyWhen %}}
 
 
 ## {{% task %}} {{% onlyWhenNot manual-fork %}}Login to the Gitea and Clone the Repo{{% /onlyWhenNot %}}{{% onlyWhen manual-fork %}}Fork the Git repository{{% /onlyWhen %}}
 
 {{% onlyWhenNot manual-fork %}}
 
-For this Training we've installed a Git Server under [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/). We also forked the Argo CD Example Repo for your `<username>`.
+For this training we're using a Git Server deployed under [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/). We also forked the Argo CD Example Repo for your `<username>`.
 
-Open your Webbrowser and navigate to [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/).
+Open your webbrowser and navigate to [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/).
 Login with the training credentials provided by the trainer (Login Button is in the upper right corner).
 
 {{% alert title="Note" color="info" %}}Users which have a personal Github account can just fork the Repository [argocd-training-examples](https://github.com/acend/argocd-training-examples) to their personal account. To fork the repository click on the top right of the Github on _Fork_.{{% /alert %}}
