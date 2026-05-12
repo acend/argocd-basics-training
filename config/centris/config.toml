@@ -7,7 +7,7 @@ weight = 1
 
 
 [params]
-enabledModule = "base centris manual-fork no-argocd-cli openshift centris-init centris-example resource-hooks sync-phases-and-waves tools helm kustomize multiple-applications application-sets projects "
+enabledModule = "base centris manual-fork no-argocd-cli openshift getting-started simple-example resource-hooks sync-phases-and-waves tools helm kustomize multiple-applications application-sets projects "
 
 cliToolName = "oc"
 distroName = "OpenShift"

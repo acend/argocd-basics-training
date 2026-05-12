@@ -9,7 +9,7 @@ onlyWhen: getting-started
 
 The first thing we're going to do is to explore our lab environment and get in touch with the different components.
 
-The namespace with the name corresponding to your username is going to be used for all the hands-on labs. And you will be using the `argocd tool` or the ArgoCD webconsole, to verify what resources and objects Argo CD created for you.
+The namespace with the name corresponding to your username is going to be used for all the hands-on labs. And you will be using {{% onlyWhenNot no-argocd-cli %}} the `argocd tool` or {{% /onlyWhenNot %}} the ArgoCD webconsole, to verify what resources and objects Argo CD created for you.
 
 {{% alert title="Note" color="info" %}}You can also use your local installation of the cli tools. Make sure you completed [the setup](../../setup/) before you continue with this lab.{{% /alert %}}
 
@@ -41,14 +41,14 @@ The files in the home directory under `/home/project` are stored in a persistenc
 
 During the lab, you’ll be using local files (eg. YAML resources) which will be applied in your lab project.
 
-Create a new folder for your `<workspace>` in your Web IDE  (for example `argocd-training` under `/home/project/argocd-training`). Either you can create it with `right-mouse-click -> New Folder` or in the Web IDE terminal
+Create a new folder for your `<workspace>` in your Web IDE  (for example `argocd-training` under `/home/project/argocd-training`). Either you can create it with `right-mouse-click -> New Folder` or in the Web IDE terminal.
 
 ```bash
 mkdir argocd-training && cd argocd-training
 ```
 
 
-### Task 1.1.2: Login on ArgoCD using argocd CLI
+### Task 1.1.2: Login to ArgoCD
 
 {{% onlyWhenNot no-argocd-cli %}}
 You can access Argo CD via Web UI (Credentials are provided by your teacher) or using the CLI. The Argo CD CLI Tool is already installed on the web IDE.
