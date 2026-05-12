@@ -79,7 +79,7 @@ argocd app create argo-hook-$USER --repo https://{{% param giteaUrl %}}/$USER/ar
 ```
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
-Create a file `application.yaml` with the following content and apply it:
+Create a file `argocd-hook-application.yaml` with the following content and apply it:
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -99,7 +99,7 @@ spec:
 ```
 
 ```bash
-{{% param cliToolName %}} apply -f application.yaml
+{{% param cliToolName %}} apply -f argocd-hook-application.yaml
 ```
 {{% /onlyWhen %}}
 

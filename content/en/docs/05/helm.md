@@ -104,7 +104,7 @@ argocd app create argo-helm-$USER --repo https://{{% param giteaUrl %}}/$USER/ar
 ```
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
-Create a file `application.yaml` with the following content and apply it:
+Create a file `argocd-helm-application.yaml` with the following content and apply it:
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -127,7 +127,7 @@ spec:
 ```
 
 ```bash
-{{% param cliToolName %}} apply -f application.yaml
+{{% param cliToolName %}} apply -f argocd-helm-application.yaml
 ```
 {{% /onlyWhen %}}
 
@@ -135,14 +135,12 @@ Sync the application
 
 {{% details title="Hint" %}}
 
-To sync (deploy) the resources you can simply click sync in the web UI{{% onlyWhenNot no-argocd-cli %}} or execute the following command:
+To sync (deploy) the resources you can simply click sync in the web UI{{% onlyWhen no-argocd-cli %}}.{{% /onlyWhen %}}{{% onlyWhenNot no-argocd-cli %}} or execute the following command:
 
 ```bash
 argocd app sync argo-helm-$USER
 ```
 {{% /onlyWhenNot %}}
-{{% onlyWhen no-argocd-cli %}}.
-{{% /onlyWhen %}}
 {{% /details %}}
 
 And verify the deployment:
@@ -162,7 +160,7 @@ argocd app set argo-helm-$USER --auto-prune
 ```
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
-Edit `application.yaml` to add automated sync policy, then re-apply:
+Edit `argocd-helm-application.yaml` to add automated sync policy, then re-apply:
 
 ```yaml
   syncPolicy:
@@ -172,7 +170,7 @@ Edit `application.yaml` to add automated sync policy, then re-apply:
 ```
 
 ```bash
-{{% param cliToolName %}} apply -f application.yaml
+{{% param cliToolName %}} apply -f argocd-helm-application.yaml
 ```
 {{% /onlyWhen %}}
 {{% /details %}}
@@ -188,7 +186,7 @@ argocd app set argo-helm-$USER --parameter replicaCount=2
 ```
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
-Edit `application.yaml` to add the parameter override in `spec.source.helm`, then re-apply:
+Edit `argocd-helm-application.yaml` to add the parameter override in `spec.source.helm`, then re-apply:
 
 ```yaml
     helm:
@@ -200,7 +198,7 @@ Edit `application.yaml` to add the parameter override in `spec.source.helm`, the
 ```
 
 ```bash
-{{% param cliToolName %}} apply -f application.yaml
+{{% param cliToolName %}} apply -f argocd-helm-application.yaml
 ```
 {{% /onlyWhen %}}
 
@@ -212,6 +210,8 @@ Since the `sync-policy` is set to `automated` the second pod will be deployed im
 
 
 ## {{% task %}} Ingress
+
+<!-- TODO: can we find an alternative for the openshift variant of this course? -->
 
 The proper and production ready way of overwriting values is by doing it in git.
 
@@ -293,7 +293,7 @@ argocd app set argo-helm-prod-$USER --auto-prune
 ```
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
-Create a file `application-prod.yaml` with the following content and apply it:
+Create a file `argocd-helm-application-prod.yaml` with the following content and apply it:
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -320,7 +320,7 @@ spec:
 ```
 
 ```bash
-{{% param cliToolName %}} apply -f application-prod.yaml
+{{% param cliToolName %}} apply -f argocd-helm-application-prod.yaml
 ```
 {{% /onlyWhen %}}
 
@@ -332,18 +332,15 @@ And verify the deployment:
 {{% param cliToolName %}} get pod --namespace $USER --watch
 ```
 
+{{% onlyWhenNot no-argocd-cli %}}
 Tell the Argo CD app to use the `values-production.yaml` values file
 
 {{% details title="Hint" %}}
-{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app set argo-helm-prod-$USER --values values-production.yaml
 ```
-{{% /onlyWhenNot %}}
-{{% onlyWhen no-argocd-cli %}}
-The `values-production.yaml` is already configured in `application-prod.yaml` above.
-{{% /onlyWhen %}}
 {{% /details %}}
+{{% /onlyWhenNot %}}
 
 Change for example the ingress hostname to something different in the `values-production.yaml` and verify whether you can access the new hostname.
 

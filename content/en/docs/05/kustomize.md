@@ -63,7 +63,7 @@ argocd app create argo-kustomize-$USER --repo https://{{% param giteaUrl %}}/$US
 ```
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
-Create a file `application.yaml` with the following content and apply it:
+Create a file `argocd-kustomize-application.yaml` with the following content and apply it:
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -83,7 +83,7 @@ spec:
 ```
 
 ```bash
-{{% param cliToolName %}} apply -f application.yaml
+{{% param cliToolName %}} apply -f argocd-kustomize-application.yaml
 ```
 {{% /onlyWhen %}}
 
@@ -91,14 +91,12 @@ Sync the application
 
 {{% details title="Hint" %}}
 
-To sync (deploy) the resources you can simply click sync in the web UI{{% onlyWhenNot no-argocd-cli %}} or execute the following command:
+To sync (deploy) the resources you can simply click sync in the web UI{{% onlyWhen no-argocd-cli %}}.{{% /onlyWhen %}}{{% onlyWhenNot no-argocd-cli %}} or execute the following command:
 
 ```bash
 argocd app sync argo-kustomize-$USER
 ```
 {{% /onlyWhenNot %}}
-{{% onlyWhen no-argocd-cli %}}.
-{{% /onlyWhen %}}
 {{% /details %}}
 
 And verify the deployment:
@@ -118,7 +116,7 @@ argocd app set argo-kustomize-$USER --auto-prune
 ```
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
-Edit `application.yaml` to add automated sync policy, then re-apply:
+Edit `argocd-kustomize-application.yaml` to add automated sync policy, then re-apply:
 
 ```yaml
   syncPolicy:
@@ -128,7 +126,7 @@ Edit `application.yaml` to add automated sync policy, then re-apply:
 ```
 
 ```bash
-{{% param cliToolName %}} apply -f application.yaml
+{{% param cliToolName %}} apply -f argocd-kustomize-application.yaml
 ```
 {{% /onlyWhen %}}
 {{% /details %}}
@@ -144,7 +142,7 @@ argocd app set argo-kustomize-$USER --nameprefix=acend
 ```
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
-Edit `application.yaml` to add the nameprefix in `spec.source.kustomize`, then re-apply:
+Edit `argocd-kustomize-application.yaml` to add the nameprefix in `spec.source.kustomize`, then re-apply:
 
 ```yaml
     kustomize:
@@ -152,11 +150,11 @@ Edit `application.yaml` to add the nameprefix in `spec.source.kustomize`, then r
 ```
 
 ```bash
-{{% param cliToolName %}} apply -f application.yaml
+{{% param cliToolName %}} apply -f argocd-kustomize-application.yaml
 ```
 {{% /onlyWhen %}}
 
-And take a look at the application in the web UI{{% onlyWhenNot no-argocd-cli %}} or using the command line tool
+And take a look at the application in the web UI{{% onlyWhen no-argocd-cli %}}.{{% /onlyWhen %}}{{% onlyWhenNot no-argocd-cli %}} or using the command line tool
 
 {{% details title="Hint" %}}
 
@@ -165,8 +163,6 @@ argocd app get argo-kustomize-$USER
 ```
 {{% /details %}}
 {{% /onlyWhenNot %}}
-{{% onlyWhen no-argocd-cli %}}.
-{{% /onlyWhen %}}
 
 {{% alert title="Warning" color="warning" %}}
 Only use this way of setting params in dev and test stages. Not for Production!
@@ -193,7 +189,7 @@ argocd app set argo-kustomize-prod-$USER --auto-prune
 ```
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
-Create a file `application-prod.yaml` with the following content and apply it:
+Create a file `argocd-kustomize-application-prod.yaml` with the following content and apply it:
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -217,7 +213,7 @@ spec:
 ```
 
 ```bash
-{{% param cliToolName %}} apply -f application-prod.yaml
+{{% param cliToolName %}} apply -f argocd-kustomize-application-prod.yaml
 ```
 {{% /onlyWhen %}}
 

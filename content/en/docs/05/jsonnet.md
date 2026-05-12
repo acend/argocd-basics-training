@@ -148,19 +148,48 @@ git push
 
 Create the new Argo CD application.
 
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app create argo-jsonnet-$USER --repo https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git --path 'jsonnet' --dest-server https://kubernetes.default.svc --dest-namespace $USER
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+Create a file `argocd-jsonnet-application.yaml` with the following content and apply it:
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argo-jsonnet-$USER
+  namespace: {{% param argoInfraNamespace %}}
+spec:
+  project: default
+  source:
+    repoURL: https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git
+    targetRevision: HEAD
+    path: jsonnet
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: $USER
+```
+
+```bash
+{{% param cliToolName %}} apply -f argocd-jsonnet-application.yaml
+```
+{{% /onlyWhen %}}
 
 Sync the application
 
 {{% details title="Hint" %}}
 
-To sync (deploy) the resources you can simply click sync in the web UI or execute the following command:
+To sync (deploy) the resources you can simply click sync in the web UI{{% onlyWhenNot no-argocd-cli %}} or execute the following command:
 
 ```bash
 argocd app sync argo-jsonnet-$USER
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}.
+{{% /onlyWhen %}}
 {{% /details %}}
 
 And verify whether your jsonnet Application definition has be successfully synced.
@@ -171,11 +200,27 @@ And verify whether your jsonnet Application definition has be successfully synce
 Tell the application to sync automatically, to enable self-healing and auto-prune
 
 {{% details title="Hint" %}}
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app set argo-jsonnet-$USER --sync-policy automated
 argocd app set argo-jsonnet-$USER --self-heal
 argocd app set argo-jsonnet-$USER --auto-prune
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+Edit `argocd-jsonnet-application.yaml` to add automated sync policy, then re-apply:
+
+```yaml
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+```
+
+```bash
+{{% param cliToolName %}} apply -f argocd-jsonnet-application.yaml
+```
+{{% /onlyWhen %}}
 {{% /details %}}
 
 Now let's change the replicacount of the deployment and scale to `2` pods.
@@ -215,7 +260,14 @@ And verify the result in the ArgoCD Ui or by using the following command, this m
 Delete the applications after you've explored the Argo CD Resources and the managed Kubernetes resources.
 
 {{% details title="Hint" %}}
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app delete argo-jsonnet-$USER
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+```bash
+{{% param cliToolName %}} delete application argo-jsonnet-$USER -n {{% param argoInfraNamespace %}}
+```
+{{% /onlyWhen %}}
 {{% /details %}}
