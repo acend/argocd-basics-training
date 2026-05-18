@@ -17,6 +17,14 @@ argocd proj create -s "*" -d "*,*" project-sync-windows-$USER
 argocd app create sync-windows-$USER --repo https://github.com/acend/argocd-training-examples.git --path 'example-app' --dest-server https://kubernetes.default.svc --dest-namespace $USER --project project-sync-windows-$USER
 argocd app sync sync-windows-$USER
 ```
+
+You should see the following message after a successful sync
+
+```
+...
+Message:            successfully synced (all tasks run)
+...
+```
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
 Create `appproject.yaml`:
@@ -61,14 +69,6 @@ spec:
 
 Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** on `sync-windows-$USER`.
 {{% /onlyWhen %}}
-
-You should see the following message after a successful sync
-
-```
-...
-Message:            successfully synced (all tasks run)
-...
-```
 
 
 ## {{% task %}} Create sync windows

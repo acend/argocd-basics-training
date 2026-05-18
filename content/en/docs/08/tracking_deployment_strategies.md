@@ -112,7 +112,7 @@ git add . && git commit -m "scale deployment replicas to 2" && git push origin
 
 {{% /details %}}
 
-Now you can try to sync your applicaion with following command:
+Now you can try to sync your applicaion as follows:
 
 {{% onlyWhenNot no-argocd-cli %}}
 ```bash
@@ -169,7 +169,7 @@ Edit `application.yaml`, change `targetRevision` to `v1.0.1`, then re-apply:
 
 {{% /details %}}
 
-With the new created tag, ArgoCD is goingt to pick up and apply the latest changes and scales up the replica count to 2.
+With the new created tag, ArgoCD is going to pick up and apply the latest changes and scales up the replica count to 2.
 First let us sync the changes and check if the ArgoCD App is in Sync.
 
 {{% onlyWhenNot no-argocd-cli %}}
