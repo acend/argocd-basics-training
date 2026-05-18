@@ -4,7 +4,7 @@ weight: 91
 onlyWhen: orphaned-resources
 ---
 
-This lab contains demonstrates how to find orphaned top-level resources with Argo CD. Orphaned resources are not managed by Argo CD and could be potentially removed from cluster.
+This lab demonstrates how to find orphaned top-level resources with Argo CD. Orphaned resources are not managed by Argo CD and could be potentially removed from cluster.
 
 
 ## {{% task %}} Create application and project
@@ -68,12 +68,17 @@ spec:
 {{% param cliToolName %}} apply -f application.yaml
 ```
 
-Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** on the `argo-$USER` application.
 {{% /onlyWhen %}}
 
 {{% alert title="Note" color="info" %}}
+{{% onlyWhen no-argocd-cli %}}
+The field `orphanedResources` enables the determinability of orphaned resources in Argo CD. After a refresh you will see them in the user interface on the project when selecting the checkbox _Orphaned Resources_.
+With `orphanedResources.warn: 'true'`, for each Argo CD application with orphaned resources in the destination namespace a warning will be shown in the user interface.
+{{% /onlyWhen %}}
+{{% onlyWhenNot no-argocd-cli %}}
 The flag `--orphaned-resources` enables the determinability of orphaned resources in Argo CD. After a refresh you will see them in the user interface on the project when selecting the checkbox _Orphaned Resources_.
 With the flag `--orphaned-resources-warn` enabled, for each Argo CD application with orphaned resources in the destination namespace a warning will be shown in the user interface.
+{{% /onlyWhenNot %}}
 {{% /alert %}}
 
 
@@ -118,7 +123,7 @@ EOF
 ```
 
 {{% alert title="Note" color="info" %}}
-This service will be detected as orphaned resource because it is not managed by Argo CD. All resources which are managed by Argo CD are marked with the label `app.kubernetes.io/instance` per default. The key of the label can be changed with the setting `application.instanceLabelKey`. See [documentation](https://argoproj.github.io/argo-cd/faq/#why-is-my-app-out-of-sync-even-after-syncing) for further details.
+This service will be detected as orphaned resource because it is not managed by Argo CD. All resources which are managed by Argo CD are marked with the annotation `argocd.argoproj.io/tracking-id` per default.
 {{% /alert %}}
 
 
