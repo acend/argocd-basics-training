@@ -68,9 +68,9 @@ git push
 Now let us create the parent Application which deploys our child applications as Custom Resources.
 Note the three paramters
 
-* `--sync-policy automated` Set the sync policy to automated. This ensures that our child applications will be created and synced per default
-* `--self-heal` Enable self heal and ensure that the parent application reconcile the child application
-* `--auto-prune` Ensure that if the parent application gets deleted, it also delete the their child applications
+* {{% onlyWhenNot no-argocd-cli %}}`--sync-policy automated`{{% /onlyWhenNot %}}{{% onlyWhen no-argocd-cli %}}`syncPolicy.automated`{{% /onlyWhen %}} Set the sync policy to automated. This ensures that our child applications will be created and synced per default
+* {{% onlyWhenNot no-argocd-cli %}}`--self-heal`{{% /onlyWhenNot %}}{{% onlyWhen no-argocd-cli %}}`syncPolicy.automated.selfHeal`{{% /onlyWhen %}} Enable self heal and ensure that the parent application reconcile the child application
+* {{% onlyWhenNot no-argocd-cli %}}`--auto-prune`{{% /onlyWhenNot %}}{{% onlyWhen no-argocd-cli %}}`syncPolicy.automated.prunte`{{% /onlyWhen %}} Ensure that if the parent application gets deleted, it also delete the their child applications
 
 {{% onlyWhenNot no-argocd-cli %}}
 ```bash
