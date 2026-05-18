@@ -31,7 +31,7 @@ The following configuration options are available for Kustomize:
 * `commonLabels` is a string map of an additional labels
 * `commonAnnotations` is a string map of an additional annotations
 
-Use the following command to set those parameters:
+The parameters can be set as follows:
 
 {{% onlyWhenNot no-argocd-cli %}}
 ```bash
@@ -45,6 +45,11 @@ namePrefix: <namePrefix>
 ```
 {{% /onlyWhen %}}
 
+{{% alert title="Warning" color="warning" %}}
+Again, the [The Argo CD parameter overrides](https://argoproj.github.io/argo-cd/user-guide/parameters/) feature is provided mainly as a convenience to developers and is intended to be used in dev/test environments, vs. production environments.
+
+Many consider this feature as anti-pattern to GitOps. So only use this feature when no other option is available!
+{{% /alert %}}
 
 ### Further Docs
 
@@ -134,7 +139,7 @@ Edit `argocd-kustomize-application.yaml` to add automated sync policy, then re-a
 
 ## {{% task %}} Set a configuration parameter
 
-We can set the `kustomize` configuration parameter with the following command:
+We can set the `kustomize` configuration parameter as follows:
 
 {{% onlyWhenNot no-argocd-cli %}}
 ```bash
