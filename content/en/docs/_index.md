@@ -39,7 +39,6 @@ Kubernetes manifests can be specified in several ways:
 
 * [kustomize](https://kustomize.io/) applications
 * [helm](https://helm.sh/) charts
-* [ksonnet](https://github.com/ksonnet/ksonnet) applications (deprecated)
 * [jsonnet](https://jsonnet.org/) files
 * Plain directory of YAML/json manifests
 * Any custom config management tool configured as a config management plugin
@@ -80,7 +79,7 @@ The repository server is an internal service which maintains a local cache of th
 * repository URL
 * revision (commit, tag, branch)
 * application path
-* template specific settings: parameters, ksonnet environments, helm values.yaml
+* template specific settings: parameters, helm values.yaml
 
 
 ### Application Controller
