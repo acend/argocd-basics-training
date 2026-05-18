@@ -26,13 +26,13 @@ argocd app set argo-helm-$USER --values values-production.yaml
 ```yaml
 # In the Application spec.source.helm section:
 valueFiles:
-  - values-production.yaml
+  - values-base.yaml # shared values across envs
+  - values-production.yaml # higher precedence - env specific
 ```
 {{% /onlyWhen %}}
-The `--values` flag can be repeated to support multiple values files.
 
 {{% alert title="Info" color="info" %}}
-Values files must be in the same git repository as the Helm chart. The files can be in a different location in which case it can be accessed using a relative path relative to the root directory of the Helm chart.
+Values files do not necessarily have to be in the same git repository as the Helm chart. For that use case, or if you want to use a public helm chart with values from your own git repository, the [Multiple Sources](https://argo-cd.readthedocs.io/en/latest/user-guide/multiple_sources) feature can be used. Check the [docs](https://argo-cd.readthedocs.io/en/latest/user-guide/multiple_sources/#helm-value-files-from-external-git-repository) if you are interested in that.
 {{% /alert %}}
 
 
@@ -55,7 +55,7 @@ parameters:
 {{% /onlyWhen %}}
 
 {{% alert title="Warning" color="warning" %}}
-Argo CD provides a mechanism to override the parameters of Argo CD applications. [The Argo CD parameter overrides](https://argoproj.github.io/argo-cd/user-guide/parameters/) feature is provided mainly as a convenience to developers and is intended to be used in dev/test environments, vs. production environments.
+[The Argo CD parameter overrides](https://argoproj.github.io/argo-cd/user-guide/parameters/) feature is provided mainly as a convenience to developers and is intended to be used in dev/test environments, vs. production environments.
 
 Many consider this feature as anti-pattern to GitOps. So only use this feature when no other option is available!
 {{% /alert %}}
@@ -63,9 +63,10 @@ Many consider this feature as anti-pattern to GitOps. So only use this feature w
 
 ### Helm Release Name
 
-By default, the Helm release name is equal to the Application name to which it belongs. Sometimes, especially on a centralised ArgoCD, you may want to override that name, and it is possible with the `release-name` flag on the cli:
+By default, the Helm release name is equal to the Application name to which it belongs. Sometimes, especially on a centralised ArgoCD, you may want to override that name.
 
 {{% onlyWhenNot no-argocd-cli %}}
+For this purpose, the cli provides the `release-name` flag:
 ```bash
 argocd app set argo-helm-$USER --release-name <release>
 ```
@@ -76,10 +77,6 @@ argocd app set argo-helm-$USER --release-name <release>
 releaseName: <release>
 ```
 {{% /onlyWhen %}}
-
-{{% alert title="Warning" color="warning" %}}
-Please note that overriding the Helm release name might cause problems when the chart you are deploying is using the app.kubernetes.io/instance label. ArgoCD injects this label with the value of the Application name for tracking purposes.
-{{% /alert %}}
 
 
 ### Helm Hooks
@@ -178,7 +175,7 @@ Edit `argocd-helm-application.yaml` to add automated sync policy, then re-apply:
 
 ## {{% task %}} Scale the deployment to 2 replicas
 
-We can set the `helm` parameter with the following command:
+We can set the `helm` parameter as follows:
 
 {{% onlyWhenNot no-argocd-cli %}}
 ```bash
@@ -206,7 +203,7 @@ Edit `argocd-helm-application.yaml` to add the parameter override in `spec.sourc
 Only use this way of setting params in dev and test stages. Not for Production!
 {{% /alert %}}
 
-Since the `sync-policy` is set to `automated` the second pod will be deployed immediately.
+Since the `sync-policy` is set to `automated` the second pod will be deployed immediately after the next refresh.
 
 
 ## {{% task %}} Ingress
