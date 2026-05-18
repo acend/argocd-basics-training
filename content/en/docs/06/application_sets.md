@@ -108,7 +108,7 @@ spec:
 ```
 {{% /onlyWhen %}}
 
-{{% alert title="Note" color="info" %}}Please notice the `dest-namespace`, ApplicationSets needs to be deployed within the `argocd` namespace{{% /alert %}}
+{{% alert title="Note" color="info" %}}Please notice the `dest-namespace`, ApplicationSets needs to be deployed within the `{{% param argoInfraNamespace %}}` namespace{{% /alert %}}
 
 You should now be able to see three ArgoCD Applications postfixed with your `<username>`:
 
