@@ -6,7 +6,6 @@ menu:
     weight: 2
 ---
 
-{{% onlyWhenNot centris %}}
 [Argo CD](https://argoproj.github.io/argo-cd/) is a part of the [Argo Project](https://argoproj.github.io/) and affiliated under the [Cloud Native Computing Foundation (CNCF)](https://www.cncf.io/). The project is just under three years old, completely open source, and primarily implemented in Go.
 
 As the name suggests, Argo CD takes care of the continuous delivery aspect of CI/CD. Continuous integration is handled by a CI tool such as GitLab CI/CD, Jenkins, Tekton or GitHub Actions. The core of Argo CD consists of a Kubernetes controller, which continuously compares the live-state with the desired-state. The live-state is tapped from the Kubernetes API, and the desired-state is persisted in the form of manifests in YAML or JSON in a Git repository. Argo CD helps to point out deviations of the states, to display the deviations or to autonomously restore the desired state.
@@ -48,7 +47,6 @@ Argo CD automates the deployment of the desired application states in the specif
 For a quick 10 minute overview of Argo CD, check out the demo presented to the Sig Apps community meeting:
 
 {{< youtube aWDIQMbp1cc >}}
-{{% /onlyWhenNot %}}
 
 
 ## Argo CD Architecture

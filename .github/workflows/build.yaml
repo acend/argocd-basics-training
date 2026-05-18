@@ -64,17 +64,6 @@ jobs:
           push: true
           tags: |
             quay.io/acend/argocd-basics-training:pr-${{ github.event.pull_request.number }}-puzzle
-      -
-        name: Build Centris Version
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: ./Dockerfile
-          build-args: |
-            TRAINING_HUGO_ENV=centris
-          push: true
-          tags: |
-            quay.io/acend/argocd-basics-training:pr-${{ github.event.pull_request.number }}-centris
       - 
         name: 'Install Helm'
         uses: azure/setup-helm@v4
@@ -110,7 +99,6 @@ jobs:
           kubectl rollout restart deployment/${TRAINING_HELM_RELEASE}-${TRAINING_HELM_NAME}-acend --kubeconfig $HOME/.kube/config --namespace $TRAINING_NAMESPACE
           kubectl rollout restart deployment/${TRAINING_HELM_RELEASE}-${TRAINING_HELM_NAME}-techlab --kubeconfig $HOME/.kube/config --namespace $TRAINING_NAMESPACE
           kubectl rollout restart deployment/${TRAINING_HELM_RELEASE}-${TRAINING_HELM_NAME}-puzzle --kubeconfig $HOME/.kube/config --namespace $TRAINING_NAMESPACE
-          kubectl rollout restart deployment/${TRAINING_HELM_RELEASE}-${TRAINING_HELM_NAME}-centris --kubeconfig $HOME/.kube/config --namespace $TRAINING_NAMESPACE
       -
         name: Comment PR Environments in PR
         uses: marocchino/sticky-pull-request-comment@v2
@@ -121,4 +109,3 @@ jobs:
            * acend version <https://argocd-basics-pr-${{ github.event.pull_request.number }}.training.acend.ch>
            * techlab version <https://argocd-techlab-pr-${{ github.event.pull_request.number }}.training.acend.ch>
            * puzzle version <https://argocd-basics-pr-${{ github.event.pull_request.number }}.training.puzzle.ch>
-           * centris version <https://argocd-centris-pr-${{ github.event.pull_request.number }}.training.acend.ch>
