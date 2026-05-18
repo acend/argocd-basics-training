@@ -51,6 +51,7 @@ Again, the [The Argo CD parameter overrides](https://argoproj.github.io/argo-cd/
 Many consider this feature as anti-pattern to GitOps. So only use this feature when no other option is available!
 {{% /alert %}}
 
+
 ### Further Docs
 
 Read more about the kustomize integration in the [official documentation](https://argo-cd.readthedocs.io/en/stable/user-guide/kustomize/)
