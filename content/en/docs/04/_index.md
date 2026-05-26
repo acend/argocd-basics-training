@@ -4,7 +4,7 @@ weight: 4
 onlyWhen: sync-phases-and-waves
 ---
 
-In this Lab you are going to learn about [Sync Phases and Waves](https://argoproj.github.io/argo-cd/user-guide/sync-waves/).
+In this Lab you are going to learn about [Sync Phases and Waves](https://argo-cd.readthedocs.io/en/stable/user-guide/sync-waves/).
 
 
 ## Sync Phases and Waves

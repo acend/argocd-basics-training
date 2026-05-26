@@ -4,7 +4,7 @@ weight: 3
 onlyWhen: resource-hooks
 ---
 
-In this Lab you are going to learn about [Resource Hooks](https://argoproj.github.io/argo-cd/user-guide/resource_hooks/).
+In this Lab you are going to learn about [Resource Hooks](https://argo-cd.readthedocs.io/en/stable/user-guide/sync-waves/).
 
 
 ## Resource Hooks
@@ -39,7 +39,7 @@ Named hooks (i.e. ones with `/metadata/name`) will only be created once. If you 
 {{% /alert %}}
 
 {{% alert  color="info" title="Note" %}}
-Hooks are not run during a [selective sync](https://argoproj.github.io/argo-cd/user-guide/selective_sync/)
+Hooks are not run during a [selective sync](https://argo-cd.readthedocs.io/en/stable/user-guide/selective_sync/)
 {{% /alert %}}
 
 

@@ -46,7 +46,7 @@ Among many other features, Jsonnet can help to reduce duplications.
 
 ### Further Docs
 
-Read more about the jsonnet integration in the [official documentation](https://argoproj.github.io/argo-cd/user-guide/jsonnet/)
+Read more about the jsonnet integration in the [official documentation](https://argo-cd.readthedocs.io/en/stable/user-guide/jsonnet/)
 
 
 ## {{% task %}} Deploy the simple-example with jsonnet

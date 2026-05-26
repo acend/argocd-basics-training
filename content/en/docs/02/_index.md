@@ -697,7 +697,7 @@ Now the sync should work. Argo CD use the configured credentials to authenticate
 argocd app sync argo-$USER
 ```
 {{% /onlyWhenNot %}}
-You can define [credential templates](https://argoproj.github.io/argo-cd/user-guide/private-repositories/#credential-templates) when using the same credential for multiple Git repositories. The configured credentials are used for each Git repository beginning with the configured URL.
+You can define [credential templates](https://argo-cd.readthedocs.io/en/stable/user-guide/private-repositories/#credential-templates) when using the same credential for multiple Git repositories. The configured credentials are used for each Git repository beginning with the configured URL.
 {{% onlyWhenNot no-argocd-cli %}}
 The following command will create a credential which matches all git repositories for your username (e.g. https://\<username>@{{% param giteaUrl %}}/\<username>)
 ```bash
@@ -734,7 +734,7 @@ Finally make your personal Git repository public again for the following labs. U
 TLS certificates and SSH private keys are supported alternative authentication methods by Argo CD. Proxy support can be configured as well in the repository settings.
 {{% /alert %}}
 
-Have a look in the [documentation](https://argoproj.github.io/argo-cd/user-guide/private-repositories/) for detailed information about accessing private repositories.
+Have a look in the [documentation](https://argo-cd.readthedocs.io/en/stable/user-guide/private-repositories/) for detailed information about accessing private repositories.
 {{% onlyWhen no-argocd-cli %}}
 Since the forked repository is public, no additional credential configuration is needed. Private repository access is managed via the Argo CD UI under **Settings → Repositories** if required.
 {{% /onlyWhen %}}

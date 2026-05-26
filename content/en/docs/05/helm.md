@@ -55,7 +55,7 @@ parameters:
 {{% /onlyWhen %}}
 
 {{% alert title="Warning" color="warning" %}}
-[The Argo CD parameter overrides](https://argoproj.github.io/argo-cd/user-guide/parameters/) feature is provided mainly as a convenience to developers and is intended to be used in dev/test environments, vs. production environments.
+[The Argo CD parameter overrides](https://argo-cd.readthedocs.io/en/stable/user-guide/parameters/) feature is provided mainly as a convenience to developers and is intended to be used in dev/test environments, vs. production environments.
 
 Many consider this feature as anti-pattern to GitOps. So only use this feature when no other option is available!
 {{% /alert %}}
@@ -86,7 +86,7 @@ releaseName: <release>
 
 ### Further Docs
 
-Read more about the helm integration in the [official documentation](https://argoproj.github.io/argo-cd/user-guide/helm/)
+Read more about the helm integration in the [official documentation](https://argo-cd.readthedocs.io/en/stable/user-guide/helm/)
 
 
 ## {{% task %}} Deploy the simple-example as Helm Chart

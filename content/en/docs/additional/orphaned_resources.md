@@ -175,4 +175,4 @@ argocd proj delete apps-$USER
 ```
 {{% /onlyWhen %}}
 
-Find more detailed information about [Orphaned Resources in the docs](https://argoproj.github.io/argo-cd/user-guide/orphaned-resources/).
+Find more detailed information about [Orphaned Resources in the docs](https://argo-cd.readthedocs.io/en/stable/user-guide/orphaned-resources/).

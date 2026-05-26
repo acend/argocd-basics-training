@@ -46,7 +46,7 @@ namePrefix: <namePrefix>
 {{% /onlyWhen %}}
 
 {{% alert title="Warning" color="warning" %}}
-Again, the [The Argo CD parameter overrides](https://argoproj.github.io/argo-cd/user-guide/parameters/) feature is provided mainly as a convenience to developers and is intended to be used in dev/test environments, vs. production environments.
+Again, the [The Argo CD parameter overrides](https://argo-cd.readthedocs.io/en/stable/user-guide/parameters/) feature is provided mainly as a convenience to developers and is intended to be used in dev/test environments, vs. production environments.
 
 Many consider this feature as anti-pattern to GitOps. So only use this feature when no other option is available!
 {{% /alert %}}

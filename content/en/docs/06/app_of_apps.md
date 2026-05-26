@@ -3,7 +3,7 @@ title: "App of Apps"
 weight: 61
 onlyWhen: app-of-apps
 ---
-The [App of apps](https://argoproj.github.io/argo-cd/operator-manual/cluster-bootstrapping/#app-of-apps-pattern) pattern is a declarative specification of one ArgoCD app that consists only of **other ArgoCD applications**.
+The [App of apps](https://argo-cd.readthedocs.io/en/stable/operator-manual/cluster-bootstrapping/#app-of-apps-pattern-alternative) pattern is a declarative specification of one ArgoCD app that consists only of **other ArgoCD applications**.
 This way we have the possibility to deploy multiple apps within just one single App definition.
 
 In Lab [2.7]({{< ref  "02" >}}) you learnt how ArgoCD stores its state as Application Custom Resources. The basic idea behind the App of Apps pattern therefore is to store those Application Custom Resources within an Argo CD Application.

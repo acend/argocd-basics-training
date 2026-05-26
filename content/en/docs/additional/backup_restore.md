@@ -13,7 +13,7 @@ This Lab only works on your local machine.
 
 As ArgoCD holds the whole state in native Kubernetes objects it's quite straightforward to make a backup and restore it in case of a disaster recovery.
 
-ArgoCD provides the utility [argocd-util](https://argoproj.github.io/argo-cd/operator-manual/server-commands/argocd-util) which is used by ArgoCD internally. The functions [export](https://argoproj.github.io/argo-cd/operator-manual/server-commands/argocd-util_export) and [import](https://argoproj.github.io/argo-cd/operator-manual/server-commands/argocd-util_import) can be used for backup and restore of a ArgoCD instance.
+ArgoCD provides the utility [argocd admin](https://argo-cd.readthedocs.io/en/stable/user-guide/commands/argocd_admin/) which is used by ArgoCD internally. The functions [export](https://argo-cd.readthedocs.io/en/stable/user-guide/commands/argocd_admin_export/) and [import](https://argo-cd.readthedocs.io/en/stable/user-guide/commands/argocd_admin_import/) can be used for backup and restore of a ArgoCD instance.
 
 As the tool is contained inside the ArgoCD server image you just can execute it from inside the container.
 
@@ -60,4 +60,4 @@ The same utility can be used to restore a previously made backup:
 docker run -i -v ~/.kube:/home/argocd/.kube --rm argoproj/argocd:$VERSION argocd admin import - < backup.yaml
 ```
 
-Reference: [Disaster recovery](https://argoproj.github.io/argo-cd/operator-manual/disaster_recovery/)
+Reference: [Disaster recovery](https://argo-cd.readthedocs.io/en/stable/operator-manual/disaster_recovery/)

@@ -88,7 +88,7 @@ The returned project name should correspond to your username.
 
 ## {{% task %}} Argo CD CLI
 
-The [Argo CD CLI](https://argoproj.github.io/argo-cd/cli_installation/) is a powerful tool to manage Argo CD and different applications. It's a self contained binary written in Go and available for Linux, Mac OS and Windows. Thanks to the fact that the CLI is implemented in Go, it can be easily integrated into scripts and build servers for automation purposes.
+The [Argo CD CLI](https://argo-cd.readthedocs.io/en/stable/cli_installation/) is a powerful tool to manage Argo CD and different applications. It's a self contained binary written in Go and available for Linux, Mac OS and Windows. Thanks to the fact that the CLI is implemented in Go, it can be easily integrated into scripts and build servers for automation purposes.
 
 
 ### Task 1.2.1: Getting familiar with the CLI
@@ -99,7 +99,7 @@ Print out the help of the CLI by typing
 argocd --help
 ```
 
-You will see a list with the available commands and flags. If you prefer to browse the manual in the browser you'll find it in the [online documentation](https://argoproj.github.io/argo-cd/user-guide/commands/argocd/).
+You will see a list with the available commands and flags. If you prefer to browse the manual in the browser you'll find it in the [online documentation](https://argo-cd.readthedocs.io/en/stable/user-guide/commands/argocd/).
 
 ```
 argocd controls a Argo CD server
@@ -175,6 +175,6 @@ echo "source <(argocd completion bash)" >> ~/.bashrc
 source ~/.bashrc
 ```
 
-Find further information in the [official documentation](https://argoproj.github.io/argo-cd/user-guide/commands/argocd_completion/)
+Find further information in the [official documentation](https://argo-cd.readthedocs.io/en/stable/user-guide/commands/argocd_completion/)
 
 {{% /onlyWhenNot %}}

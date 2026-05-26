@@ -239,4 +239,4 @@ argocd proj delete project-sync-windows-$USER
 ```
 {{% /onlyWhen %}}
 
-Find more detailed information about [Sync Windows in the docs](https://argoproj.github.io/argo-cd/user-guide/sync_windows/#sync-windows).
+Find more detailed information about [Sync Windows in the docs](https://argo-cd.readthedocs.io/en/stable/user-guide/sync_windows/).
