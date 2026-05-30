@@ -81,6 +81,7 @@ appDomain= "training.cluster.acend.ch"
 cliToolName = "kubectl"
 distroName = "Rancher"
 argoInfraNamespace = "argocd"
+clusterApiUrl = ""
 
 # Enable Lunr.js offline search
 offlineSearch = true
