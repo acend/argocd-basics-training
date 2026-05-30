@@ -220,7 +220,7 @@ apps   Deployment  <username>  simple-example  Synced  Progressing        deploy
 Check the [Argo CD UI](https://{{% param argoCdUrl %}}) to browse the application and their components.
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
-Create a file `example-application.yaml` with the following content:
+Create a file `example-application.yaml` in the directory you previously changed to `argocd-training-examples/applications` with the following content:
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
