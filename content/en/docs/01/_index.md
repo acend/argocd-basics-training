@@ -67,7 +67,16 @@ You can access Argo CD via the Web UI. Open your browser and navigate to [https:
 ### Task 1.1.3: Lab Setup
 
 
-Most of the labs will be done inside the {{% param distroName %}} project with your username. Verify that your oc tool is configured to point to the right project:
+Most of the labs will be done inside the {{% param distroName %}} project with your username.
+
+{{% onlyWhen centris %}}
+Go to the OpenShift console and click on your user icon on the top right side. In the menu, choose "copy login command" and then copy the `oc login` command from the newly opened page
+and paste it into the webshell terminal.
+
+{{% /onlyWhen %}}
+
+
+Verify that your oc tool is configured to point to the right project:
 
 
 ```s
@@ -76,7 +85,7 @@ oc project
 
 
 ```
-Using project "<username>" on server "https://<theClusterAPIURL>".
+Using project "<username>" on server "https://{{% param clusterApiUrl %}}".
 ```
 
 The returned project name should correspond to your username.

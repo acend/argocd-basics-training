@@ -11,11 +11,12 @@ enabledModule = "base centris manual-fork no-argocd-cli openshift getting-starte
 
 cliToolName = "oc"
 distroName = "OpenShift"
-argoInfraNamespace = "openshift-gitops"
+argoInfraNamespace = "argocd"
 
 github_repo = "https://github.com/acend/argocd-basics-training"
 github_branch = "main"
 
-argoCdUrl = "argocd.training.cluster.acend.ch"
-giteaUrl = "gitea.training.cluster.acend.ch"
-appDomain= "training.cluster.acend.ch"
+argoCdUrl = "https://argocd-server-argocd.apps.lab.clusters.t-k.ch/"
+giteaUrl = "gitea.apps.lab.clusters.t-k.ch"
+appDomain= "apps.lab.clusters.t-k.ch"
+clusterApiUrl = "console.apps.lab.clusters.t-k.ch"

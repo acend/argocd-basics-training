@@ -7,12 +7,12 @@ menu:
     weight: 1
 ---
 
-When not using the preinstalled Web IDE provided by your Trainer, it's also possible to use your local computer.
+When not using the preinstalled Web IDE provided by your trainer, it's also possible to use your own computer. If you're using the provided setup, you can skip this section.
 
 
 ## Local Environment Requirements
 
-In this Training its required to have the following tools locally installed on your computer:
+In this training it is required to have the following tools installed on your computer:
 
 * git
 * git bash on Windows
@@ -20,7 +20,7 @@ In this Training its required to have the following tools locally installed on y
 * Argo CD CLI
 {{% /onlyWhenNot %}}
 {{% onlyWhen openshift %}}
-* oc Tool (OpenShift Client) *Only when on OpenShift*
+* oc Tool (OpenShift Client)
 {{% /onlyWhen %}}
 * kubectl
 

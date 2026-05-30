@@ -10,10 +10,10 @@ Our lab setup consists of the following components:
 
 * Git Server ([Gitea](https://gitea.io)): [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/)
 * Argo CD Server: [https://{{% param argoCdUrl %}}](https://{{% param argoCdUrl %}})
-* {{% onlyWhenNot openshift %}}Kubernetes Cluster{{% /onlyWhenNot %}}{{% onlyWhen openshift %}}OpenShift Cluster{{% /onlyWhen %}}
+* {{% onlyWhenNot openshift %}}Kubernetes Cluster:{{% /onlyWhenNot %}}{{% onlyWhen openshift %}}OpenShift Cluster:{{% /onlyWhen %}} [https://{{% param clusterApiUrl %}}](https://{{% param clusterApiUrl %}})
 
 
-## {{% task %}} {{% onlyWhenNot manual-fork %}}Login to the Gitea and Clone the Repo{{% /onlyWhenNot %}}{{% onlyWhen manual-fork %}}Fork the Git repository{{% /onlyWhen %}}
+## {{% task %}} {{% onlyWhenNot manual-fork %}}Login to the Gitea{{% /onlyWhenNot %}}{{% onlyWhen manual-fork %}}Fork the Git repository{{% /onlyWhen %}}
 
 {{% onlyWhenNot manual-fork %}}
 
@@ -22,7 +22,7 @@ For this training we're using a Git Server deployed under [https://{{% param git
 Open your webbrowser and navigate to [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/).
 Login with the training credentials provided by the trainer (Login Button is in the upper right corner).
 
-{{% alert title="Note" color="info" %}}Users which have a personal Github account can just fork the Repository [argocd-training-examples](https://github.com/acend/argocd-training-examples) to their personal account. To fork the repository click on the top right of the Github on _Fork_.{{% /alert %}}
+{{% alert title="Note" color="info" %}}Users which have a personal Github account can just fork the Repository [argocd-training-examples](https://github.com/acend/argocd-training-examples) to their personal account. To fork the repository click on the top right of the Github on _Fork_. However, you should be aware that the ArgoCD instance is shared for all participants, meaning at some point a GitHub access token needs to be registered. Keep its permissions minimal and make sure it is disabled after this workshop. {{% /alert %}}
 
 {{% /onlyWhenNot  %}}
 
@@ -31,13 +31,27 @@ Login with the training credentials provided by the trainer (Login Button is in 
 
 As we are proceeding according to the GitOps principle we need some example resource manifests in a Git repository which we can edit.
 
-Users which have a personal Github account can just fork the Repository [argocd-training-examples](https://github.com/acend/argocd-training-examples) to their personal account. To fork the repository click on the top right of the Github on _Fork_.
-
-All other users can use the provided Gitea installation of the personal lab environment. Visit [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/) with your browser and register a new account with your personal username and a password that you can remember ;)
+Users which have a personal Github account can just fork the Repository [argocd-training-examples](https://github.com/acend/argocd-training-examples) to their personal account. To fork the repository click on the top right of the Github on _Fork_. However, you should be aware that the ArgoCD instance is shared for all participants, meaning at some point a GitHub access token needs to be registered. Keep its permissions minimal and make sure it is disabled after this workshop.
 
 {{% alert title="Note" color="info" %}}All the cli commands in this chapter must be executed in the terminal of the provided Web IDE.{{% /alert %}}
 
+All other users can use the provided Gitea installation of the personal lab environment.
+
+{{% onlyWhenNot openshift %}}
+
+Visit [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/) with your browser and register a new account with your personal username and a password that you can remember ;)
+
 ![Register new User in Gitea](gitea-register.png)
+
+{{% /onlyWhenNot%}}
+
+{{% onlyWhen openshift %}}
+
+Visit [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/) with your browser and log in using Dex which will take you to the OpenShift login page. After logging in, confirm your name and email address to create the Gitea account.
+
+![Register new User in Gitea](gitea-register-openshift.png)
+
+{{% /onlyWhen%}}
 
 Login with the new user and fork the existing Git repository from Github:
 
@@ -47,7 +61,7 @@ Login with the new user and fork the existing Git repository from Github:
 
 {{% /onlyWhen  %}}
 
-The Git Repository is available under your Repositories
+The Git Repository is available under your repositories.
 
 ![The Git Repository](gitea-repository.png)
 
@@ -55,13 +69,25 @@ By clicking on the repository link in the repository list you get to the detail 
 
 ![The Git Repository](gitea-repository-2.png)
 
-
 The **URL** of the Git repository, we'll be working with, will look like `https://{{% param giteaUrl %}}/<username>/argocd-training-examples.git`.
 
+
+## {{% task %}} Creating an access token for Gitea
+
+In Gitea, click your user icon in the top right corner and click "Settings". Then go to "Applications". Here you will create an access token for Gitea. You can use "webshell" for the token
+name and set the repository row to "read and write". This will be necessary for you to access your repository from the webshell.
+
+![Creating the access token on Gitea](gitea-access-token.png)
+
+After clicking "Generate token", it will be displayed once on top of the page. Make sure you copy the token somewhere you can still access later.
+
+Optional: If you're extra security-concious, create a second token with the name "argocd" and select "read" in the repository row. We will use it later in this section.
+This is optional because you can just use your webshell token for ArgoCD, but in practice you would not want write permissions where they're not needed.
+
+
+## {{% task %}} Cloning the repository to the webshell
+
 Within the Web IDE we set the `USER` environment variable to your personal `<username>`.
-```bash
-export USER=<user>
-```
 
 Verify that with the following command:
 ```bash
@@ -668,10 +694,11 @@ This allows us to manage the ArgoCD application definitions in a declarative way
 
 ## {{% task %}} Accessing a private Git repository
 
-{{% onlyWhenNot no-argocd-cli %}}
 The Git repository we have imported to Gitea is public available for the whole world. When accessing a private repository we have to provide credentials in form of a username/password pair or a ssh private key. In this task you will learn how to access a protected repo from Argo CD.
 
 First make the Git repository in Gitea private by checking the option `Visibility: Make Repository Private` under `Settings -> Repository`. Now sync the app again.
+
+{{% onlyWhenNot no-argocd-cli %}}
 
 ```bash
 argocd app sync argo-$USER
@@ -697,36 +724,35 @@ Now the sync should work. Argo CD use the configured credentials to authenticate
 argocd app sync argo-$USER
 ```
 {{% /onlyWhenNot %}}
-You can define [credential templates](https://argo-cd.readthedocs.io/en/stable/user-guide/private-repositories/#credential-templates) when using the same credential for multiple Git repositories. The configured credentials are used for each Git repository beginning with the configured URL.
-{{% onlyWhenNot no-argocd-cli %}}
-The following command will create a credential which matches all git repositories for your username (e.g. https://\<username>@{{% param giteaUrl %}}/\<username>)
-```bash
-argocd repocreds add https://{{% param giteaUrl %}}/$USER --username $USER
-```
-{{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
-A credential template is a `Secret` with the label `argocd.argoproj.io/secret-type: repo-creds` and a URL prefix instead of a full repository URL. Argo CD will use its credentials for every repository whose URL starts with that prefix.
+
+You will see an error indicating that authentication is required: `Failed to load target state: failed to generate manifest for source 1 of 1: rpc error: code = Unknown desc = failed to list refs: authentication required: Unauthorized`
+
+
+Argo CD can't any longer access the protected repository without providing credentials for authentication. Next create a repository secret with your Gitea credentials. The password could be your actual password or an access token.
+
+{{% alert title="Note" color="info" %}}This secret needs to be in the `argocd` namespace which is accessible by every participant in this lab. Keep the token permissions as low as possible (read on the repository suffices) and set a close expiration date!{{% /alert %}}
+
 
 ```yaml
 apiVersion: v1
 kind: Secret
 metadata:
-  name: my-group-creds
+  name: argocd-training-examples-creds-$USER
   namespace: {{% param argoInfraNamespace %}}
   labels:
-    argocd.argoproj.io/secret-type: repo-creds
+    argocd.argoproj.io/secret-type: repository
 stringData:
   type: git
-  url: https://{{% param giteaUrl %}}/my-group
-  username: my-user
-  password: my-token
+  url: https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git
+  username: $USER
+  password: <your-gitea-password>
 ```
 
 ```bash
-{{% param cliToolName %}} apply -f repo-creds-secret.yaml
+{{% param cliToolName %}} apply -f repo-secret.yaml
 ```
 
-For example, a template for `https://{{% param giteaUrl %}}/my-group` would cover all repositories within that group without needing a separate secret per repository.
 {{% /onlyWhen %}}
 Finally make your personal Git repository public again for the following labs. Uncheck the option `Visibility: Make Repository Private` under `Settings -> Repository` in the Gitea UI.
 
