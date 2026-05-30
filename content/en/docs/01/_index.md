@@ -4,6 +4,16 @@ weight: 1
 onlyWhen: getting-started
 ---
 
+## Lab Components
+
+Our lab setup consists of the following components:
+
+
+* Git Server ([Gitea](https://gitea.io)): [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/)
+* Argo CD Server: [https://{{% param argoCdUrl %}}](https://{{% param argoCdUrl %}})
+* {{% onlyWhenNot openshift %}}Kubernetes Cluster:{{% /onlyWhenNot %}}{{% onlyWhen openshift %}}OpenShift Cluster:{{% /onlyWhen %}} [https://{{% param clusterApiUrl %}}](https://{{% param clusterApiUrl %}})
+* WebIDE Development Environment with all too.
+
 
 ## {{% task %}} Web IDE
 
@@ -70,7 +80,7 @@ You can access Argo CD via the Web UI. Open your browser and navigate to [https:
 Most of the labs will be done inside the {{% param distroName %}} project with your username.
 
 {{% onlyWhen centris %}}
-Go to the OpenShift console and click on your user icon on the top right side. In the menu, choose "copy login command" and then copy the `oc login` command from the newly opened page
+Go to the OpenShift console (<https://{{% param clusterApiUrl %}}>) and click on your user icon on the top right side. In the menu, choose "copy login command" and then copy the `oc login` command from the newly opened page
 and paste it into the webshell terminal.
 
 Then run
