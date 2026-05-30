@@ -21,7 +21,7 @@ imagePrefix = "puzzle_"
 distroName = "Rancher"
 cliToolName = "kubectl"
 
-enabledModule = "base rancher"
+enabledModule = "base rancher getting-started simple-example resource-hooks sync-phases-and-waves tools helm kustomize jsonnet multiple-applications app-of-apps application-sets projects controlling-deployment-workflows sync-windows tracking-and-deployment-strategies additional-concepts backup-and-restore orphaned-resources"
 
 [[Languages.en.menu.main]]
 copyright = "Puzzle ITC GmbH"

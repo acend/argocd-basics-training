@@ -38,6 +38,18 @@ acendTraining:
         secretOverride: acend-wildcard
         appname: argocd-basics
         domain: training.puzzle.ch
+    - 
+      name: centris
+      replicaCount: 2
+      image:
+        repository: quay.io/acend/argocd-basics-training
+        pullPolicy: Always
+        tag: ""
+        tagsuffix: "-centris"
+      ingress:
+        secretOverride: acend-wildcard
+        appname: argocd-centris
+        domain: training.acend.ch
 
 
 nameOverride: "acend-argocd-basics"

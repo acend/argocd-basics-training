@@ -1,10 +1,10 @@
 ---
-title: "3. Resource Hooks"
+title: "Resource Hooks"
 weight: 3
-sectionnumber: 3
+onlyWhen: resource-hooks
 ---
 
-In this Lab you are going to learn about [Resource Hooks](https://argoproj.github.io/argo-cd/user-guide/resource_hooks/).
+In this Lab you are going to learn about [Resource Hooks](https://argo-cd.readthedocs.io/en/stable/user-guide/sync-waves/).
 
 
 ## Resource Hooks
@@ -39,7 +39,7 @@ Named hooks (i.e. ones with `/metadata/name`) will only be created once. If you 
 {{% /alert %}}
 
 {{% alert  color="info" title="Note" %}}
-Hooks are not run during a [selective sync](https://argoproj.github.io/argo-cd/user-guide/selective_sync/)
+Hooks are not run during a [selective sync](https://argo-cd.readthedocs.io/en/stable/user-guide/selective_sync/)
 {{% /alert %}}
 
 
@@ -63,7 +63,7 @@ metadata:
 * `BeforeHookCreation`: Any hook resource will be deleted before the new one is created.
 
 
-## Task {{% param sectionnumber %}}.1: Hook Example
+## {{% task %}} Hook Example
 
 In this task we're going to deploy an [example](https://github.com/acend/argocd-training-examples/tree/master/pre-post-sync-hook) which has `pre` and `post` hooks.
 
@@ -73,17 +73,49 @@ Create the new application `argo-hook-$USER` with the following command. It will
 * Sync: Deployment with name `pre-post-sync-hook`
 * PostSync: after Job
 
-
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app create argo-hook-$USER --repo https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git --path 'pre-post-sync-hook' --dest-server https://kubernetes.default.svc --dest-namespace $USER
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+Create a file `argocd-hook-application.yaml` with the following content and apply it:
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argo-hook-$USER
+  namespace: {{% param argoInfraNamespace %}}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git
+    targetRevision: HEAD
+    path: pre-post-sync-hook
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: $USER
+```
+
+```bash
+{{% param cliToolName %}} apply -f argocd-hook-application.yaml
+```
+{{% /onlyWhen %}}
 
 Sync the application
 
 {{% details title="Hint" %}}
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app sync argo-hook-$USER
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** on the `argo-hook-$USER` application.
+{{% /onlyWhen %}}
 {{% /details %}}
 
 And verify the deployment:
@@ -95,7 +127,7 @@ And verify the deployment:
 Or in the web UI.
 
 
-## Task {{% param sectionnumber %}}.2: Post-hook Curl (Optional)
+## {{% task %}} Post-hook Curl (Optional)
 
 Alter the post sync hook command from `sleep` to `curl https://acend.ch` (Could be used to send a notification to a Chat channel)
 The curl command is not available in the minimal `quay.io/acend/example-web-go` image. You can use `quay.io/acend/example-web-python` or different image.
@@ -122,12 +154,46 @@ spec:
 ```
 
 
-## Task {{% param sectionnumber %}}.3: Delete the Application
+## {{% task %}} Enable auto-sync and prune
+
+Enable automated sync and pruning before deletion to ensure all managed resources are cleaned up:
+
+{{% onlyWhenNot no-argocd-cli %}}
+```bash
+argocd app set argo-hook-$USER --sync-policy automated
+argocd app set argo-hook-$USER --self-heal
+argocd app set argo-hook-$USER --auto-prune
+```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+Edit `argocd-hook-application.yaml` to add automated sync policy, then re-apply:
+
+```yaml
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+```
+
+```bash
+{{% param cliToolName %}} apply -f argocd-hook-application.yaml
+```
+{{% /onlyWhen %}}
+
+
+## {{% task %}} Delete the Application
 
 Delete the application after you've explored the Argo CD Resources and the managed Kubernetes resources.
 
 {{% details title="Hint" %}}
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app delete argo-hook-$USER
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+```bash
+{{% param cliToolName %}} delete application argo-hook-$USER -n {{% param argoInfraNamespace %}}
+```
+{{% /onlyWhen %}}
 {{% /details %}}

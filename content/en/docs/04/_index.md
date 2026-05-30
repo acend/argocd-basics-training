@@ -1,10 +1,10 @@
 ---
-title: "4. Sync Phases and Waves"
+title: "Sync Phases and Waves"
 weight: 4
-sectionnumber: 4
+onlyWhen: sync-phases-and-waves
 ---
 
-In this Lab you are going to learn about [Sync Phases and Waves](https://argoproj.github.io/argo-cd/user-guide/sync-waves/).
+In this Lab you are going to learn about [Sync Phases and Waves](https://argo-cd.readthedocs.io/en/stable/user-guide/sync-waves/).
 
 
 ## Sync Phases and Waves
@@ -34,7 +34,7 @@ Pre-sync and post-sync can only contain hooks defined on annotations `argocd.arg
 You can specify the wave in the sync phase by setting an annotation `argocd.argoproj.io/sync-wave`. Hooks and resources are assigned to wave zero by default. The wave can be negative, so you can create a wave that runs before all other resources.
 
 
-## Task {{% param sectionnumber %}}.1: Sync Wave Example
+## {{% task %}} Sync Wave Example
 
 Let's now get our hands on a sync wave example.
 
@@ -53,17 +53,49 @@ Create the new application `argo-wave-$USER` with the following command. The App
 * Sync Wave 3
   * Job: maintenance-page-down
 
-
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app create argo-wave-$USER --repo https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git --path 'sync-wave' --dest-server https://kubernetes.default.svc --dest-namespace $USER
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+Create a file `argocd-wave-application.yaml` with the following content and apply it:
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argo-wave-$USER
+  namespace: {{% param argoInfraNamespace %}}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git
+    targetRevision: HEAD
+    path: sync-wave
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: $USER
+```
+
+```bash
+{{% param cliToolName %}} apply -f argocd-wave-application.yaml
+```
+{{% /onlyWhen %}}
 
 Sync the application:
 
 {{% details title="Hint" %}}
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app sync argo-wave-$USER
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** on the `argo-wave-$USER` application.
+{{% /onlyWhen %}}
 {{% /details %}}
 
 And verify the deployment:
@@ -73,12 +105,46 @@ And verify the deployment:
 ```
 
 
-## Task {{% param sectionnumber %}}.2: Delete the Application
+## {{% task %}} Enable auto-sync and prune
+
+Enable automated sync and pruning before deletion to ensure all managed resources are cleaned up:
+
+{{% onlyWhenNot no-argocd-cli %}}
+```bash
+argocd app set argo-wave-$USER --sync-policy automated
+argocd app set argo-wave-$USER --self-heal
+argocd app set argo-wave-$USER --auto-prune
+```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+Edit `argocd-wave-application.yaml` to add automated sync policy, then re-apply:
+
+```yaml
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+```
+
+```bash
+{{% param cliToolName %}} apply -f argocd-wave-application.yaml
+```
+{{% /onlyWhen %}}
+
+
+## {{% task %}} Delete the Application
 
 Delete the application after you've explored the Argo CD Resources and the managed Kubernetes resources.
 
 {{% details title="Hint" %}}
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app delete argo-wave-$USER
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+```bash
+{{% param cliToolName %}} delete application argo-wave-$USER -n {{% param argoInfraNamespace %}}
+```
+{{% /onlyWhen %}}
 {{% /details %}}

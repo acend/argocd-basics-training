@@ -1,0 +1,22 @@
+
+[Languages]
+[Languages.en]
+title = "ArgoCD Training"
+languageName = "English"
+weight = 1
+
+
+[params]
+enabledModule = "base centris manual-fork no-argocd-cli openshift getting-started simple-example resource-hooks sync-phases-and-waves tools helm kustomize jsonnet multiple-applications app-of-apps application-sets projects controlling-deployment-workflows sync-windows tracking-and-deployment-strategies additional-concepts orphaned-resources"
+
+cliToolName = "oc"
+distroName = "OpenShift"
+argoInfraNamespace = "argocd"
+
+github_repo = "https://github.com/acend/argocd-basics-training"
+github_branch = "main"
+
+argoCdUrl = "argocd-server-argocd.apps.lab.clusters.t-k.ch/"
+giteaUrl = "gitea.apps.lab.clusters.t-k.ch"
+appDomain= "apps.lab.clusters.t-k.ch"
+clusterApiUrl = "console.apps.lab.clusters.t-k.ch"

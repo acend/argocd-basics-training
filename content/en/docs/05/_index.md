@@ -1,10 +1,10 @@
 ---
-title: "5. Tools"
+title: "Tools"
 weight: 5
-sectionnumber: 5
+onlyWhen: tools
 ---
 
-In this Lab you are going to learn about different [application source tools](https://argoproj.github.io/argo-cd/user-guide/application_sources/).
+In this Lab you are going to learn about different [application source tools](https://argo-cd.readthedocs.io/en/stable/user-guide/application_sources/).
 
 
 ## Tools
@@ -13,7 +13,6 @@ As mentioned in the [introduction](../) Argo CD supports many different formats 
 
 * [kustomize](https://kustomize.io/) applications
 * [helm](https://helm.sh/) charts
-* [ksonnet](https://github.com/ksonnet/ksonnet) applications (deprecated)
 * [jsonnet](https://jsonnet.org/) files
 * Plain directory of YAML/json manifests
 * Any custom config management tool configured as a config management plugin
@@ -21,7 +20,7 @@ As mentioned in the [introduction](../) Argo CD supports many different formats 
 So far you have been using **plain YAML** manifest in the previous labs.
 
 {{% alert title="Warning" color="warning" %}}
-Argo CD provides a mechanism to override the parameters of Argo CD applications. [The Argo CD parameter overrides](https://argoproj.github.io/argo-cd/user-guide/parameters/) feature is provided mainly as a convenience to developers and is intended to be used in dev/test environments, vs. production environments.
+Argo CD provides a mechanism to override the parameters of Argo CD applications. [The Argo CD parameter overrides](https://argo-cd.readthedocs.io/en/stable/user-guide/parameters/) feature is provided mainly as a convenience to developers and is intended to be used in dev/test environments, vs. production environments.
 
 Many consider this feature as anti-pattern to GitOps. So only use this feature when no other option is available!
 {{% /alert %}}
@@ -29,7 +28,7 @@ Many consider this feature as anti-pattern to GitOps. So only use this feature w
 
 ### Tool Detection
 
-When the build tool is not specified explicitly in the [Argo CD Application](https://argoproj.github.io/argo-cd/operator-manual/declarative-setup/) CRD it will be detected:
+When the build tool is not specified explicitly in the [Argo CD Application](https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/) CRD it will be detected:
 
 * `Helm` if there's a file matching `Chart.yaml`.
 * `Kustomize` if there's a `kustomization.yaml`, `kustomization.yml`, or `Kustomization`

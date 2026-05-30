@@ -1,8 +1,7 @@
 ---
-title: "8.1 Tracking and Deployment Strategies"
+title: "Tracking and Deployment Strategies"
 weight: 81
-sectionnumber: 8.1
-onlyWhenNot: techlab
+onlyWhen: tracking-and-deployment-strategies
 ---
 
 If you are using ArgoCD with Git or Helm tools, ArgoCD gives you the availability to configure different tracking and deployment strategies.
@@ -40,7 +39,7 @@ This method is often used in development environment where you want to apply the
 The state at the specified Git tag or commit will be applied to the cluster. Pinning can achieved in two ways. Eiteher you can specifiy the full semver Git tag (v1.2.0) or a commit SHA. Usually the Git tag offers more flexibility while the commit SHA offers more immutuability. Commit pinning is generally the first choice for production environments.
 
 
-## Task {{% param sectionnumber %}}.1: Git version pinning
+## {{% task %}} Git version pinning
 
 In this task we're going to configure a version pinning with a Git tag. The goal of this task to show you how to pin a version from a Git tag and therefore freeze the deployment to specific commits.
 
@@ -56,6 +55,7 @@ git push origin --tags
 
 
 Re-create the simple application example:
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app create argo-example-$USER --repo https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git --path 'example-app' --dest-server https://kubernetes.default.svc --dest-namespace $USER
 ```
@@ -65,6 +65,33 @@ To pin the v1.0.0 version tag on our application execute the following command:
 ```bash
 argocd app set argo-example-$USER --revision v1.0.0
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+Create a file `application.yaml` with the following content and apply it:
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argo-example-$USER
+  namespace: {{% param argoInfraNamespace %}}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git
+    targetRevision: v1.0.0
+    path: example-app
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: $USER
+```
+
+```bash
+{{% param cliToolName %}} apply -f application.yaml
+```
+{{% /onlyWhen %}}
 {{% /details %}}
 
 
@@ -87,11 +114,16 @@ git add . && git commit -m "scale deployment replicas to 2" && git push origin
 
 {{% /details %}}
 
-Now you can try to sync your applicaion with following command:
+Now you can try to sync your applicaion as follows:
 
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app sync argo-example-$USER
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** on the `argo-example-$USER` application.
+{{% /onlyWhen %}}
 
 Check the number of configured replicas on the app deployment.
 
@@ -122,17 +154,27 @@ Execute the following command to create and push a new Git tag
 git tag v1.0.1 && git push origin --tags
 ```
 
+{{% onlyWhenNot no-argocd-cli %}}
 Execute the following command to set the revision to our new Git tag `v.1.0.1`.
 
 ```bash
 argocd app set argo-example-$USER --revision v1.0.1
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+Edit `application.yaml`, change `targetRevision` to `v1.0.1`, then re-apply:
+
+```bash
+{{% param cliToolName %}} apply -f application.yaml
+```
+{{% /onlyWhen %}}
 
 {{% /details %}}
 
-With the new created tag, ArgoCD is goingt to pick up and apply the latest changes and scales up the replica count to 2.
+With the new created tag, ArgoCD is going to pick up and apply the latest changes and scales up the replica count to 2.
 First let us sync the changes and check if the ArgoCD App is in Sync.
 
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app sync argo-example-$USER
 ```
@@ -142,6 +184,10 @@ Then diplay the status with following command:
 ```bash
 argocd app get argo-example-$USER
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** on the `argo-example-$USER` application, then verify the status in the UI.
+{{% /onlyWhen %}}
 
 If the app is in sync, you can check the number of replicas of the deployment.
 
@@ -158,11 +204,45 @@ simple-example   2/2     2            2           7m43s
 ```
 
 
-## Task {{% param sectionnumber %}}.2: Delete the Application
+## {{% task %}} Enable auto-sync and prune
+
+Enable automated sync and pruning before deletion to ensure all managed resources are cleaned up:
+
+{{% onlyWhenNot no-argocd-cli %}}
+```bash
+argocd app set argo-example-$USER --sync-policy automated
+argocd app set argo-example-$USER --self-heal
+argocd app set argo-example-$USER --auto-prune
+```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+Edit `application.yaml` to add automated sync policy, then re-apply:
+
+```yaml
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+```
+
+```bash
+{{% param cliToolName %}} apply -f application.yaml
+```
+{{% /onlyWhen %}}
+
+
+## {{% task %}} Delete the Application
 
 
 You can cascading delete the ArgoCD Application with the following command:
 
+{{% onlyWhenNot no-argocd-cli %}}
 ```bash
 argocd app delete argo-example-$USER
 ```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+```bash
+{{% param cliToolName %}} delete application argo-example-$USER -n {{% param argoInfraNamespace %}}
+```
+{{% /onlyWhen %}}

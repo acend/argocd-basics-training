@@ -7,6 +7,6 @@ weight = 1
 
 
 [params]
-enabledModule = "base techlab"
+enabledModule = "base techlab getting-started simple-example resource-hooks sync-phases-and-waves tools helm kustomize jsonnet"
 github_repo = ""
 github_branch = ""
