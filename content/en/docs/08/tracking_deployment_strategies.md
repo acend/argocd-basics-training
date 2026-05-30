@@ -75,6 +75,8 @@ kind: Application
 metadata:
   name: argo-example-$USER
   namespace: {{% param argoInfraNamespace %}}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
@@ -200,6 +202,33 @@ Now you can see in the output that the replica count has changed to 2.
 NAME             READY   UP-TO-DATE   AVAILABLE   AGE
 simple-example   2/2     2            2           7m43s
 ```
+
+
+## {{% task %}} Enable auto-sync and prune
+
+Enable automated sync and pruning before deletion to ensure all managed resources are cleaned up:
+
+{{% onlyWhenNot no-argocd-cli %}}
+```bash
+argocd app set argo-example-$USER --sync-policy automated
+argocd app set argo-example-$USER --self-heal
+argocd app set argo-example-$USER --auto-prune
+```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+Edit `application.yaml` to add automated sync policy, then re-apply:
+
+```yaml
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+```
+
+```bash
+{{% param cliToolName %}} apply -f application.yaml
+```
+{{% /onlyWhen %}}
 
 
 ## {{% task %}} Delete the Application

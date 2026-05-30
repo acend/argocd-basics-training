@@ -87,6 +87,8 @@ kind: Application
 metadata:
   name: argo-hook-$USER
   namespace: {{% param argoInfraNamespace %}}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
@@ -150,6 +152,33 @@ spec:
       restartPolicy: Never
   backoffLimit: 0
 ```
+
+
+## {{% task %}} Enable auto-sync and prune
+
+Enable automated sync and pruning before deletion to ensure all managed resources are cleaned up:
+
+{{% onlyWhenNot no-argocd-cli %}}
+```bash
+argocd app set argo-hook-$USER --sync-policy automated
+argocd app set argo-hook-$USER --self-heal
+argocd app set argo-hook-$USER --auto-prune
+```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+Edit `argocd-hook-application.yaml` to add automated sync policy, then re-apply:
+
+```yaml
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+```
+
+```bash
+{{% param cliToolName %}} apply -f argocd-hook-application.yaml
+```
+{{% /onlyWhen %}}
 
 
 ## {{% task %}} Delete the Application

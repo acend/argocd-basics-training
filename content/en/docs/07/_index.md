@@ -141,6 +141,8 @@ kind: Application
 metadata:
   name: project-app-$USER
   namespace: {{% param argoInfraNamespace %}}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: project-$USER
   source:
@@ -225,6 +227,33 @@ To allow `Service` again, remove the `namespaceResourceBlacklist` entry from `ap
 ```
 
 Sync the application again in the UI.
+{{% /onlyWhen %}}
+
+
+## {{% task %}} Enable auto-sync and prune
+
+Enable automated sync and pruning before deletion to ensure all managed resources are cleaned up:
+
+{{% onlyWhenNot no-argocd-cli %}}
+```bash
+argocd app set project-app-$USER --sync-policy automated
+argocd app set project-app-$USER --self-heal
+argocd app set project-app-$USER --auto-prune
+```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+Edit `application.yaml` to add automated sync policy, then re-apply:
+
+```yaml
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+```
+
+```bash
+{{% param cliToolName %}} apply -f application.yaml
+```
 {{% /onlyWhen %}}
 
 

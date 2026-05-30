@@ -109,6 +109,8 @@ kind: Application
 metadata:
   name: argo-helm-$USER
   namespace: {{% param argoInfraNamespace %}}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
@@ -218,14 +220,14 @@ Change the `helm/simple-example/values.yaml` file in your git repository
 ...
 ingress:
   enabled: true
+  ingressClassName: openshift-default
+  annotations:
+    route.openshift.io/termination: edge
   hosts:
     - host: helm-<username>.{{% param appDomain %}}
       paths:
       - path: /
-  tls: 
-    - hosts:
-        - helm-<username>.{{% param appDomain %}}
-      secretName: acend-wildcard
+  tls: []
 ...
 ```
 
@@ -255,14 +257,14 @@ Change the host in the `helm/simple-example/values-production.yaml` to the produ
 ...
 ingress:
   enabled: true
+  ingressClassName: openshift-default
+  annotations:
+    route.openshift.io/termination: edge
   hosts:
     - host: helm-<username>-prod.{{% param appDomain %}}
       paths:
       - path: /
-  tls: 
-    - hosts:
-        - helm-<username>-prod.{{% param appDomain %}}
-      secretName: acend-wildcard
+  tls: []
 ...
 ```
 
@@ -298,6 +300,8 @@ kind: Application
 metadata:
   name: argo-helm-prod-$USER
   namespace: {{% param argoInfraNamespace %}}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:

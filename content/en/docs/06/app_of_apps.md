@@ -30,12 +30,14 @@ To deploy the app of apps into our namespace we need to edit the three applicati
 
 
 <!-- markdownlint-disable -->
-{{< highlight YAML "hl_lines=4 8 13" >}}
+{{< highlight YAML "hl_lines=4 10 15" >}}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: <username>-app-of-apps-1
   namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
     namespace: <username>
@@ -88,6 +90,8 @@ kind: Application
 metadata:
   name: argo-aoa-$USER
   namespace: {{% param argoInfraNamespace %}}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:

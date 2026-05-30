@@ -51,6 +51,8 @@ kind: Application
 metadata:
   name: sync-windows-$USER
   namespace: {{% param argoInfraNamespace %}}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: project-sync-windows-$USER
   source:
@@ -219,6 +221,33 @@ Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** on `sy
 {{% /onlyWhen %}}
 
 Which now work flawless. Automatic syncs are still forbidden and will not occur between 08:00 and 20:00.
+
+
+## {{% task %}} Enable auto-sync and prune
+
+Enable automated sync and pruning before deletion to ensure all managed resources are cleaned up:
+
+{{% onlyWhenNot no-argocd-cli %}}
+```bash
+argocd app set sync-windows-$USER --sync-policy automated
+argocd app set sync-windows-$USER --self-heal
+argocd app set sync-windows-$USER --auto-prune
+```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+Edit `application.yaml` to add automated sync policy, then re-apply:
+
+```yaml
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+```
+
+```bash
+{{% param cliToolName %}} apply -f application.yaml
+```
+{{% /onlyWhen %}}
 
 
 ## {{% task %}} Housekeeping

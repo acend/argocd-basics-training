@@ -228,6 +228,8 @@ kind: Application
 metadata:
   name: argo-$USER
   namespace: {{% param argoInfraNamespace %}}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
@@ -245,12 +247,12 @@ Apply it to the cluster:
 {{% param cliToolName %}} apply -f example-application.yaml
 ```
 
-Expected output: `application 'example-application-<username>' created`
+Expected output: `application 'argo-$USER' created`
 
 Argo CD will now detect the application. Once the application is created, you can view its status:
 
 ```bash
-{{% param cliToolName %}} describe application example-application-$USER -n {{% param argoInfraNamespace %}}
+{{% param cliToolName %}} describe application argo-$USER -n {{% param argoInfraNamespace %}}
 ```
 
 Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** to deploy the resources. This command retrieves the manifests from the git repository and performs a {{% param cliToolName %}} apply on them. From now on, all resources are managed by Argo CD. Congrats, the first step in direction GitOps! :)
@@ -258,7 +260,7 @@ Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** to dep
 Once synced the application status will show as **Healthy**.
 
 ```bash
-{{% param cliToolName %}} get application example-application-$USER -n {{% param argoInfraNamespace %}}
+{{% param cliToolName %}} get application argo-$USER -n {{% param argoInfraNamespace %}}
 ```
 {{% /onlyWhen %}}
 
@@ -307,7 +309,7 @@ spec:
 Commit the changes and push them to your personal remote Git repository. After the Git push command a **password** input field will appear at the top of the Web IDE.
 
 ```bash
-git add .
+git add deployment.yaml
 git commit -m "Increased replicas to 2"
 git push
 ```
@@ -434,6 +436,8 @@ kind: Application
 metadata:
   name: argo-$USER
   namespace: {{% param argoInfraNamespace %}}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
@@ -546,6 +550,14 @@ spec:
     - simple-example-<username>.{{% param appDomain %}}
 ```
 
+Commit and Push the changes again, like you did before:
+
+
+```bash
+git add ingress.yaml
+git commit -m "Expose application"
+git push
+
 {{% /onlyWhenNot  %}}
 {{% onlyWhen openshift %}}
 To expose an application we need to specify a so called `route` resource. Create a `route.yaml` file next to the `deployment.yaml` in the example-app directory.
@@ -565,17 +577,16 @@ spec:
     weight: 100
   wildcardPolicy: None
 ```
-{{% /onlyWhen  %}}
-
 
 Commit and Push the changes again, like you did before:
 
 
 ```bash
-git add .
+git add route.yaml
 git commit -m "Expose application"
 git push
 ```
+{{% /onlyWhen  %}}
 
 After ArgoCD syncs the changes, you can access the example applications url: `https://simple-example-<username>.{{% param appDomain %}}`
 
@@ -599,8 +610,8 @@ You probably asked yourself: how can I delete deployed resources on the containe
 First delete the files `service.yaml` and {{% onlyWhenNot openshift %}}`ingress.yaml`{{% /onlyWhenNot %}}{{% onlyWhen openshift %}}`route.yaml`{{% /onlyWhen %}} from Git repository and push the changes:
 
 ```bash
-git add .
-git add --all && git commit -m 'Removes service and ingress' && git push
+git add git add route.yaml service.yaml
+git commit -m 'Removes service and ingress' && git push
 
 ```
 {{% onlyWhenNot no-argocd-cli %}}
@@ -694,7 +705,7 @@ This allows us to manage the ArgoCD application definitions in a declarative way
 
 ## {{% task %}} Accessing a private Git repository
 
-The Git repository we have imported to Gitea is public available for the whole world. When accessing a private repository we have to provide credentials in form of a username/password pair or a ssh private key. In this task you will learn how to access a protected repo from Argo CD.
+The Git repository we have imported to Gitea is publicly available for the whole world. When accessing a private repository we have to provide credentials in form of a username/password pair or a SSH private key. In this task you will learn how to access a protected repo from Argo CD.
 
 First make the Git repository in Gitea private by checking the option `Visibility: Make Repository Private` under `Settings -> Repository`. Now sync the app again.
 
@@ -782,5 +793,5 @@ Hit `y` to confirm the deletion and this will delete the `Application` manifests
 {{% param cliToolName %}} delete application argo-$USER -n {{% param argoInfraNamespace %}}
 ```
 
-This will delete the `Application` resource. Since automated pruning is enabled, Argo CD will also delete the managed `Deployment` and `Service` from the namespace.
+This will delete the `Application` resource. Since automated pruning is enabled and a finalizer is set on the `Application`, Argo CD will also delete the managed `Deployment` and `Service` from the namespace.
 {{% /onlyWhen %}}

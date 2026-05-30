@@ -162,6 +162,8 @@ kind: Application
 metadata:
   name: argo-jsonnet-$USER
   namespace: {{% param argoInfraNamespace %}}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:

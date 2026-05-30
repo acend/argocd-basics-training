@@ -34,6 +34,8 @@ kind: Application
 metadata:
   name: argo-$USER
   namespace: {{% param argoInfraNamespace %}}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: apps-$USER
   source:
@@ -155,6 +157,33 @@ OrphanedResourceWarning  Application has 1 orphaned resources  2021-09-02 16:20:
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
 Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Refresh** on the `argo-$USER` application. Navigate to the application details — you will see the `black-hole` service listed as an orphaned resource with an `OrphanedResourceWarning`.
+{{% /onlyWhen %}}
+
+
+## {{% task %}} Enable auto-sync and prune
+
+Enable automated sync and pruning before deletion to ensure all managed resources are cleaned up:
+
+{{% onlyWhenNot no-argocd-cli %}}
+```bash
+argocd app set argo-$USER --sync-policy automated
+argocd app set argo-$USER --self-heal
+argocd app set argo-$USER --auto-prune
+```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+Edit `application.yaml` to add automated sync policy, then re-apply:
+
+```yaml
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+```
+
+```bash
+{{% param cliToolName %}} apply -f application.yaml
+```
 {{% /onlyWhen %}}
 
 

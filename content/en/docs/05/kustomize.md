@@ -77,6 +77,8 @@ kind: Application
 metadata:
   name: argo-kustomize-$USER
   namespace: {{% param argoInfraNamespace %}}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
@@ -203,6 +205,8 @@ kind: Application
 metadata:
   name: argo-kustomize-prod-$USER
   namespace: {{% param argoInfraNamespace %}}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:

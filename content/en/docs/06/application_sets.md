@@ -88,6 +88,8 @@ kind: Application
 metadata:
   name: argo-appset-$USER
   namespace: {{% param argoInfraNamespace %}}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
@@ -236,6 +238,8 @@ kind: Application
 metadata:
   name: argo-appset-matrix-$USER
   namespace: {{% param argoInfraNamespace %}}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:

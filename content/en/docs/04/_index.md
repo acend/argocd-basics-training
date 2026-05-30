@@ -67,6 +67,8 @@ kind: Application
 metadata:
   name: argo-wave-$USER
   namespace: {{% param argoInfraNamespace %}}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
@@ -101,6 +103,33 @@ And verify the deployment:
 ```bash
 {{% param cliToolName %}} get pod --namespace $USER --watch
 ```
+
+
+## {{% task %}} Enable auto-sync and prune
+
+Enable automated sync and pruning before deletion to ensure all managed resources are cleaned up:
+
+{{% onlyWhenNot no-argocd-cli %}}
+```bash
+argocd app set argo-wave-$USER --sync-policy automated
+argocd app set argo-wave-$USER --self-heal
+argocd app set argo-wave-$USER --auto-prune
+```
+{{% /onlyWhenNot %}}
+{{% onlyWhen no-argocd-cli %}}
+Edit `argocd-wave-application.yaml` to add automated sync policy, then re-apply:
+
+```yaml
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+```
+
+```bash
+{{% param cliToolName %}} apply -f argocd-wave-application.yaml
+```
+{{% /onlyWhen %}}
 
 
 ## {{% task %}} Delete the Application

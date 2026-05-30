@@ -73,6 +73,13 @@ Most of the labs will be done inside the {{% param distroName %}} project with y
 Go to the OpenShift console and click on your user icon on the top right side. In the menu, choose "copy login command" and then copy the `oc login` command from the newly opened page
 and paste it into the webshell terminal.
 
+Then run
+
+
+```s
+oc project $USER
+```
+
 {{% /onlyWhen %}}
 
 
