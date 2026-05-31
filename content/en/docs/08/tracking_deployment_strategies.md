@@ -73,19 +73,19 @@ Create a file `application.yaml` with the following content and apply it:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: argo-example-$USER
+  name: argo-example-<username>
   namespace: {{% param argoInfraNamespace %}}
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
-    repoURL: https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git
+    repoURL: https://{{% param giteaUrl %}}/<username>/argocd-training-examples.git
     targetRevision: v1.0.0
     path: example-app
   destination:
     server: https://kubernetes.default.svc
-    namespace: $USER
+    namespace: <username>
 ```
 
 ```bash

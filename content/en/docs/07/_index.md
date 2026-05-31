@@ -119,14 +119,14 @@ Update `appproject.yaml` to add the permitted sources and destinations, then re-
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: project-$USER
+  name: project-<username>
   namespace: {{% param argoInfraNamespace %}}
 spec:
   sourceRepos:
     - '*'
   destinations:
     - server: https://kubernetes.default.svc
-      namespace: 'user*'
+      namespace: '<username>'
 ```
 
 ```bash
@@ -139,19 +139,19 @@ Now create a file `application.yaml` with the following content and apply it:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: project-app-$USER
+  name: project-app-<username>
   namespace: {{% param argoInfraNamespace %}}
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  project: project-$USER
+  project: project-<username>
   source:
     repoURL: https://github.com/acend/argocd-training-examples.git
     targetRevision: HEAD
     path: example-app
   destination:
     server: https://kubernetes.default.svc
-    namespace: $USER
+    namespace: <username>
 ```
 
 ```bash

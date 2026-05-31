@@ -85,19 +85,19 @@ Create a file `argocd-hook-application.yaml` with the following content and appl
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: argo-hook-$USER
+  name: argo-hook-<username>
   namespace: {{% param argoInfraNamespace %}}
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
-    repoURL: https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git
+    repoURL: https://{{% param giteaUrl %}}/<username>/argocd-training-examples.git
     targetRevision: HEAD
     path: pre-post-sync-hook
   destination:
     server: https://kubernetes.default.svc
-    namespace: $USER
+    namespace: <username>
 ```
 
 ```bash

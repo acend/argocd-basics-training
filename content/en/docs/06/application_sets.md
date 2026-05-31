@@ -86,14 +86,14 @@ Create the following `application.yaml` and apply it:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: argo-appset-$USER
+  name: argo-appset-<username>
   namespace: {{% param argoInfraNamespace %}}
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
-    repoURL: https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git
+    repoURL: https://{{% param giteaUrl %}}/<username>/argocd-training-examples.git
     targetRevision: HEAD
     path: application-set/simple-example
   destination:

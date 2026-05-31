@@ -17,10 +17,17 @@ Our lab setup consists of the following components:
 
 {{% onlyWhenNot manual-fork %}}
 
-For this training we're using a Git Server deployed under [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/). We also forked the Argo CD Example Repo for your `<username>`.
+For this training we're using a Git Server deployed under [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/). We also prepared the Argo CD Example Repo for your `<username>`.
 
 Open your webbrowser and navigate to [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/).
+
+{{% onlyWhenNot openshift %}}
 Login with the training credentials provided by the trainer (Login Button is in the upper right corner).
+{{% /onlyWhenNot  %}}
+{{% onlyWhen openshift %}}
+Click the **Sign in with dex** or **Anmelden mit dex** Button to login (Login Button is in the upper right corner).
+{{% /onlyWhen%}}
+
 
 {{% alert title="Note" color="info" %}}Users which have a personal Github account can just fork the Repository [argocd-training-examples](https://github.com/acend/argocd-training-examples) to their personal account. To fork the repository click on the top right of the Github on _Fork_. However, you should be aware that the ArgoCD instance is shared for all participants, meaning at some point a GitHub access token needs to be registered. Keep its permissions minimal and make sure it is disabled after this workshop. {{% /alert %}}
 
@@ -43,17 +50,17 @@ Visit [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/) with you
 
 ![Register new User in Gitea](gitea-register.png)
 
+Login with the new user and fork the existing Git repository from Github:
+
 {{% /onlyWhenNot%}}
 
 {{% onlyWhen openshift %}}
 
-Visit [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/) with your browser and log in using Dex which will take you to the OpenShift login page. After logging in, confirm your name and email address to create the Gitea account.
+Visit [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/) with your browser and login using **Dex** which will take you to the OpenShift login page, where you can login.
 
-![Register new User in Gitea](gitea-register-openshift.png)
+Migrate the existing Git repository from Github:
 
 {{% /onlyWhen%}}
-
-Login with the new user and fork the existing Git repository from Github:
 
 1. Select _Create_ on the top right -> _New Migration_ -> Select _GitHub_
 1. Migrate / Clone From URL: https://github.com/acend/argocd-training-examples.git
@@ -72,24 +79,12 @@ By clicking on the repository link in the repository list you get to the detail 
 The **URL** of the Git repository, we'll be working with, will look like `https://{{% param giteaUrl %}}/<username>/argocd-training-examples.git`.
 
 
-## {{% task %}} Creating an access token for Gitea
-
-In Gitea, click your user icon in the top right corner and click "Settings". Then go to "Applications". Here you will create an access token for Gitea. You can use "webshell" for the token
-name and set the repository row to "read and write". This will be necessary for you to access your repository from the webshell.
-
-![Creating the access token on Gitea](gitea-access-token.png)
-
-After clicking "Generate token", it will be displayed once on top of the page. Make sure you copy the token somewhere you can still access later.
-
-Optional: If you're extra security-concious, create a second token with the name "argocd" and select "read" in the repository row. We will use it later in this section.
-This is optional because you can just use your webshell token for ArgoCD, but in practice you would not want write permissions where they're not needed.
-
-
 ## {{% task %}} Cloning the repository to the webshell
 
 Within the Web IDE we set the `USER` environment variable to your personal `<username>`.
 
 Verify that with the following command:
+
 ```bash
 echo $USER
 ```
@@ -222,23 +217,32 @@ Check the [Argo CD UI](https://{{% param argoCdUrl %}}) to browse the applicatio
 {{% onlyWhen no-argocd-cli %}}
 Create a file `example-application.yaml` in the directory you previously changed to `argocd-training-examples/applications` with the following content:
 
+{{% alert title="Note" color="info" %}}Make sure to replace `<username>` placeholders in the manifests with the correct value.
+
+Use the following command to get your username.
+
+```bash
+echo $USER
+```
+{{% /alert %}}
+
 ```yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: argo-$USER
+  name: argo-<username>
   namespace: {{% param argoInfraNamespace %}}
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
-    repoURL: https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git
+    repoURL: https://{{% param giteaUrl %}}/<username>/argocd-training-examples.git
     targetRevision: HEAD
     path: example-app
   destination:
     server: https://kubernetes.default.svc
-    namespace: $USER
+    namespace: <username>
 ```
 
 Apply it to the cluster:
@@ -276,6 +280,19 @@ Detailed view of a application in unsynced and synced state
 ![Application Tree (synced state)](app-tree-sycned.png)
 
 
+## {{% task %}} Creating an access token for Gitea
+
+In Gitea, click your user icon in the top right corner and click "Settings". Then go to "Applications". Here you will create an access token for Gitea. You can use "webshell" for the token
+name and set the repository row to "read and write". This will be necessary for you to access your repository from the webshell.
+
+![Creating the access token on Gitea](gitea-access-token.png)
+
+After clicking "Generate token", it will be displayed once on top of the page. Make sure you copy the `token` somewhere you can still access later.
+
+Optional: If you're extra security-concious, create a second token with the name "argocd" and select "read" in the repository row. We will use it later in this section.
+This is optional because you can just use your webshell token for ArgoCD, but in practice you would not want write permissions where they're not needed.
+
+
 ## {{% task %}} Automated Sync Policy and Diff
 
 When there is a new commit in your Git repository, the Argo CD application becomes OutOfSync. Let's assume we want to scale up our `Deployment` of the example application from 1 to 2 replicas. We will change this in the Deployment manifest.
@@ -306,7 +323,7 @@ spec:
 ```
 
 
-Commit the changes and push them to your personal remote Git repository. After the Git push command a **password** input field will appear at the top of the Web IDE.
+Commit the changes and push them to your personal remote Git repository. After the Git push command a **password** input field will appear, this is where you have to enter the toke you've created in the previous chapter.
 
 ```bash
 git add deployment.yaml
@@ -428,25 +445,25 @@ argocd app set argo-$USER --sync-policy automated
 ```
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
-To configure automatic sync, edit the example-application.yaml (or use the UI):
+To configure automatic sync, configure the `syncPolicy` and set it to `automated` by editing the `example-application.yaml` (or use the UI) a:
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: argo-$USER
+  name: argo-<username>
   namespace: {{% param argoInfraNamespace %}}
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
-    repoURL: https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git
+    repoURL: https://{{% param giteaUrl %}}/<username>/argocd-training-examples.git
     targetRevision: HEAD
     path: example-app
   destination:
     server: https://kubernetes.default.svc
-    namespace: $USER
+    namespace: <username>
   syncPolicy:
     automated: {}
 ```
@@ -571,6 +588,9 @@ metadata:
 spec:
   port:
     targetPort: 5000
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
   to:
     kind: Service
     name: simple-example
@@ -610,7 +630,7 @@ You probably asked yourself: how can I delete deployed resources on the containe
 First delete the files `service.yaml` and {{% onlyWhenNot openshift %}}`ingress.yaml`{{% /onlyWhenNot %}}{{% onlyWhen openshift %}}`route.yaml`{{% /onlyWhen %}} from Git repository and push the changes:
 
 ```bash
-git add git add route.yaml service.yaml
+git add route.yaml service.yaml
 git commit -m 'Removes service and ingress' && git push
 
 ```
@@ -707,7 +727,10 @@ This allows us to manage the ArgoCD application definitions in a declarative way
 
 The Git repository we have imported to Gitea is publicly available for the whole world. When accessing a private repository we have to provide credentials in form of a username/password pair or a SSH private key. In this task you will learn how to access a protected repo from Argo CD.
 
-First make the Git repository in Gitea private by checking the option `Visibility: Make Repository Private` under `Settings -> Repository`. Now sync the app again.
+
+### Step 1
+
+First make the Git repository in Gitea **private** by checking the option `Visibility: Make Repository Private` under `Settings -> Repository`. Now sync the app again.
 
 {{% onlyWhenNot no-argocd-cli %}}
 
@@ -739,32 +762,56 @@ argocd app sync argo-$USER
 
 You will see an error indicating that authentication is required: `Failed to load target state: failed to generate manifest for source 1 of 1: rpc error: code = Unknown desc = failed to list refs: authentication required: Unauthorized`
 
+Argo CD can't any longer access the protected repository without providing credentials for authentication.
 
-Argo CD can't any longer access the protected repository without providing credentials for authentication. Next create a repository secret with your Gitea credentials. The password could be your actual password or an access token.
+
+### Step 2
+
+Next create a repository secret with your Gitea credentials. The password could be your actual password or an access token.
 
 {{% alert title="Note" color="info" %}}This secret needs to be in the `argocd` namespace which is accessible by every participant in this lab. Keep the token permissions as low as possible (read on the repository suffices) and set a close expiration date!{{% /alert %}}
+
+Create a file `repo-secret.yaml` with the following content:
+
+{{% alert title="Note" color="info" %}}Make sure to replace `<username>` placeholders in the manifests with the correct value.
+
+Use the following command to get your username.
+```bash
+echo $USER
+```
+{{% /alert %}}
 
 
 ```yaml
 apiVersion: v1
 kind: Secret
 metadata:
-  name: argocd-training-examples-creds-$USER
+  name: argocd-training-examples-creds-<username>
   namespace: {{% param argoInfraNamespace %}}
   labels:
     argocd.argoproj.io/secret-type: repository
 stringData:
   type: git
-  url: https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git
-  username: $USER
+  url: https://{{% param giteaUrl %}}/<username>/argocd-training-examples.git
+  username: <username>
   password: <your-gitea-password>
 ```
+
+and apply it
 
 ```bash
 {{% param cliToolName %}} apply -f repo-secret.yaml
 ```
 
+and sync the app again, and your argo cd instance is able to access the private git repository using the configures secret.
+
+Check the Argo CD UI under **Settings → Repositories** and verify the configuration of your private repository.
+
 {{% /onlyWhen %}}
+
+
+### Step 3
+
 Finally make your personal Git repository public again for the following labs. Uncheck the option `Visibility: Make Repository Private` under `Settings -> Repository` in the Gitea UI.
 
 {{% alert title="Note" color="info" %}}
@@ -772,9 +819,6 @@ TLS certificates and SSH private keys are supported alternative authentication m
 {{% /alert %}}
 
 Have a look in the [documentation](https://argo-cd.readthedocs.io/en/stable/user-guide/private-repositories/) for detailed information about accessing private repositories.
-{{% onlyWhen no-argocd-cli %}}
-Since the forked repository is public, no additional credential configuration is needed. Private repository access is managed via the Argo CD UI under **Settings → Repositories** if required.
-{{% /onlyWhen %}}
 
 
 ## {{% task %}} Delete the Application
