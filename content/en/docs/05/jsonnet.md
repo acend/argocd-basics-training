@@ -160,19 +160,19 @@ Create a file `argocd-jsonnet-application.yaml` with the following content and a
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: argo-jsonnet-$USER
+  name: argo-jsonnet-<username>
   namespace: {{% param argoInfraNamespace %}}
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
-    repoURL: https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git
+    repoURL: https://{{% param giteaUrl %}}/<username>/argocd-training-examples.git
     targetRevision: HEAD
     path: jsonnet
   destination:
     server: https://kubernetes.default.svc
-    namespace: $USER
+    namespace: <username>
 ```
 
 ```bash

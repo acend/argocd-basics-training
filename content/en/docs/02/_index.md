@@ -17,10 +17,17 @@ Our lab setup consists of the following components:
 
 {{% onlyWhenNot manual-fork %}}
 
-For this training we're using a Git Server deployed under [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/). We also forked the Argo CD Example Repo for your `<username>`.
+For this training we're using a Git Server deployed under [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/). We also prepared the Argo CD Example Repo for your `<username>`.
 
 Open your webbrowser and navigate to [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/).
+
+{{% onlyWhenNot openshift %}}
 Login with the training credentials provided by the trainer (Login Button is in the upper right corner).
+{{% /onlyWhenNot  %}}
+{{% onlyWhen openshift %}}
+Click the **Sign in with dex** or **Anmelden mit dex** Button to login (Login Button is in the upper right corner).
+{{% /onlyWhen%}}
+
 
 {{% alert title="Note" color="info" %}}Users which have a personal Github account can just fork the Repository [argocd-training-examples](https://github.com/acend/argocd-training-examples) to their personal account. To fork the repository click on the top right of the Github on _Fork_. However, you should be aware that the ArgoCD instance is shared for all participants, meaning at some point a GitHub access token needs to be registered. Keep its permissions minimal and make sure it is disabled after this workshop. {{% /alert %}}
 
@@ -49,7 +56,7 @@ Login with the new user and fork the existing Git repository from Github:
 
 {{% onlyWhen openshift %}}
 
-Visit [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/) with your browser and log in using **Dex** which will take you to the OpenShift login page, where you can login.
+Visit [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/) with your browser and login using **Dex** which will take you to the OpenShift login page, where you can login.
 
 Migrate the existing Git repository from Github:
 
@@ -444,19 +451,19 @@ To configure automatic sync, configure the `syncPolicy` and set it to `automated
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: argo-$USER
+  name: argo-<username>
   namespace: {{% param argoInfraNamespace %}}
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
-    repoURL: https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git
+    repoURL: https://{{% param giteaUrl %}}/<username>/argocd-training-examples.git
     targetRevision: HEAD
     path: example-app
   destination:
     server: https://kubernetes.default.svc
-    namespace: $USER
+    namespace: <username>
   syncPolicy:
     automated: {}
 ```

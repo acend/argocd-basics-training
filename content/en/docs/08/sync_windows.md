@@ -33,7 +33,7 @@ Create `appproject.yaml`:
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: project-sync-windows-$USER
+  name: project-sync-windows-<username>
   namespace: {{% param argoInfraNamespace %}}
 spec:
   sourceRepos:
@@ -49,19 +49,19 @@ Create `application.yaml`:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: sync-windows-$USER
+  name: sync-windows-<username>
   namespace: {{% param argoInfraNamespace %}}
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  project: project-sync-windows-$USER
+  project: project-sync-windows-<username>
   source:
     repoURL: https://github.com/acend/argocd-training-examples.git
     targetRevision: HEAD
     path: example-app
   destination:
     server: https://kubernetes.default.svc
-    namespace: $USER
+    namespace: <username>
 ```
 
 ```bash

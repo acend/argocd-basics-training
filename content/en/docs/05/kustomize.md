@@ -75,19 +75,19 @@ Create a file `argocd-kustomize-application.yaml` with the following content and
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: argo-kustomize-$USER
+  name: argo-kustomize-<username>
   namespace: {{% param argoInfraNamespace %}}
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
-    repoURL: https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git
+    repoURL: https://{{% param giteaUrl %}}/<username>/argocd-training-examples.git
     targetRevision: HEAD
     path: kustomize/simple-example
   destination:
     server: https://kubernetes.default.svc
-    namespace: $USER
+    namespace: <username>
 ```
 
 ```bash

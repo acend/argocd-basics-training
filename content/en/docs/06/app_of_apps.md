@@ -88,19 +88,19 @@ Create a file `application.yaml` with the following content and apply it:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: argo-aoa-$USER
+  name: argo-aoa-<username>
   namespace: {{% param argoInfraNamespace %}}
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
-    repoURL: https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git
+    repoURL: https://{{% param giteaUrl %}}/<username>/argocd-training-examples.git
     targetRevision: HEAD
     path: app-of-apps
   destination:
     server: https://kubernetes.default.svc
-    namespace: $USER
+    namespace: <username>
   syncPolicy:
     automated:
       selfHeal: true
