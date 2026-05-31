@@ -43,28 +43,17 @@ Visit [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/) with you
 
 ![Register new User in Gitea](gitea-register.png)
 
+Login with the new user and fork the existing Git repository from Github:
+
 {{% /onlyWhenNot%}}
 
 {{% onlyWhen openshift %}}
 
-Execute the follwoing command in a terminal in your Web IDE:
+Visit [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/) with your browser and log in using **Dex** which will take you to the OpenShift login page, where you can login.
 
-```bash
-echo $USER
-```
-
-Visit [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/) with your browser and log in using **Dex** which will take you to the OpenShift login page. After logging in, confirm your Use the  `<username>` from the commmand above and an email address to create the Gitea account.
-
-{{% alert title="Info" color="info" %}}
-Use the username from the WebIDE for the gitea registration
-{{% /alert %}}
-
-
-![Register new User in Gitea](gitea-register-openshift.png)
+Migrate the existing Git repository from Github:
 
 {{% /onlyWhen%}}
-
-Login with the new user and fork the existing Git repository from Github:
 
 1. Select _Create_ on the top right -> _New Migration_ -> Select _GitHub_
 1. Migrate / Clone From URL: https://github.com/acend/argocd-training-examples.git
