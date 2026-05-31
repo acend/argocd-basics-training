@@ -47,7 +47,18 @@ Visit [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/) with you
 
 {{% onlyWhen openshift %}}
 
-Visit [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/) with your browser and log in using Dex which will take you to the OpenShift login page. After logging in, confirm your name and email address to create the Gitea account.
+Execute the follwoing command in a terminal in your Web IDE:
+
+```bash
+echo $USER
+```
+
+Visit [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/) with your browser and log in using **Dex** which will take you to the OpenShift login page. After logging in, confirm your Use the  `<username>` from the commmand above and an email address to create the Gitea account.
+
+{{% alert title="Info" color="info" %}}
+Use the username from the WebIDE for the gitea registration
+{{% /alert %}}
+
 
 ![Register new User in Gitea](gitea-register-openshift.png)
 
@@ -70,19 +81,6 @@ By clicking on the repository link in the repository list you get to the detail 
 ![The Git Repository](gitea-repository-2.png)
 
 The **URL** of the Git repository, we'll be working with, will look like `https://{{% param giteaUrl %}}/<username>/argocd-training-examples.git`.
-
-
-## {{% task %}} Creating an access token for Gitea
-
-In Gitea, click your user icon in the top right corner and click "Settings". Then go to "Applications". Here you will create an access token for Gitea. You can use "webshell" for the token
-name and set the repository row to "read and write". This will be necessary for you to access your repository from the webshell.
-
-![Creating the access token on Gitea](gitea-access-token.png)
-
-After clicking "Generate token", it will be displayed once on top of the page. Make sure you copy the token somewhere you can still access later.
-
-Optional: If you're extra security-concious, create a second token with the name "argocd" and select "read" in the repository row. We will use it later in this section.
-This is optional because you can just use your webshell token for ArgoCD, but in practice you would not want write permissions where they're not needed.
 
 
 ## {{% task %}} Cloning the repository to the webshell
@@ -222,6 +220,8 @@ Check the [Argo CD UI](https://{{% param argoCdUrl %}}) to browse the applicatio
 {{% onlyWhen no-argocd-cli %}}
 Create a file `example-application.yaml` in the directory you previously changed to `argocd-training-examples/applications` with the following content:
 
+{{% alert title="Note" color="info" %}}Make sure to replace `$USER` placeholders in the manifests{{% /alert %}}
+
 ```yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -276,6 +276,19 @@ Detailed view of a application in unsynced and synced state
 ![Application Tree (synced state)](app-tree-sycned.png)
 
 
+## {{% task %}} Creating an access token for Gitea
+
+In Gitea, click your user icon in the top right corner and click "Settings". Then go to "Applications". Here you will create an access token for Gitea. You can use "webshell" for the token
+name and set the repository row to "read and write". This will be necessary for you to access your repository from the webshell.
+
+![Creating the access token on Gitea](gitea-access-token.png)
+
+After clicking "Generate token", it will be displayed once on top of the page. Make sure you copy the `token` somewhere you can still access later.
+
+Optional: If you're extra security-concious, create a second token with the name "argocd" and select "read" in the repository row. We will use it later in this section.
+This is optional because you can just use your webshell token for ArgoCD, but in practice you would not want write permissions where they're not needed.
+
+
 ## {{% task %}} Automated Sync Policy and Diff
 
 When there is a new commit in your Git repository, the Argo CD application becomes OutOfSync. Let's assume we want to scale up our `Deployment` of the example application from 1 to 2 replicas. We will change this in the Deployment manifest.
@@ -306,7 +319,7 @@ spec:
 ```
 
 
-Commit the changes and push them to your personal remote Git repository. After the Git push command a **password** input field will appear at the top of the Web IDE.
+Commit the changes and push them to your personal remote Git repository. After the Git push command a **password** input field will appear, this is where you have to enter the toke you've created in the previous chapter.
 
 ```bash
 git add deployment.yaml
@@ -428,7 +441,7 @@ argocd app set argo-$USER --sync-policy automated
 ```
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
-To configure automatic sync, edit the example-application.yaml (or use the UI):
+To configure automatic sync, configure the `syncPolicy` and set it to `automated` by editing the `example-application.yaml` (or use the UI) a:
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
