@@ -88,6 +88,7 @@ The **URL** of the Git repository, we'll be working with, will look like `https:
 Within the Web IDE we set the `USER` environment variable to your personal `<username>`.
 
 Verify that with the following command:
+
 ```bash
 echo $USER
 ```
@@ -220,25 +221,32 @@ Check the [Argo CD UI](https://{{% param argoCdUrl %}}) to browse the applicatio
 {{% onlyWhen no-argocd-cli %}}
 Create a file `example-application.yaml` in the directory you previously changed to `argocd-training-examples/applications` with the following content:
 
-{{% alert title="Note" color="info" %}}Make sure to replace `$USER` placeholders in the manifests{{% /alert %}}
+{{% alert title="Note" color="info" %}}Make sure to replace `<username>` placeholders in the manifests with the correct value.
+
+Use the following command to get your username.
+
+```bash
+echo $USER
+```
+{{% /alert %}}
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: argo-$USER
+  name: argo-<username>
   namespace: {{% param argoInfraNamespace %}}
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
-    repoURL: https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git
+    repoURL: https://{{% param giteaUrl %}}/<username>/argocd-training-examples.git
     targetRevision: HEAD
     path: example-app
   destination:
     server: https://kubernetes.default.svc
-    namespace: $USER
+    namespace: <username>
 ```
 
 Apply it to the cluster:
@@ -584,6 +592,9 @@ metadata:
 spec:
   port:
     targetPort: 5000
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
   to:
     kind: Service
     name: simple-example
@@ -623,7 +634,7 @@ You probably asked yourself: how can I delete deployed resources on the containe
 First delete the files `service.yaml` and {{% onlyWhenNot openshift %}}`ingress.yaml`{{% /onlyWhenNot %}}{{% onlyWhen openshift %}}`route.yaml`{{% /onlyWhen %}} from Git repository and push the changes:
 
 ```bash
-git add git add route.yaml service.yaml
+git add route.yaml service.yaml
 git commit -m 'Removes service and ingress' && git push
 
 ```
@@ -720,7 +731,10 @@ This allows us to manage the ArgoCD application definitions in a declarative way
 
 The Git repository we have imported to Gitea is publicly available for the whole world. When accessing a private repository we have to provide credentials in form of a username/password pair or a SSH private key. In this task you will learn how to access a protected repo from Argo CD.
 
-First make the Git repository in Gitea private by checking the option `Visibility: Make Repository Private` under `Settings -> Repository`. Now sync the app again.
+
+### Step 1
+
+First make the Git repository in Gitea **private** by checking the option `Visibility: Make Repository Private` under `Settings -> Repository`. Now sync the app again.
 
 {{% onlyWhenNot no-argocd-cli %}}
 
@@ -752,32 +766,56 @@ argocd app sync argo-$USER
 
 You will see an error indicating that authentication is required: `Failed to load target state: failed to generate manifest for source 1 of 1: rpc error: code = Unknown desc = failed to list refs: authentication required: Unauthorized`
 
+Argo CD can't any longer access the protected repository without providing credentials for authentication.
 
-Argo CD can't any longer access the protected repository without providing credentials for authentication. Next create a repository secret with your Gitea credentials. The password could be your actual password or an access token.
+
+### Step 2
+
+Next create a repository secret with your Gitea credentials. The password could be your actual password or an access token.
 
 {{% alert title="Note" color="info" %}}This secret needs to be in the `argocd` namespace which is accessible by every participant in this lab. Keep the token permissions as low as possible (read on the repository suffices) and set a close expiration date!{{% /alert %}}
+
+Create a file `repo-secret.yaml` with the following content:
+
+{{% alert title="Note" color="info" %}}Make sure to replace `<username>` placeholders in the manifests with the correct value.
+
+Use the following command to get your username.
+```bash
+echo $USER
+```
+{{% /alert %}}
 
 
 ```yaml
 apiVersion: v1
 kind: Secret
 metadata:
-  name: argocd-training-examples-creds-$USER
+  name: argocd-training-examples-creds-<username>
   namespace: {{% param argoInfraNamespace %}}
   labels:
     argocd.argoproj.io/secret-type: repository
 stringData:
   type: git
-  url: https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git
-  username: $USER
+  url: https://{{% param giteaUrl %}}/<username>/argocd-training-examples.git
+  username: <username>
   password: <your-gitea-password>
 ```
+
+and apply it
 
 ```bash
 {{% param cliToolName %}} apply -f repo-secret.yaml
 ```
 
+and sync the app again, and your argo cd instance is able to access the private git repository using the configures secret.
+
+Check the Argo CD UI under **Settings → Repositories** and verify the configuration of your private repository.
+
 {{% /onlyWhen %}}
+
+
+### Step 3
+
 Finally make your personal Git repository public again for the following labs. Uncheck the option `Visibility: Make Repository Private` under `Settings -> Repository` in the Gitea UI.
 
 {{% alert title="Note" color="info" %}}
@@ -785,9 +823,6 @@ TLS certificates and SSH private keys are supported alternative authentication m
 {{% /alert %}}
 
 Have a look in the [documentation](https://argo-cd.readthedocs.io/en/stable/user-guide/private-repositories/) for detailed information about accessing private repositories.
-{{% onlyWhen no-argocd-cli %}}
-Since the forked repository is public, no additional credential configuration is needed. Private repository access is managed via the Argo CD UI under **Settings → Repositories** if required.
-{{% /onlyWhen %}}
 
 
 ## {{% task %}} Delete the Application
