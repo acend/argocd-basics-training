@@ -105,7 +105,7 @@ git clone https://$USER@{{% param giteaUrl %}}/$USER/argocd-training-examples.gi
 Change the working directory to the cloned git repository:
 
 ```bash
-cd argocd-training-examples/example-app
+cd argocd-training-examples
 ```
 
 When using the Web IDE: Configure the Git Client and verify the output
@@ -215,7 +215,7 @@ apps   Deployment  <username>  simple-example  Synced  Progressing        deploy
 Check the [Argo CD UI](https://{{% param argoCdUrl %}}) to browse the application and their components.
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
-Create a file `example-application.yaml` in the directory you previously changed to `argocd-training-examples/applications` with the following content:
+Create a directory `applications` to store your application manifests in. Then create a file `example-application.yaml` in your new directory with the following content:
 
 {{% alert title="Note" color="info" %}}Make sure to replace `<username>` placeholders in the manifests with the correct value.
 
@@ -299,7 +299,7 @@ When there is a new commit in your Git repository, the Argo CD application becom
 
 Increase the number of replicas in your file `<workspace>/example-app/deployment.yaml` to 2.
 
-```
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -730,7 +730,7 @@ The Git repository we have imported to Gitea is publicly available for the whole
 
 ### Step 1
 
-First make the Git repository in Gitea **private** by checking the option `Visibility: Make Repository Private` under `Settings -> Repository`. Now sync the app again.
+First make the Git repository in Gitea **private** by checking the option `Visibility: Make Repository Private` under `Settings -> Repository`. Now refresh the app again.
 
 {{% onlyWhenNot no-argocd-cli %}}
 
