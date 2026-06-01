@@ -8,9 +8,10 @@ In this lab you will learn how to deploy a simple application using Argo CD.
 
 Our lab setup consists of the following components:
 
-* Git Server ([Gitea](https://gitea.io)): [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/)
-* Argo CD Server: [https://{{% param argoCdUrl %}}](https://{{% param argoCdUrl %}})
+* Git Server ([Gitea](https://gitea.io)): [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/) -> use "sign up with dex" to sign in
+* Argo CD Server: [https://{{% param argoCdUrl %}}](https://{{% param argoCdUrl %}}) -> use "login with OpenShift" to sign in
 * {{% onlyWhenNot openshift %}}Kubernetes Cluster:{{% /onlyWhenNot %}}{{% onlyWhen openshift %}}OpenShift Cluster:{{% /onlyWhen %}} [https://{{% param clusterApiUrl %}}](https://{{% param clusterApiUrl %}})
+* The WebIDE Development Environment with all necessary tools installed will be provided by the trainer -> use "login with OpenShift" to sign in
 
 
 ## {{% task %}} {{% onlyWhenNot manual-fork %}}Login to the Gitea{{% /onlyWhenNot %}}{{% onlyWhen manual-fork %}}Fork the Git repository{{% /onlyWhen %}}
