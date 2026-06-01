@@ -11,7 +11,9 @@ Our lab setup consists of the following components:
 
 * Git Server ([Gitea](https://gitea.io)): [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/) -> use "sign up with dex" to sign in
 * Argo CD Server: [https://{{% param argoCdUrl %}}](https://{{% param argoCdUrl %}}) -> use "login with OpenShift" to sign in
-* {{% onlyWhenNot openshift %}}Kubernetes Cluster:{{% /onlyWhenNot %}}{{% onlyWhen openshift %}}OpenShift Cluster:{{% /onlyWhen %}} [https://{{% param clusterApiUrl %}}](https://{{% param clusterApiUrl %}})
+{{% onlyWhen openshift %}}
+* OpenShift Cluster: [https://{{% param ocpConsoleUrl %}}](https://{{% param ocpConsoleUrl %}})
+{{% /onlyWhen %}}
 * The WebIDE Development Environment with all necessary tools installed will be provided by the trainer -> use "login with OpenShift" to sign in
 
 
@@ -88,7 +90,7 @@ oc project
 
 
 ```
-Using project "<username>" on server "https://{{% param clusterApiUrl %}}".
+Using project "<username>" on server "https://kubernetes.default".
 ```
 
 The returned project name should correspond to your `<username>` equal to the env variable `echo $USER`.

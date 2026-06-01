@@ -10,7 +10,9 @@ Our lab setup consists of the following components:
 
 * Git Server ([Gitea](https://gitea.io)): [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/) -> use "sign up with dex" to sign in
 * Argo CD Server: [https://{{% param argoCdUrl %}}](https://{{% param argoCdUrl %}}) -> use "login with OpenShift" to sign in
-* {{% onlyWhenNot openshift %}}Kubernetes Cluster:{{% /onlyWhenNot %}}{{% onlyWhen openshift %}}OpenShift Cluster:{{% /onlyWhen %}} [https://{{% param clusterApiUrl %}}](https://{{% param clusterApiUrl %}})
+{{% onlyWhen openshift %}}
+* OpenShift Cluster: [https://{{% param ocpConsoleUrl %}}](https://{{% param ocpConsoleUrl %}})
+{{% /onlyWhen %}}
 * The WebIDE Development Environment with all necessary tools installed will be provided by the trainer -> use "login with OpenShift" to sign in
 
 
@@ -260,7 +262,7 @@ Argo CD will now detect the application. Once the application is created, you ca
 {{% param cliToolName %}} describe application argo-$USER -n {{% param argoInfraNamespace %}}
 ```
 
-Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** to deploy the resources. This command retrieves the manifests from the git repository and performs a {{% param cliToolName %}} apply on them. From now on, all resources are managed by Argo CD. Congrats, the first step in direction GitOps! :)
+Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** -> **Synchronize** to deploy the resources. This command retrieves the manifests from the git repository and performs a {{% param cliToolName %}} apply on them. From now on, all resources are managed by Argo CD. Congrats, the first step in direction GitOps! :)
 
 Once synced the application status will show as **Healthy**.
 
