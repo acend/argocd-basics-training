@@ -8,9 +8,12 @@ In this lab you will learn how to deploy a simple application using Argo CD.
 
 Our lab setup consists of the following components:
 
-* Git Server ([Gitea](https://gitea.io)): [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/)
-* Argo CD Server: [https://{{% param argoCdUrl %}}](https://{{% param argoCdUrl %}})
-* {{% onlyWhenNot openshift %}}Kubernetes Cluster:{{% /onlyWhenNot %}}{{% onlyWhen openshift %}}OpenShift Cluster:{{% /onlyWhen %}} [https://{{% param clusterApiUrl %}}](https://{{% param clusterApiUrl %}})
+* Git Server ([Gitea](https://gitea.io)): [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/) -> use "sign up with dex" to sign in
+* Argo CD Server: [https://{{% param argoCdUrl %}}](https://{{% param argoCdUrl %}}) -> use "login with OpenShift" to sign in
+{{% onlyWhen openshift %}}
+* OpenShift Cluster: [https://{{% param ocpConsoleUrl %}}](https://{{% param ocpConsoleUrl %}})
+{{% /onlyWhen %}}
+* The WebIDE Development Environment with all necessary tools installed will be provided by the trainer -> use "login with OpenShift" to sign in
 
 
 ## {{% task %}} {{% onlyWhenNot manual-fork %}}Login to the Gitea{{% /onlyWhenNot %}}{{% onlyWhen manual-fork %}}Fork the Git repository{{% /onlyWhen %}}
@@ -76,7 +79,7 @@ By clicking on the repository link in the repository list you get to the detail 
 
 ![The Git Repository](gitea-repository-2.png)
 
-The **URL** of the Git repository, we'll be working with, will look like `https://{{% param giteaUrl %}}/<username>/argocd-training-examples.git`.
+The **URL** of the Git repository we'll be working with will look like `https://{{% param giteaUrl %}}/<username>/argocd-training-examples.git`.
 
 
 ## {{% task %}} Cloning the repository to the webshell
@@ -105,7 +108,7 @@ git clone https://$USER@{{% param giteaUrl %}}/$USER/argocd-training-examples.gi
 Change the working directory to the cloned git repository:
 
 ```bash
-cd argocd-training-examples/example-app
+cd argocd-training-examples
 ```
 
 When using the Web IDE: Configure the Git Client and verify the output
@@ -215,7 +218,7 @@ apps   Deployment  <username>  simple-example  Synced  Progressing        deploy
 Check the [Argo CD UI](https://{{% param argoCdUrl %}}) to browse the application and their components.
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
-Create a file `example-application.yaml` in the directory you previously changed to `argocd-training-examples/applications` with the following content:
+Create a directory `applications` to store your application manifests in. Then create a file `example-application.yaml` in your new directory with the following content:
 
 {{% alert title="Note" color="info" %}}Make sure to replace `<username>` placeholders in the manifests with the correct value.
 
@@ -259,7 +262,7 @@ Argo CD will now detect the application. Once the application is created, you ca
 {{% param cliToolName %}} describe application argo-$USER -n {{% param argoInfraNamespace %}}
 ```
 
-Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** to deploy the resources. This command retrieves the manifests from the git repository and performs a {{% param cliToolName %}} apply on them. From now on, all resources are managed by Argo CD. Congrats, the first step in direction GitOps! :)
+Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** -> **Synchronize** to deploy the resources. This command retrieves the manifests from the git repository and performs a {{% param cliToolName %}} apply on them. From now on, all resources are managed by Argo CD. Congrats, the first step in direction GitOps! :)
 
 Once synced the application status will show as **Healthy**.
 
@@ -283,7 +286,7 @@ Detailed view of a application in unsynced and synced state
 ## {{% task %}} Creating an access token for Gitea
 
 In Gitea, click your user icon in the top right corner and click "Settings". Then go to "Applications". Here you will create an access token for Gitea. You can use "webshell" for the token
-name and set the repository row to "read and write". This will be necessary for you to access your repository from the webshell.
+name and set the repository row to "read and write". This will be necessary for you to access your repository.
 
 ![Creating the access token on Gitea](gitea-access-token.png)
 
@@ -299,7 +302,7 @@ When there is a new commit in your Git repository, the Argo CD application becom
 
 Increase the number of replicas in your file `<workspace>/example-app/deployment.yaml` to 2.
 
-```
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -730,7 +733,7 @@ The Git repository we have imported to Gitea is publicly available for the whole
 
 ### Step 1
 
-First make the Git repository in Gitea **private** by checking the option `Visibility: Make Repository Private` under `Settings -> Repository`. Now sync the app again.
+First make the Git repository in Gitea **private** by checking the option `Visibility: Make Repository Private` under `Settings -> Repository`. Now refresh the app again.
 
 {{% onlyWhenNot no-argocd-cli %}}
 
@@ -760,7 +763,7 @@ argocd app sync argo-$USER
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
 
-You will see an error indicating that authentication is required: `Failed to load target state: failed to generate manifest for source 1 of 1: rpc error: code = Unknown desc = failed to list refs: authentication required: Unauthorized`
+You will see an error indicating that authentication is required. There will be a popup saying `Unable to load data: revision HEAD must be resolved` and when you click on the Error in `APP CONDITIONS` it will say `Failed to load target state: failed to generate manifest for source 1 of 1: rpc error: code = Unknown desc = failed to list refs: authentication required: Unauthorized`
 
 Argo CD can't any longer access the protected repository without providing credentials for authentication.
 

@@ -9,15 +9,25 @@ onlyWhen: getting-started
 Our lab setup consists of the following components:
 
 
-* Git Server ([Gitea](https://gitea.io)): [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/)
-* Argo CD Server: [https://{{% param argoCdUrl %}}](https://{{% param argoCdUrl %}})
-* {{% onlyWhenNot openshift %}}Kubernetes Cluster:{{% /onlyWhenNot %}}{{% onlyWhen openshift %}}OpenShift Cluster:{{% /onlyWhen %}} [https://{{% param clusterApiUrl %}}](https://{{% param clusterApiUrl %}})
-* WebIDE Development Environment with all too.
+* Git Server ([Gitea](https://gitea.io)): [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/) -> use "sign up with dex" to sign in
+* Argo CD Server: [https://{{% param argoCdUrl %}}](https://{{% param argoCdUrl %}}) -> use "login with OpenShift" to sign in
+{{% onlyWhen openshift %}}
+* OpenShift Cluster: [https://{{% param ocpConsoleUrl %}}](https://{{% param ocpConsoleUrl %}})
+{{% /onlyWhen %}}
+* The WebIDE Development Environment with all necessary tools installed will be provided by the trainer -> use "login with OpenShift" to sign in
 
 
 ## {{% task %}} Web IDE
 
-The first thing we're going to do is to explore our lab environment and get in touch with the different components.
+{{% onlyWhen openshift %}}
+
+The very first thing you need to do is to log in to the OpenShift Console: [https://{{% param ocpConsoleUrl %}}](https://{{% param ocpConsoleUrl %}})
+
+This is necessary to ensure your account is created and can be used by the other tools to authenticate.
+
+{{% /onlyWhen %}}
+
+The first thing we're going to do now is to explore our lab environment and get in touch with the different components.
 
 The namespace with the name corresponding to your username is going to be used for all the hands-on labs. And you will be using {{% onlyWhenNot no-argocd-cli %}} the `argocd tool` or {{% /onlyWhenNot %}} the ArgoCD webconsole, to verify what resources and objects Argo CD created for you.
 
@@ -44,14 +54,14 @@ The Web IDE Pod consists of the following tools:
 * odo
 * argocd
 
-The files in the home directory under `/home/project` are stored in a persistence volume, so please make sure to store all your persistence data in this directory.
+The files in your root directory (`/home/project`) are stored in a persistent volume, so all your data in this directory will be persistent for when you open the webshell again.
 
 
 ### Task 1.1.1: Local Workspace Directory
 
 During the lab, you’ll be using local files (eg. YAML resources) which will be applied in your lab project.
 
-Create a new folder for your `<workspace>` in your Web IDE  (for example `argocd-training` under `/home/project/argocd-training`). Either you can create it with `right-mouse-click -> New Folder` or in the Web IDE terminal.
+Create a new folder for your `<workspace>` in your Web IDE. Either you can create it with `right-mouse-click -> New Folder` or in the Web IDE terminal.
 
 ```bash
 mkdir argocd-training && cd argocd-training
@@ -88,7 +98,7 @@ oc project
 
 
 ```
-Using project "<username>" on server "https://{{% param clusterApiUrl %}}".
+Using project "<username>" on server "https://kubernetes.default".
 ```
 
 The returned project name should correspond to your `<username>` equal to the env variable `echo $USER`.
