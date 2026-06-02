@@ -285,12 +285,15 @@ Detailed view of a application in unsynced and synced state
 
 ## {{% task %}} Creating an access token for Gitea
 
-In Gitea, click your user icon in the top right corner and click "Settings". Then go to "Applications". Here you will create an access token for Gitea. You can use "argocd" for the token
-name and set the repository row to "read". This will be necessary for ArgoCD to be able to access your repository.
+In Gitea, click your user icon in the top right corner and click "Settings". Then go to "Applications". Here you will create an access token for Gitea. You can use "webshell" for the token
+name and set the repository row to "read and write". This will be necessary for you to access your repository.
 
 ![Creating the access token on Gitea](gitea-access-token.png)
 
 After clicking "Generate token", it will be displayed once on top of the page. Make sure you copy the `token` somewhere you can still access later.
+
+Optional: If you're extra security-concious, create a second token with the name "argocd" and select "read" in the repository row. We will use it later in this section.
+This is optional because you can just use your webshell token for ArgoCD, but in practice you would not want write permissions where they're not needed.
 
 
 ## {{% task %}} Automated Sync Policy and Diff
