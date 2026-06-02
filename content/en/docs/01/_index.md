@@ -19,7 +19,15 @@ Our lab setup consists of the following components:
 
 ## {{% task %}} Web IDE
 
-The first thing we're going to do is to explore our lab environment and get in touch with the different components.
+{{% onlyWhen openshift %}}
+
+The very first thing you need to do is to log in to the OpenShift Console: [https://{{% param ocpConsoleUrl %}}](https://{{% param ocpConsoleUrl %}})
+
+This is necessary to ensure your account is created and can be used by the other tools to authenticate.
+
+{{% /onlyWhen %}}
+
+The first thing we're going to do now is to explore our lab environment and get in touch with the different components.
 
 The namespace with the name corresponding to your username is going to be used for all the hands-on labs. And you will be using {{% onlyWhenNot no-argocd-cli %}} the `argocd tool` or {{% /onlyWhenNot %}} the ArgoCD webconsole, to verify what resources and objects Argo CD created for you.
 
