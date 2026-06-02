@@ -763,7 +763,7 @@ argocd app sync argo-$USER
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
 
-You will see an error indicating that authentication is required: `Failed to load target state: failed to generate manifest for source 1 of 1: rpc error: code = Unknown desc = failed to list refs: authentication required: Unauthorized`
+You will see an error indicating that authentication is required. There will be a popup saying `Unable to load data: revision HEAD must be resolved` and when you click on the Error in `APP CONDITIONS` it will say `Failed to load target state: failed to generate manifest for source 1 of 1: rpc error: code = Unknown desc = failed to list refs: authentication required: Unauthorized`
 
 Argo CD can't any longer access the protected repository without providing credentials for authentication.
 
