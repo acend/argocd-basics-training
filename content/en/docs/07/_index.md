@@ -11,7 +11,7 @@ Argo CD applications can be linked to a project which provides a logical groupin
 * Destination Namespaces: Destination namespaces where the manifests are permitted to be deployed to
 * Permitted resource kinds to be synced (e.g. `ConfigMap`)
 * Sync windows: Time windows when an application is permitted to be synced by Argo CD.
-* Roles: Roles and policies assigned to the project. The roles are bound to OIDC groups and/or JWT tokens)
+* Roles: Roles and policies assigned to the project. The roles are bound to OIDC groups and/or JWT tokens
 * GPG Signature Keys: GnuPG keys that commits must be signed with in order to be allowed to sync them
 * Resource Monitoring: Visualization and monitoring of orphaned resources
 
@@ -24,7 +24,7 @@ Now we want to create a new empty Argo CD project.
 
 {{% onlyWhenNot no-argocd-cli %}}
 ```bash
-argocd proj create project-$USER
+argocd proj create project-<$USER>
 argocd proj list
 ```
 
@@ -45,7 +45,7 @@ Create a file `appproject.yaml` with the following content and apply it:
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: project-$USER
+  name: project-<username>
   namespace: {{% param argoInfraNamespace %}}
 spec:
   sourceRepos: []
@@ -61,7 +61,7 @@ spec:
 
 ## {{% task %}} Define permitted sources and destinations
 
-The next step is to deploy a new application and assign it to the created project `project-<username>` by using the flag `--project`
+The next step is to deploy a new application and assign it to the created project `project-<username>` by using the`project` {{% onlyWhenNot no-argocd-cli %}}flag.{{% /onlyWhenNot %}}{{% onlyWhen no-argocd-cli %}}attribute.{{% /onlyWhen %}}
 
 {{% onlyWhenNot no-argocd-cli %}}
 ```bash
@@ -133,7 +133,7 @@ spec:
 {{% param cliToolName %}} apply -f appproject.yaml
 ```
 
-Now create a file `application.yaml` with the following content and apply it:
+Now create a file `application-in-project.yaml` with the following content and apply it:
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -155,10 +155,10 @@ spec:
 ```
 
 ```bash
-{{% param cliToolName %}} apply -f application.yaml
+{{% param cliToolName %}} apply -f application-in-project.yaml
 ```
 
-Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** on the `project-app-$USER` application.
+Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** on the `project-app-<username>` application.
 {{% /onlyWhen %}}
 
 {{% alert title="Note" color="info" %}}
@@ -218,7 +218,7 @@ spec:
 {{% param cliToolName %}} apply -f appproject.yaml
 ```
 
-Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** on `project-app-$USER`. The sync will fail because `Service` is now blocked.
+Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** on `project-app-<username>`. The sync will fail because `Service` is now blocked.
 
 To allow `Service` again, remove the `namespaceResourceBlacklist` entry from `appproject.yaml` and re-apply:
 
@@ -242,7 +242,7 @@ argocd app set project-app-$USER --auto-prune
 ```
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
-Edit `application.yaml` to add automated sync policy, then re-apply:
+Edit `application-in-project.yaml` to add automated sync policy, then re-apply:
 
 ```yaml
   syncPolicy:
@@ -252,7 +252,7 @@ Edit `application.yaml` to add automated sync policy, then re-apply:
 ```
 
 ```bash
-{{% param cliToolName %}} apply -f application.yaml
+{{% param cliToolName %}} apply -f application-in-project.yaml
 ```
 {{% /onlyWhen %}}
 

@@ -6,7 +6,7 @@ onlyWhen: app-of-apps
 The [App of apps](https://argo-cd.readthedocs.io/en/stable/operator-manual/cluster-bootstrapping/#app-of-apps-pattern-alternative) pattern is a declarative specification of one ArgoCD app that consists only of **other ArgoCD applications**.
 This way we have the possibility to deploy multiple apps within just one single App definition.
 
-In Lab [2.7]({{< ref  "02" >}}) you learnt how ArgoCD stores its state as Application Custom Resources. The basic idea behind the App of Apps pattern therefore is to store those Application Custom Resources within an Argo CD Application.
+In Lab [2]({{< ref  "02" >}}) you learnt how ArgoCD stores its state as Application Custom Resources. The basic idea behind the App of Apps pattern therefore is to store those Application Custom Resources within an Argo CD Application.
 
 First let us examine our ArgoCD example repository with the child applications.
 
@@ -25,7 +25,7 @@ As we can see the directory consists of three ArgoCD applications. Each of them 
 
 To deploy the app of apps into our namespace we need to edit the three application custom Resources (`app-of-apps/apps/*`):
 
-* Replace all occurrences `<username>` in the **three** yaml files.
+* Replace all occurrences of the placeholder `username` in the **three** yaml files.
 * Set the correct `<repourl>` eg. (`https://{{% param giteaUrl %}}/<username>/argocd-training-examples.git`)
 
 
@@ -53,12 +53,12 @@ spec:
 Make sure to also commit and push your changes to the git repository.
 
 {{% alert title="Note" color="info" %}}
-Please make sure, to update all three application files
+Please make sure to update all three application files.
 {{% /alert %}}
 
 {{% details title="Hint" %}}
 ```bash
-git add .
+git add ../app-of-apps
 git commit -m "Update URLs for App of App"
 git push
 ```
@@ -68,11 +68,11 @@ git push
 ## {{% task %}} Create Argo CD Application
 
 Now let us create the parent Application which deploys our child applications as Custom Resources.
-Note the three paramters
+Note the three parameters:
 
 * {{% onlyWhenNot no-argocd-cli %}}`--sync-policy automated`{{% /onlyWhenNot %}}{{% onlyWhen no-argocd-cli %}}`syncPolicy.automated`{{% /onlyWhen %}} Set the sync policy to automated. This ensures that our child applications will be created and synced per default
 * {{% onlyWhenNot no-argocd-cli %}}`--self-heal`{{% /onlyWhenNot %}}{{% onlyWhen no-argocd-cli %}}`syncPolicy.automated.selfHeal`{{% /onlyWhen %}} Enable self heal and ensure that the parent application reconcile the child application
-* {{% onlyWhenNot no-argocd-cli %}}`--auto-prune`{{% /onlyWhenNot %}}{{% onlyWhen no-argocd-cli %}}`syncPolicy.automated.prunte`{{% /onlyWhen %}} Ensure that if the parent application gets deleted, it also delete the their child applications
+* {{% onlyWhenNot no-argocd-cli %}}`--auto-prune`{{% /onlyWhenNot %}}{{% onlyWhen no-argocd-cli %}}`syncPolicy.automated.prune`{{% /onlyWhen %}} Ensure that if the parent application gets deleted, it also delete the their child applications
 
 {{% onlyWhenNot no-argocd-cli %}}
 ```bash
@@ -82,7 +82,7 @@ argocd app create argo-aoa-$USER --repo https://{{% param giteaUrl %}}/$USER/arg
 Expected output: `application 'argo-aoa-<username>' created`
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
-Create a file `application.yaml` with the following content and apply it:
+Create a file `aoa-application.yaml` with the following content and apply it:
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -108,7 +108,7 @@ spec:
 ```
 
 ```bash
-{{% param cliToolName %}} apply -f application.yaml
+{{% param cliToolName %}} apply -f aoa-application.yaml
 ```
 {{% /onlyWhen %}}
 
@@ -116,7 +116,7 @@ Explore the Argo parent application in the web UI.
 
 As you can see our newly created parent app consits of another three apps.
 
-Note that the child applications resources are not synced automatically. This is because an ArgoCD application only synces their direct child resources. To sync the child apps, either click on sync in the ArgoCD UI or set the sync policy to automed.  
+Note that the child applications resources are not synced automatically. This is because an ArgoCD application only synces their direct child resources. To sync the child apps, either click on sync in the ArgoCD UI or set the sync policy to automated.  
 
 
 ## {{% task %}} Delete the Application

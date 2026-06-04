@@ -27,7 +27,7 @@ Message:            successfully synced (all tasks run)
 ```
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
-Create `appproject.yaml`:
+Create `appproject-sync-window.yaml`:
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -43,7 +43,7 @@ spec:
       namespace: '*'
 ```
 
-Create `application.yaml`:
+Create `application-sync-window.yaml`:
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -65,11 +65,11 @@ spec:
 ```
 
 ```bash
-{{% param cliToolName %}} apply -f appproject.yaml
-{{% param cliToolName %}} apply -f application.yaml
+{{% param cliToolName %}} apply -f appproject-sync-window.yaml
+{{% param cliToolName %}} apply -f application-sync-window.yaml
 ```
 
-Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** on `sync-windows-$USER`.
+Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** on `sync-windows-<username>`.
 {{% /onlyWhen %}}
 
 
@@ -102,7 +102,7 @@ ID  STATUS  KIND  SCHEDULE   DURATION  APPLICATIONS  NAMESPACES  CLUSTERS  MANUA
 ```
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
-Update `appproject.yaml` to add a deny sync window, then re-apply:
+Update `appproject-sync-window.yaml` to add a deny sync window, then re-apply:
 
 ```yaml
 spec:
@@ -121,7 +121,7 @@ spec:
 ```
 
 ```bash
-{{% param cliToolName %}} apply -f appproject.yaml
+{{% param cliToolName %}} apply -f appproject-sync-window.yaml
 ```
 {{% /onlyWhen %}}
 
@@ -131,7 +131,7 @@ The window starts at 08:00 in the morning an lasts for 12 hours and denies all s
 Paste the cron expression on [Crontab Guru](https://crontab.guru/#0_8_*_*_*) to get an explanation of it.
 {{% /alert %}}
 
-Now try to sync the previously created application
+Now try to sync the previously created application.
 
 {{% onlyWhenNot no-argocd-cli %}}
 ```bash
@@ -144,7 +144,7 @@ FATA[0000] rpc error: code = PermissionDenied desc = Cannot sync: Blocked by syn
 ```
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
-Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and try to click **Sync** on `sync-windows-$USER`. The sync will be blocked with a "Blocked by sync window" error.
+Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and try to click **Sync** on `sync-windows-<username>`. The sync will be blocked with a "Blocked by sync window" error.
 {{% /onlyWhen %}}
 
 {{% alert title="Note" color="info" %}}
@@ -175,7 +175,7 @@ argocd proj windows update project-sync-windows-$USER 0 --applications "*"
 ```
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
-Update `appproject.yaml` to restrict the sync window to `sketchy-app`, then re-apply:
+Update `appproject-sync-window.yaml` to restrict the sync window to `sketchy-app`, then re-apply:
 
 ```yaml
       applications:
@@ -183,22 +183,22 @@ Update `appproject.yaml` to restrict the sync window to `sketchy-app`, then re-a
 ```
 
 ```bash
-{{% param cliToolName %}} apply -f appproject.yaml
+{{% param cliToolName %}} apply -f appproject-sync-window.yaml
 ```
 
-Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** on `sync-windows-$USER` — it works now because the window no longer applies to it.
+Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** on `sync-windows-<username>` — it works now because the window no longer applies to it.
 
-Revert `applications` back to `['*']` in `appproject.yaml` and re-apply:
+Revert `applications` back to `['*']` in `appproject-sync-window.yaml` and re-apply:
 
 ```bash
-{{% param cliToolName %}} apply -f appproject.yaml
+{{% param cliToolName %}} apply -f appproject-sync-window.yaml
 ```
 {{% /onlyWhen %}}
 
 
 ## {{% task %}} Enabling manual syncs
 
-Now enable the manual sync for the window and try again to sync manually
+Now enable the manual sync for the window and try again to sync manually.
 
 {{% onlyWhenNot no-argocd-cli %}}
 ```bash
@@ -207,20 +207,20 @@ argocd app sync sync-windows-$USER
 ```
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
-Update `appproject.yaml` to set `manualSync: true` on the sync window, then re-apply:
+Update `appproject-sync-window.yaml` to set `manualSync: true` on the sync window, then re-apply:
 
 ```yaml
       manualSync: true
 ```
 
 ```bash
-{{% param cliToolName %}} apply -f appproject.yaml
+{{% param cliToolName %}} apply -f appproject-sync-window.yaml
 ```
 
-Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** on `sync-windows-$USER` — it now works for manual syncs.
+Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** on `sync-windows-<username>` — it now works for manual syncs.
 {{% /onlyWhen %}}
 
-Which now work flawless. Automatic syncs are still forbidden and will not occur between 08:00 and 20:00.
+Which now work flawlessly. Automatic syncs are still forbidden and will not occur between 08:00 and 20:00.
 
 
 ## {{% task %}} Enable auto-sync and prune
@@ -235,7 +235,7 @@ argocd app set sync-windows-$USER --auto-prune
 ```
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
-Edit `application.yaml` to add automated sync policy, then re-apply:
+Edit `application-sync-window.yaml` to add automated sync policy, then re-apply:
 
 ```yaml
   syncPolicy:
@@ -245,7 +245,7 @@ Edit `application.yaml` to add automated sync policy, then re-apply:
 ```
 
 ```bash
-{{% param cliToolName %}} apply -f application.yaml
+{{% param cliToolName %}} apply -f application-sync-window.yaml
 ```
 {{% /onlyWhen %}}
 
