@@ -20,7 +20,7 @@ Our lab setup consists of the following components:
 
 {{% onlyWhenNot manual-fork %}}
 
-For this training we're using a Git Server deployed under [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/). We also prepared the Argo CD Example Repo for your `<username>`.
+For this training we're using a Git Server deployed under [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/). We also prepared the Argo CD Example Repo for your user `<username>`.
 
 Open your webbrowser and navigate to [https://{{% param giteaUrl %}}](https://{{% param giteaUrl %}}/).
 
@@ -84,7 +84,7 @@ The **URL** of the Git repository we'll be working with will look like `https://
 
 ## {{% task %}} Cloning the repository to the webshell
 
-Within the Web IDE we set the `USER` environment variable to your personal `<username>`.
+Within the Web IDE we set the `USER` environment variable to your personal username `<username>`.
 
 Verify that with the following command:
 
@@ -218,9 +218,10 @@ apps   Deployment  <username>  simple-example  Synced  Progressing        deploy
 Check the [Argo CD UI](https://{{% param argoCdUrl %}}) to browse the application and their components.
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
-Create a directory `applications` to store your application manifests in. Then create a file `example-application.yaml` in your new directory with the following content:
 
-{{% alert title="Note" color="info" %}}Make sure to replace `<username>` placeholders in the manifests with the correct value.
+Create a file `example-application.yaml` in the `applications` directory with the following content:
+
+{{% alert title="Note" color="info" %}}Make sure to replace `username` placeholders in the manifests with the correct value, if your username isn't already displayed.
 
 Use the following command to get your username.
 
@@ -254,7 +255,7 @@ Apply it to the cluster:
 {{% param cliToolName %}} apply -f example-application.yaml
 ```
 
-Expected output: `application 'argo-$USER' created`
+Expected output: `application 'argo-<username>' created`
 
 Argo CD will now detect the application. Once the application is created, you can view its status:
 
@@ -262,7 +263,7 @@ Argo CD will now detect the application. Once the application is created, you ca
 {{% param cliToolName %}} describe application argo-$USER -n {{% param argoInfraNamespace %}}
 ```
 
-Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** -> **Synchronize** to deploy the resources. This command retrieves the manifests from the git repository and performs a {{% param cliToolName %}} apply on them. From now on, all resources are managed by Argo CD. Congrats, the first step in direction GitOps! :)
+Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** to deploy the resources. This command retrieves the manifests from the git repository and performs a {{% param cliToolName %}} apply on them. From now on, all resources are managed by Argo CD. Congrats, the first step in direction GitOps! :)
 
 Once synced the application status will show as **Healthy**.
 
@@ -286,7 +287,7 @@ Detailed view of a application in unsynced and synced state
 ## {{% task %}} Creating an access token for Gitea
 
 In Gitea, click your user icon in the top right corner and click "Settings". Then go to "Applications". Here you will create an access token for Gitea. You can use "webshell" for the token
-name and set the repository row to "read and write". This will be necessary for you to access your repository.
+name and set the repository row to "read and write". This will be necessary for you to access your repository from the webshell.
 
 ![Creating the access token on Gitea](gitea-access-token.png)
 
@@ -302,7 +303,7 @@ When there is a new commit in your Git repository, the Argo CD application becom
 
 Increase the number of replicas in your file `<workspace>/example-app/deployment.yaml` to 2.
 
-```yaml
+```
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -329,7 +330,7 @@ spec:
 Commit the changes and push them to your personal remote Git repository. After the Git push command a **password** input field will appear, this is where you have to enter the toke you've created in the previous chapter.
 
 ```bash
-git add deployment.yaml
+git add ../example-app/deployment.yaml
 git commit -m "Increased replicas to 2"
 git push
 ```
@@ -397,7 +398,7 @@ which should give you an output similar to:
 {{% onlyWhen no-argocd-cli %}}
 Out of the box Git will be polled by Argo CD in a predefined interval (defaults to 3 minutes). To use a synchronous workflow you can use webhooks in Git. These will trigger a synchronization in Argo CD on every push to the repository.
 
-Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Refresh** on the `argo-$USER` application to trigger an immediate update.
+Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Refresh** on the `argo-<username>` application to trigger an immediate update.
 {{% /onlyWhen %}}
 
 Now open the web console of Argo CD and go to your application. The deployment `simple-example` is marked as 'OutOfSync':
@@ -540,9 +541,7 @@ simple-example   1/1     2            2           114m
 This is a great way to enforce a strict GitOps principle. Changes which are manually made on deployed resource manifests are reverted immediately back to the desired state by the ArgoCD controller.
 
 
-## {{% task %}} Expose Application
-
-This is an optional task.
+## {{% task %}} Expose Application (optional)
 
 {{% onlyWhenNot openshift %}}
 To expose an application we need to specify a so called `ingress` resource. Create an `ingress.yaml` file next to the `deployment.yaml` in the example-app directory with the following content.
@@ -605,7 +604,7 @@ Commit and Push the changes again, like you did before:
 
 
 ```bash
-git add route.yaml
+git add ../example-app/route.yaml
 git commit -m "Expose application"
 git push
 ```
@@ -633,7 +632,7 @@ You probably asked yourself: how can I delete deployed resources on the containe
 First delete the files `service.yaml` and {{% onlyWhenNot openshift %}}`ingress.yaml`{{% /onlyWhenNot %}}{{% onlyWhen openshift %}}`route.yaml`{{% /onlyWhen %}} from Git repository and push the changes:
 
 ```bash
-git add route.yaml service.yaml
+git add ../example-app/route.yaml ../example-app/service.yaml
 git commit -m 'Removes service and ingress' && git push
 
 ```
@@ -717,7 +716,7 @@ You will see the application which we created{{% onlyWhenNot no-argocd-cli %}} s
 {{% param cliToolName %}} get applications argo-$USER -oyaml --namespace={{% param argoInfraNamespace %}}
 ```
 
-You even can edit the `Application` resource by using:
+You can even edit the `Application` resource by using:
 
 ```bash
 {{% param cliToolName %}} edit applications argo-$USER --namespace={{% param argoInfraNamespace %}}
@@ -733,7 +732,7 @@ The Git repository we have imported to Gitea is publicly available for the whole
 
 ### Step 1
 
-First make the Git repository in Gitea **private** by checking the option `Visibility: Make Repository Private` under `Settings -> Repository`. Now refresh the app again.
+First make the Git repository in Gitea **private** by checking the option `Visibility: Make Repository Private` under `Settings -> Repository`. Now sync the app again.
 
 {{% onlyWhenNot no-argocd-cli %}}
 
@@ -763,7 +762,7 @@ argocd app sync argo-$USER
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
 
-You will see an error indicating that authentication is required. There will be a popup saying `Unable to load data: revision HEAD must be resolved` and when you click on the Error in `APP CONDITIONS` it will say `Failed to load target state: failed to generate manifest for source 1 of 1: rpc error: code = Unknown desc = failed to list refs: authentication required: Unauthorized`
+You will see an error indicating that authentication is required: `Failed to load target state: failed to generate manifest for source 1 of 1: rpc error: code = Unknown desc = failed to list refs: authentication required: Unauthorized`
 
 Argo CD can't any longer access the protected repository without providing credentials for authentication.
 
@@ -776,7 +775,7 @@ Next create a repository secret with your Gitea credentials. The password could 
 
 Create a file `repo-secret.yaml` with the following content:
 
-{{% alert title="Note" color="info" %}}Make sure to replace `<username>` placeholders in the manifests with the correct value.
+{{% alert title="Note" color="info" %}}Make sure to replace  the `username` placeholders in the manifests with the correct value if it has not been replaced yet.
 
 Use the following command to get your username.
 ```bash
@@ -806,7 +805,7 @@ and apply it
 {{% param cliToolName %}} apply -f repo-secret.yaml
 ```
 
-and sync the app again, and your argo cd instance is able to access the private git repository using the configures secret.
+and sync the app again, and your Argo CD instance is able to access the private git repository using the configures secret.
 
 Check the Argo CD UI under **Settings → Repositories** and verify the configuration of your private repository.
 
@@ -815,7 +814,11 @@ Check the Argo CD UI under **Settings → Repositories** and verify the configur
 
 ### Step 3
 
-Finally make your personal Git repository public again for the following labs. Uncheck the option `Visibility: Make Repository Private` under `Settings -> Repository` in the Gitea UI.
+Finally make your personal Git repository public again for the following labs. Uncheck the option `Visibility: Make Repository Private` under `Settings -> Repository` in the Gitea UI. Remove your repository secret with the following command:
+
+```bash
+oc delete -f repo-secret.yaml
+```
 
 {{% alert title="Note" color="info" %}}
 TLS certificates and SSH private keys are supported alternative authentication methods by Argo CD. Proxy support can be configured as well in the repository settings.

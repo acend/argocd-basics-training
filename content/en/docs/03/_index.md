@@ -39,7 +39,7 @@ Named hooks (i.e. ones with `/metadata/name`) will only be created once. If you 
 {{% /alert %}}
 
 {{% alert  color="info" title="Note" %}}
-Hooks are not run during a [selective sync](https://argo-cd.readthedocs.io/en/stable/user-guide/selective_sync/)
+Hooks are not run during a [selective sync](https://argo-cd.readthedocs.io/en/stable/user-guide/selective_sync/).
 {{% /alert %}}
 
 
@@ -67,7 +67,7 @@ metadata:
 
 In this task we're going to deploy an [example](https://github.com/acend/argocd-training-examples/tree/master/pre-post-sync-hook) which has `pre` and `post` hooks.
 
-Create the new application `argo-hook-$USER` with the following command. It will create a service, a deployment and two hooks as soon as the application is synced.
+Create the new application `argo-hook-<username>`. It will create a service, a deployment and two hooks as soon as the application is synced.
 
 * PreSync: before Job
 * Sync: Deployment with name `pre-post-sync-hook`
@@ -114,7 +114,7 @@ argocd app sync argo-hook-$USER
 ```
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
-Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** on the `argo-hook-$USER` application.
+Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** on the `argo-hook-<username>` application.
 {{% /onlyWhen %}}
 {{% /details %}}
 

@@ -54,7 +54,7 @@ The Web IDE Pod consists of the following tools:
 * odo
 * argocd
 
-The files in your root directory (`/home/project`) are stored in a persistent volume, so all your data in this directory will be persistent for when you open the webshell again.
+The files in your root directory (`/home/project`) are stored on a persistent volume, so all your data in this directory will be persistent for when you open the webshell again.
 
 
 ### Task 1.1.1: Local Workspace Directory
@@ -101,7 +101,7 @@ oc project
 Using project "<username>" on server "https://kubernetes.default".
 ```
 
-The returned project name should correspond to your `<username>` equal to the env variable `echo $USER`.
+The returned project name should correspond to your username equal to the env variable `echo $USER`.
 {{% /onlyWhen  %}}
 
 
