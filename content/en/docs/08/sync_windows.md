@@ -145,6 +145,7 @@ FATA[0000] rpc error: code = PermissionDenied desc = Cannot sync: Blocked by syn
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
 Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and try to click **Sync** on `sync-windows-<username>`. The sync will be blocked with a "Blocked by sync window" error.
+You will also see a red pause icon next to the Application state indicating that Sync operations are currently not allowed.
 {{% /onlyWhen %}}
 
 {{% alert title="Note" color="info" %}}
@@ -166,16 +167,26 @@ Sync the application again
 argocd app sync sync-windows-$USER
 ```
 
-.. which now works because the sync window only applies for applications with the name `sketchy-app`.
+It still doesn't work, but why?
 
-Revert the changes and use wildcard `*` again to match all applications
+By default, the three fields `namespaces`, `clusters` and `applications` will be evaluated using `OR`, not `AND`. The namespace and the cluster still matches our `simple-example` application.
+To change this behavior, edit the AppProject with the option `--use-and-operator`.
+
+```bash
+argocd proj windows update project-sync-windows-$USER 0 --use-and-operator
+```
+
+Try syncing again. This now works because the sync window only applies for applications with the name `sketchy-app`, the application `simple-example` is not matched anymore.
+The three fields `namespaces`, `clusters` and `applications` and the functionality to toggle `OR` and `AND` evaluations give you a lot of flexibility to configure different sync windows.
+
+Then revert the changes and use wildcard `*` again to match all applications
 
 ```bash
 argocd proj windows update project-sync-windows-$USER 0 --applications "*"
 ```
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
-Update `appproject-sync-window.yaml` to restrict the sync window to `sketchy-app`, then re-apply:
+Update `appproject-sync-window.yaml` to restrict the sync window to the application `sketchy-app`, leave everything else as-is, then re-apply:
 
 ```yaml
       applications:
@@ -186,7 +197,19 @@ Update `appproject-sync-window.yaml` to restrict the sync window to `sketchy-app
 {{% param cliToolName %}} apply -f appproject-sync-window.yaml
 ```
 
-Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** on `sync-windows-<username>` — it works now because the window no longer applies to it.
+Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** on `sync-windows-<username>`.
+
+It still doesn't work, but why?
+
+By default, the three fields `namespaces`, `clusters` and `applications` will be evaluated using `OR`, not `AND`. The namespace and the cluster still matches our `simple-example` application.
+To change this behavior, edit the AppProject and add the field `andOperator: true` on the same level as `manualSync`. Apply again.
+
+```yaml
+      andOperator: true
+```
+
+Try syncing again. This now works because the sync window only applies for applications with the name `sketchy-app`, the application `simple-example` is not matched anymore.
+The three fields `namespaces`, `clusters` and `applications` and the functionality to toggle `OR` and `AND` evaluations give you a lot of flexibility to configure different sync windows.
 
 Revert `applications` back to `['*']` in `appproject-sync-window.yaml` and re-apply:
 
@@ -205,6 +228,8 @@ Now enable the manual sync for the window and try again to sync manually.
 argocd proj windows enable-manual-sync project-sync-windows-$USER 0
 argocd app sync sync-windows-$USER
 ```
+
+Which now work flawlessly.
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
 Update `appproject-sync-window.yaml` to set `manualSync: true` on the sync window, then re-apply:
@@ -218,9 +243,10 @@ Update `appproject-sync-window.yaml` to set `manualSync: true` on the sync windo
 ```
 
 Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** on `sync-windows-<username>` — it now works for manual syncs.
+Where the red pause icon was, you will now see a yellow pause icon indicating that there is an active Sync window for this app, but it does not apply for all operations.
 {{% /onlyWhen %}}
 
-Which now work flawlessly. Automatic syncs are still forbidden and will not occur between 08:00 and 20:00.
+Automatic syncs are still forbidden and will not occur between 08:00 and 20:00.
 
 
 ## {{% task %}} Enable auto-sync and prune
