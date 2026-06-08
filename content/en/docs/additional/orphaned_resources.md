@@ -83,6 +83,8 @@ With the flag `--orphaned-resources-warn` enabled, for each Argo CD application 
 {{% /onlyWhenNot %}}
 {{% /alert %}}
 
+![Orphaned Resources Checkbox in ArgoCD UI](orphaned-resource-checkbox.png)
+
 {{% onlyWhenNot no-argocd-cli %}}
 
 Assign the application to newly created project:
