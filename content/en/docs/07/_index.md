@@ -24,7 +24,7 @@ Now we want to create a new empty Argo CD project.
 
 {{% onlyWhenNot no-argocd-cli %}}
 ```bash
-argocd proj create project-<$USER>
+argocd proj create project-$USER
 argocd proj list
 ```
 

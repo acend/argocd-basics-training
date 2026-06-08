@@ -263,7 +263,7 @@ Argo CD will now detect the application. Once the application is created, you ca
 {{% param cliToolName %}} describe application argo-$USER -n {{% param argoInfraNamespace %}}
 ```
 
-Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** to deploy the resources. This command retrieves the manifests from the git repository and performs a {{% param cliToolName %}} apply on them. From now on, all resources are managed by Argo CD. Congrats, the first step in direction GitOps! :)
+Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** -> **Synchronize** to deploy the resources. This command retrieves the manifests from the git repository and performs a {{% param cliToolName %}} apply on them. From now on, all resources are managed by Argo CD. Congrats, the first step in direction GitOps! :)
 
 Once synced the application status will show as **Healthy**.
 
@@ -303,7 +303,7 @@ When there is a new commit in your Git repository, the Argo CD application becom
 
 Increase the number of replicas in your file `<workspace>/example-app/deployment.yaml` to 2.
 
-```
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -732,7 +732,7 @@ The Git repository we have imported to Gitea is publicly available for the whole
 
 ### Step 1
 
-First make the Git repository in Gitea **private** by checking the option `Visibility: Make Repository Private` under `Settings -> Repository`. Now sync the app again.
+First make the Git repository in Gitea **private** by checking the option `Visibility: Make Repository Private` under `Settings -> Repository`. Now refresh the app again.
 
 {{% onlyWhenNot no-argocd-cli %}}
 
@@ -762,7 +762,7 @@ argocd app sync argo-$USER
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
 
-You will see an error indicating that authentication is required: `Failed to load target state: failed to generate manifest for source 1 of 1: rpc error: code = Unknown desc = failed to list refs: authentication required: Unauthorized`
+You will see an error indicating that authentication is required. There will be a popup saying `Unable to load data: revision HEAD must be resolved` and when you click on the Error in `APP CONDITIONS` it will say `Failed to load target state: failed to generate manifest for source 1 of 1: rpc error: code = Unknown desc = failed to list refs: authentication required: Unauthorized`
 
 Argo CD can't any longer access the protected repository without providing credentials for authentication.
 

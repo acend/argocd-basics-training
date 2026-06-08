@@ -169,14 +169,14 @@ argocd app sync sync-windows-$USER
 
 It still doesn't work, but why?
 
-By default, the three fields `namespaces`, `clusters` and `applications` will be evaluated using `OR`, not `AND`. The namespace and the cluster still matches our `simple-example` application.
+By default, the three fields `namespaces`, `clusters` and `applications` will be evaluated using `OR`, not `AND`. The namespace and the cluster still matches our `project-sync-windows-<username>` application.
 To change this behavior, edit the AppProject with the option `--use-and-operator`.
 
 ```bash
 argocd proj windows update project-sync-windows-$USER 0 --use-and-operator
 ```
 
-Try syncing again. This now works because the sync window only applies for applications with the name `sketchy-app`, the application `simple-example` is not matched anymore.
+Try syncing again. This now works because the sync window only applies for applications with the name `sketchy-app`, the application `project-sync-windows-<username>` is not matched anymore.
 The three fields `namespaces`, `clusters` and `applications` and the functionality to toggle `OR` and `AND` evaluations give you a lot of flexibility to configure different sync windows.
 
 Then revert the changes and use wildcard `*` again to match all applications
@@ -201,14 +201,14 @@ Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** on `sy
 
 It still doesn't work, but why?
 
-By default, the three fields `namespaces`, `clusters` and `applications` will be evaluated using `OR`, not `AND`. The namespace and the cluster still matches our `simple-example` application.
+By default, the three fields `namespaces`, `clusters` and `applications` will be evaluated using `OR`, not `AND`. The namespace and the cluster still matches our `project-sync-windows-<username>` application.
 To change this behavior, edit the AppProject and add the field `andOperator: true` on the same level as `manualSync`. Apply again.
 
 ```yaml
       andOperator: true
 ```
 
-Try syncing again. This now works because the sync window only applies for applications with the name `sketchy-app`, the application `simple-example` is not matched anymore.
+Try syncing again. This now works because the sync window only applies for applications with the name `sketchy-app`, the application `project-sync-windows-<username>` is not matched anymore.
 The three fields `namespaces`, `clusters` and `applications` and the functionality to toggle `OR` and `AND` evaluations give you a lot of flexibility to configure different sync windows.
 
 Revert `applications` back to `['*']` in `appproject-sync-window.yaml` and re-apply:
