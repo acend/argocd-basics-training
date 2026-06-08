@@ -64,7 +64,7 @@ Now let's make sure to apply this to the cluster. But wait, we can either direct
 Let's go the GitOps path:
 
 ```bash
-git add ../application-set/simple-example/application-set.yaml
+git add application-set/simple-example/application-set.yaml
 git commit -m "Add ApplicationSet"
 git push
 ```
@@ -212,7 +212,7 @@ spec:
 Push the changes to your git repository.
 
 ```bash
-git add ../application-set/matrix-example/matrix-example-application-set.yaml
+git add application-set/matrix-example/matrix-example-application-set.yaml
 git commit -m "Add Matrix Example"
 git push
 ```

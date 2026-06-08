@@ -109,7 +109,7 @@ replicas: 2
 For commiting and pushing your changes to your Git repository, execute follwing command:
 
 ```bash
-git add ../example-app/deployment.yaml
+git add example-app
 git commit -m "scale deployment replicas to 2"
 git push
 ```
