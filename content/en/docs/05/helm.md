@@ -235,7 +235,7 @@ Commit and push the changes to your repository.
 
 {{% details title="Hint" %}}
 ```bash
-git add ../helm/simple-example/values.yaml
+git add helm/simple-example
 git commit -m "Expose ingress"
 git push
 ```
@@ -272,7 +272,7 @@ Commit and push the changes to your repository.
 
 {{% details title="Hint" %}}
 ```bash
-git add ../helm/simple-example/values-production.yaml
+git add helm/simple-example
 git commit -m "Add prod stage"
 git push
 ```

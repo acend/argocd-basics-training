@@ -58,7 +58,7 @@ Please make sure to update all three application files.
 
 {{% details title="Hint" %}}
 ```bash
-git add ../app-of-apps
+git add app-of-apps
 git commit -m "Update URLs for App of App"
 git push
 ```

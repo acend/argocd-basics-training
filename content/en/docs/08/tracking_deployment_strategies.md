@@ -24,19 +24,19 @@ For Helm you can use Semver versions either to pin to a specific version or to t
 
 | Use Case                                   | How                                                                                     | Notes                      |
 |--------------------------------------------|-----------------------------------------------------------------------------------------|----------------------------|
-| Pin to a version (e.g. in production)      | Either tag the commit with (e.g. v1.2.0) and use that tag, or using commit SHA. | See commit and version pinning.        |
-| Use the latest (e.g. in local development) | Use HEAD or master (assuming master is your master branch).                             | See HEAD / Branch Tracking |
+| Pin to a specific release                  | Tag the commit (e.g. v1.2.0) and use that tag, or use a commit SHA.                    | See commit and version pinning. |
+| Track a branch                             | Use a branch name or HEAD.                                                              | See HEAD / Branch Tracking |
 
 
 ### Head / Branch Tracking
 
-Either a branch name or a symbolic reference (like HEAD). For branches ArgoCD will take the latest commit of this branch.
-This method is often used in development environment where you want to apply the latest changes.
+Either a branch name or a symbolic reference (like HEAD). ArgoCD will track the latest commit on that branch and sync whenever it changes.
+This is a common pattern for environments that should always reflect the latest state of a branch — including production setups where the branch itself represents the desired state (e.g. a `release` or `main` branch).
 
 
 ### Commit and Version Pinning
 
-The state at the specified Git tag or commit will be applied to the cluster. Pinning can achieved in two ways. Eiteher you can specifiy the full semver Git tag (v1.2.0) or a commit SHA. Usually the Git tag offers more flexibility while the commit SHA offers more immutuability. Commit pinning is generally the first choice for production environments.
+The state at the specified Git tag or commit will be applied to the cluster. Pinning can be achieved in two ways: a semver Git tag (e.g. v1.2.0) or a full commit SHA. Git tags are typically easier to work with and still human-readable, while a commit SHA gives you the strongest immutability guarantee. Version pinning via tags is a reasonable choice when you want explicit, auditable control over what gets deployed.
 
 
 ## {{% task %}} Git version pinning
@@ -109,7 +109,7 @@ replicas: 2
 For commiting and pushing your changes to your Git repository, execute follwing command:
 
 ```bash
-git add ../example-app/deployment.yaml
+git add example-app
 git commit -m "scale deployment replicas to 2"
 git push
 ```

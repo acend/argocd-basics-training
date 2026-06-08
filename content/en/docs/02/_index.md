@@ -330,7 +330,7 @@ spec:
 Commit the changes and push them to your personal remote Git repository. After the Git push command a **password** input field will appear, this is where you have to enter the toke you've created in the previous chapter.
 
 ```bash
-git add ../example-app/deployment.yaml
+git add example-app
 git commit -m "Increased replicas to 2"
 git push
 ```
@@ -604,7 +604,7 @@ Commit and Push the changes again, like you did before:
 
 
 ```bash
-git add ../example-app/route.yaml
+git add example-app
 git commit -m "Expose application"
 git push
 ```
@@ -632,7 +632,7 @@ You probably asked yourself: how can I delete deployed resources on the containe
 First delete the files `service.yaml` and {{% onlyWhenNot openshift %}}`ingress.yaml`{{% /onlyWhenNot %}}{{% onlyWhen openshift %}}`route.yaml`{{% /onlyWhen %}} from Git repository and push the changes:
 
 ```bash
-git add ../example-app/route.yaml ../example-app/service.yaml
+git add example-app
 git commit -m 'Removes service and ingress' && git push
 
 ```
