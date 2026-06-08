@@ -50,6 +50,18 @@ acendTraining:
         secretOverride: acend-wildcard
         appname: argocd-centris
         domain: training.acend.ch
+    - 
+      name: cnz
+      replicaCount: 2
+      image:
+        repository: quay.io/acend/argocd-basics-training
+        pullPolicy: Always
+        tag: ""
+        tagsuffix: "-cnz"
+      ingress:
+        secretOverride: acend-wildcard
+        appname: argocd-cnz
+        domain: training.acend.ch
 
 
 nameOverride: "acend-argocd-basics"
