@@ -115,6 +115,13 @@ name = "LinkedIn"
 icon = "fab fa-linkedin-in"
 url = "https://linkedin.com/company/acendch/"
 
+[params.replaceContent]
+[[params.replaceContent.placeholders]]
+placeholder = "<username>"
+queryParam = "u"
+defaultValue = "<username>"
+
+
 [module]
   [module.hugoVersion]
     extended = true

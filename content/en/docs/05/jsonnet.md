@@ -46,7 +46,7 @@ Among many other features, Jsonnet can help to reduce duplications.
 
 ### Further Docs
 
-Read more about the jsonnet integration in the [official documentation](https://argo-cd.readthedocs.io/en/stable/user-guide/jsonnet/)
+Read more about the jsonnet integration in the [official documentation](https://argo-cd.readthedocs.io/en/stable/user-guide/jsonnet/).
 
 
 ## {{% task %}} Deploy the simple-example with jsonnet
@@ -66,7 +66,7 @@ Similar to `helm`, `jsonnet` allows us to extract parameters into a separate fil
 }
 ```
 
-And the actual template file, containing the kubernetes service and deployment definitions, `simple-application.jsonnet` file:
+And the actual template file, containing the Kubernetes service and deployment definitions, `simple-application.jsonnet` file:
 
 ```json
 local params = import 'params.libsonnet';
@@ -133,13 +133,13 @@ local params = import 'params.libsonnet';
 
 Note the first line, where we tell jsonnet where to get params from.
 
-Ok now replace the `<username>` placeholder in the `params.libsonnet` file with your username.
+Now replace the `username` placeholder in the `params.libsonnet` file with your username.
 
 Commit and push the changes to your repository.
 
 {{% details title="Hint" %}}
 ```bash
-git add jsonnet/params.libsonnet
+git add ../jsonnet/params.libsonnet
 git commit -m "Change Username"
 git push
 ```
@@ -180,26 +180,26 @@ spec:
 ```
 {{% /onlyWhen %}}
 
-Sync the application
+Sync the application.
 
 {{% details title="Hint" %}}
 
-To sync (deploy) the resources you can simply click sync in the web UI{{% onlyWhenNot no-argocd-cli %}} or execute the following command:
+To sync (deploy) the resources you can simply click sync in the web UI{{% onlyWhen no-argocd-cli %}}.{{% /onlyWhen %}}{{% onlyWhenNot no-argocd-cli %}}
+ or execute the following command:
 
 ```bash
 argocd app sync argo-jsonnet-$USER
 ```
 {{% /onlyWhenNot %}}
-{{% onlyWhen no-argocd-cli %}}.
-{{% /onlyWhen %}}
+
 {{% /details %}}
 
-And verify whether your jsonnet Application definition has be successfully synced.
+And verify whether your jsonnet Application definition has been successfully synced.
 
 
 ## {{% task %}} Autosync and scale up
 
-Tell the application to sync automatically, to enable self-healing and auto-prune
+Tell the application to sync automatically and to enable self-healing and auto-prune.
 
 {{% details title="Hint" %}}
 {{% onlyWhenNot no-argocd-cli %}}
@@ -225,7 +225,7 @@ Edit `argocd-jsonnet-application.yaml` to add automated sync policy, then re-app
 {{% /onlyWhen %}}
 {{% /details %}}
 
-Now let's change the replicacount of the deployment and scale to `2` pods.
+Now let's change the replica count of the deployment and scale to `2` pods.
 
 Change the replica param in your `params.libsonnet` to 2
 
@@ -244,13 +244,13 @@ Commit and push the changes to your repository.
 
 {{% details title="Hint" %}}
 ```bash
-git add jsonnet/params.libsonnet
+git add ../jsonnet/params.libsonnet
 git commit -m "Scale Jsonnet to two"
 git push
 ```
 {{% /details %}}
 
-And verify the result in the ArgoCD Ui or by using the following command, this might take a little while to happen, depending on how many trainees are currently working on the labs. Hint: hit refresh to speed up the process.
+And verify the result in the ArgoCD UI or by using the following command, this might take a little while, depending on how many trainees are currently working on the labs. Hint: hit refresh to speed up the process.
 
 ```bash
 {{% param cliToolName %}} get pod --namespace $USER --watch

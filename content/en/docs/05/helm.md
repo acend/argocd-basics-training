@@ -235,7 +235,7 @@ Commit and push the changes to your repository.
 
 {{% details title="Hint" %}}
 ```bash
-git add helm/simple-example/values.yaml
+git add ../helm/simple-example/values.yaml
 git commit -m "Expose ingress"
 git push
 ```
@@ -272,14 +272,14 @@ Commit and push the changes to your repository.
 
 {{% details title="Hint" %}}
 ```bash
-git add helm/simple-example/values-production.yaml
+git add ../helm/simple-example/values-production.yaml
 git commit -m "Add prod stage"
 git push
 ```
 {{% /details %}}
 
 
-Let's create the production stage Argo CD application with the name `argo-helm-prod-$USER` and enable automated sync, self-healing and pruning.
+Let's create the production stage Argo CD application with the name `argo-helm-prod-<username>` and enable automated sync, self-healing and pruning.
 
 {{% details title="Hint" %}}
 
@@ -298,14 +298,14 @@ Create a file `argocd-helm-application-prod.yaml` with the following content and
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: argo-helm-prod-$USER
+  name: argo-helm-prod-<username>
   namespace: {{% param argoInfraNamespace %}}
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
-    repoURL: https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git
+    repoURL: https://{{% param giteaUrl %}}/<username>/argocd-training-examples.git
     targetRevision: HEAD
     path: helm/simple-example
     helm:
@@ -313,7 +313,7 @@ spec:
         - values-production.yaml
   destination:
     server: https://kubernetes.default.svc
-    namespace: $USER
+    namespace: <username>
   syncPolicy:
     automated:
       selfHeal: true

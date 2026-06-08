@@ -38,7 +38,7 @@ You can specify the wave in the sync phase by setting an annotation `argocd.argo
 
 Let's now get our hands on a sync wave example.
 
-Create the new application `argo-wave-$USER` with the following command. The Application consist of the following resources, phases and waves:
+Create the new application `argo-wave-<username>`. The Application consist of the following resources, phases and waves:
 
 * PreSync
   * Job: upgrade-sql-schema
@@ -94,7 +94,7 @@ argocd app sync argo-wave-$USER
 ```
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
-Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** on the `argo-wave-$USER` application.
+Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** on the `argo-wave-<username>` application.
 {{% /onlyWhen %}}
 {{% /details %}}
 

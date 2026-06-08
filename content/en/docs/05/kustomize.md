@@ -183,7 +183,7 @@ Let's now also deploy an application for the production stage.
 
 This does mean we deploy an overlay which specifically configures the production stage.
 
-Let's create the production stage Argo CD application (path: `kustomize/overlays-example/overlays/production`) with the name `argo-kustomize-prod-$USER` and enable automated sync, self-healing and pruning.
+Let's create the production stage Argo CD application (path: `kustomize/overlays-example/overlays/production`) with the name `argo-kustomize-prod-<username>` and enable automated sync, self-healing and pruning.
 
 
 {{% details title="Hint" %}}
@@ -203,19 +203,19 @@ Create a file `argocd-kustomize-application-prod.yaml` with the following conten
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: argo-kustomize-prod-$USER
+  name: argo-kustomize-prod-<username>
   namespace: {{% param argoInfraNamespace %}}
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
-    repoURL: https://{{% param giteaUrl %}}/$USER/argocd-training-examples.git
+    repoURL: https://{{% param giteaUrl %}}/<username>/argocd-training-examples.git
     targetRevision: HEAD
     path: kustomize/overlays-example/overlays/production
   destination:
     server: https://kubernetes.default.svc
-    namespace: $USER
+    namespace: <username>
   syncPolicy:
     automated:
       selfHeal: true
