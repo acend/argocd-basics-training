@@ -26,7 +26,7 @@ argocd proj set apps-$USER --orphaned-resources --orphaned-resources-warn
 ```
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
-Create a file `application.yaml` with the following content and apply it:
+Create a file `application-orphaned.yaml` with the following content and apply it:
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -47,7 +47,7 @@ spec:
     namespace: <username>
 ```
 
-Create a file `appproject.yaml` with the following content and apply it:
+Create a file `appproject-orphaned.yaml` with the following content and apply it:
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -66,8 +66,8 @@ spec:
 ```
 
 ```bash
-{{% param cliToolName %}} apply -f appproject.yaml
-{{% param cliToolName %}} apply -f application.yaml
+{{% param cliToolName %}} apply -f appproject-orphaned.yaml
+{{% param cliToolName %}} apply -f application-orphaned.yaml
 ```
 
 {{% /onlyWhen %}}
@@ -83,11 +83,10 @@ With the flag `--orphaned-resources-warn` enabled, for each Argo CD application 
 {{% /onlyWhenNot %}}
 {{% /alert %}}
 
-
-## {{% task %}} Assign application to project
-
-Assign application to newly created project
 {{% onlyWhenNot no-argocd-cli %}}
+
+Assign the application to newly created project:
+
 ```bash
 argocd app set argo-$USER --project apps-$USER
 ```
@@ -102,9 +101,6 @@ Refresh the application
 argocd app get --refresh argo-$USER
 ```
 {{% /onlyWhenNot %}}
-{{% onlyWhen no-argocd-cli %}}
-The application is already assigned to the project in the `application.yaml` from the previous task (`project: apps-$USER`). Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Refresh** on the `argo-$USER` application to verify the project assignment.
-{{% /onlyWhen %}}
 
 
 ## {{% task %}} Create orphaned resource
@@ -129,8 +125,8 @@ This service will be detected as orphaned resource because it is not managed by 
 {{% /alert %}}
 
 
-Print all resources
 {{% onlyWhenNot no-argocd-cli %}}
+Print all resources:
 ```bash
 argocd app resources argo-$USER
 ```
@@ -156,7 +152,7 @@ OrphanedResourceWarning  Application has 1 orphaned resources  2021-09-02 16:20:
 ```
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
-Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Refresh** on the `argo-$USER` application. Navigate to the application details — you will see the `black-hole` service listed as an orphaned resource with an `OrphanedResourceWarning`.
+Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Refresh** on the `argo-<username>` application. Navigate to the application details — you will see the `black-hole` service listed as an orphaned resource with an `OrphanedResourceWarning`.
 {{% /onlyWhen %}}
 
 
@@ -172,7 +168,7 @@ argocd app set argo-$USER --auto-prune
 ```
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
-Edit `application.yaml` to add automated sync policy, then re-apply:
+Edit `application-orphaned.yaml` to add automated sync policy, then re-apply:
 
 ```yaml
   syncPolicy:
@@ -182,7 +178,7 @@ Edit `application.yaml` to add automated sync policy, then re-apply:
 ```
 
 ```bash
-{{% param cliToolName %}} apply -f application.yaml
+{{% param cliToolName %}} apply -f application-orphaned.yaml
 ```
 {{% /onlyWhen %}}
 

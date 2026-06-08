@@ -52,7 +52,7 @@ To create and push a Git tag execute the following command:
 git tag v1.0.0
 git push origin --tags
 ```
-
+{{% /details %}}
 
 Re-create the simple application example:
 {{% onlyWhenNot no-argocd-cli %}}
@@ -67,7 +67,7 @@ argocd app set argo-example-$USER --revision v1.0.0
 ```
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
-Create a file `application.yaml` with the following content and apply it:
+Create a file `tagged-application.yaml` with the following content and apply it:
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -89,11 +89,11 @@ spec:
 ```
 
 ```bash
-{{% param cliToolName %}} apply -f application.yaml
+{{% param cliToolName %}} apply -f tagged-application.yaml
 ```
-{{% /onlyWhen %}}
-{{% /details %}}
 
+Finally, sync the application in the web UI.
+{{% /onlyWhen %}}
 
 Increase the number of replicas in your file `<workspace>/example-app/deployment.yaml` to 2.
 After that commit and push your changes to the Git repository.
@@ -109,12 +109,14 @@ replicas: 2
 For commiting and pushing your changes to your Git repository, execute follwing command:
 
 ```bash
-git add . && git commit -m "scale deployment replicas to 2" && git push origin
+git add ../example-app/deployment.yaml
+git commit -m "scale deployment replicas to 2"
+git push
 ```
 
 {{% /details %}}
 
-Now you can try to sync your applicaion as follows:
+Now you can try to sync your application as follows:
 
 {{% onlyWhenNot no-argocd-cli %}}
 ```bash
@@ -122,7 +124,7 @@ argocd app sync argo-example-$USER
 ```
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
-Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** on the `argo-example-$USER` application.
+Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** on the `argo-example-<username>` application.
 {{% /onlyWhen %}}
 
 Check the number of configured replicas on the app deployment.
@@ -134,7 +136,7 @@ To see the number of configured replicas execute follwing command:
 kubectl describe deployment simple-example
 ```
 
-You can see in the command output, the number of replicas didn't changed and remains to one.
+You can see in the command output, the number of replicas didn't changed and remains one.
 
 {{< highlight YAML "hl_lines=1" >}}
 NAME             READY   UP-TO-DATE   AVAILABLE   AGE
@@ -162,16 +164,16 @@ argocd app set argo-example-$USER --revision v1.0.1
 ```
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
-Edit `application.yaml`, change `targetRevision` to `v1.0.1`, then re-apply:
+Edit `tagged-application.yaml`, change `targetRevision` to `v1.0.1`, then re-apply:
 
 ```bash
-{{% param cliToolName %}} apply -f application.yaml
+{{% param cliToolName %}} apply -f tagged-application.yaml
 ```
 {{% /onlyWhen %}}
 
 {{% /details %}}
 
-With the new created tag, ArgoCD is going to pick up and apply the latest changes and scales up the replica count to 2.
+With the newly created tag, ArgoCD is going to pick up and apply the latest changes and scales up the replica count to 2.
 First let us sync the changes and check if the ArgoCD App is in Sync.
 
 {{% onlyWhenNot no-argocd-cli %}}
@@ -179,14 +181,14 @@ First let us sync the changes and check if the ArgoCD App is in Sync.
 argocd app sync argo-example-$USER
 ```
 
-Then diplay the status with following command:
+Then display the status with following command:
 
 ```bash
 argocd app get argo-example-$USER
 ```
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
-Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** on the `argo-example-$USER` application, then verify the status in the UI.
+Open the [Argo CD UI](https://{{% param argoCdUrl %}}) and click **Sync** on the `argo-example-<username>` application, then verify the status in the UI.
 {{% /onlyWhen %}}
 
 If the app is in sync, you can check the number of replicas of the deployment.
@@ -216,7 +218,7 @@ argocd app set argo-example-$USER --auto-prune
 ```
 {{% /onlyWhenNot %}}
 {{% onlyWhen no-argocd-cli %}}
-Edit `application.yaml` to add automated sync policy, then re-apply:
+Edit `tagged-application.yaml` to add automated sync policy, then re-apply:
 
 ```yaml
   syncPolicy:
@@ -226,7 +228,7 @@ Edit `application.yaml` to add automated sync policy, then re-apply:
 ```
 
 ```bash
-{{% param cliToolName %}} apply -f application.yaml
+{{% param cliToolName %}} apply -f tagged-application.yaml
 ```
 {{% /onlyWhen %}}
 
