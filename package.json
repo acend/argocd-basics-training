@@ -22,7 +22,7 @@
   "homepage": "https://github.com/acend/argocd-basics-training#readme",
   "devDependencies": {
     "husky": "9.1.7",
-    "lint-staged": "15.2.10",
+    "lint-staged": "15.5.2",
     "markdownlint-cli": "0.44.0",
     "autoprefixer": "^10.4",
     "postcss": "^8.4",
