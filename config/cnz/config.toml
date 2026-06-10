@@ -16,13 +16,6 @@ argoInfraNamespace = "argocd"
 github_repo = "https://github.com/acend/argocd-basics-training"
 github_branch = "main"
 
-[params.replaceContent]
-
-[[params.replaceContent.placeholders]]
-placeholder = "<username>"
-queryParam = "u"
-defaultValue = "<username>"
-
 argoCdUrl = "argocd-server-argocd.apps.lab.clusters.t-k.ch/"
 giteaUrl = "gitea.apps.lab.clusters.t-k.ch"
 appDomain= "apps.lab.clusters.t-k.ch"
